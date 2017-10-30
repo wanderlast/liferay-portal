@@ -50,7 +50,7 @@ public class OrganizationModelListener extends BaseModelListener<Organization> {
 				OrganizationModelListener.class.getName());
 
 		TransactionCommitCallbackUtil.registerCallback(
-			()-> {
+			() -> {
 				threadPoolExecutor.submit(
 					() -> {
 						UserLocalServiceUtil.reindex(
