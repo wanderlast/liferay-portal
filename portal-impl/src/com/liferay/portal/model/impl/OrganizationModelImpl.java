@@ -195,9 +195,10 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 	public static final Object[][] MAPPING_TABLE_GROUPS_ORGS_COLUMNS = {
 			{ "companyId", Types.BIGINT },
 			{ "groupId", Types.BIGINT },
-			{ "organizationId", Types.BIGINT }
+			{ "organizationId", Types.BIGINT },
+			{ "inherited", Types.BOOLEAN }
 		};
-	public static final String MAPPING_TABLE_GROUPS_ORGS_SQL_CREATE = "create table Groups_Orgs (companyId LONG not null,groupId LONG not null,organizationId LONG not null,primary key (groupId, organizationId))";
+	public static final String MAPPING_TABLE_GROUPS_ORGS_SQL_CREATE = "create table Groups_Orgs (companyId LONG not null,groupId LONG not null,organizationId LONG not null,inherited BOOLEAN,primary key (groupId, organizationId))";
 	public static final boolean FINDER_CACHE_ENABLED_GROUPS_ORGS = GetterUtil.getBoolean(com.liferay.portal.util.PropsUtil.get(
 				"value.object.finder.cache.enabled.Groups_Orgs"), true);
 	public static final String MAPPING_TABLE_USERS_ORGS_NAME = "Users_Orgs";

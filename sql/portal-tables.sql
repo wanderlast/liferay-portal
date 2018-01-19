@@ -513,6 +513,7 @@ create table Groups_Orgs (
 	companyId LONG not null,
 	groupId LONG not null,
 	organizationId LONG not null,
+	inherited BOOLEAN,
 	primary key (groupId, organizationId)
 );
 
