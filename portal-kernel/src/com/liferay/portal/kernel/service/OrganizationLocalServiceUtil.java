@@ -436,6 +436,11 @@ public class OrganizationLocalServiceUtil {
 		return getService().getIndexableActionableDynamicQuery();
 	}
 
+	public static java.util.List<com.liferay.portal.kernel.model.Organization> getInheritedOrganizations(
+		long groupId) {
+		return getService().getInheritedOrganizations(groupId);
+	}
+
 	public static java.util.List<com.liferay.portal.kernel.model.Organization> getNoAssetOrganizations() {
 		return getService().getNoAssetOrganizations();
 	}
@@ -637,6 +642,11 @@ public class OrganizationLocalServiceUtil {
 		long parentOrganizationId) {
 		return getService()
 				   .getOrganizationsCount(companyId, parentOrganizationId);
+	}
+
+	public static java.util.List<com.liferay.portal.kernel.model.User> getOrganizationsUsers(
+		java.util.List<com.liferay.portal.kernel.model.Organization> organizationList) {
+		return getService().getOrganizationsUsers(organizationList);
 	}
 
 	/**

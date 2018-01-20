@@ -465,6 +465,32 @@ public class OrganizationLocalServiceImpl
 		return organizations;
 	}
 
+	public List<Organization> getInheritedOrganizations(long groupId) {
+		List<Organization> inheritedOrganizations;
+		List<Organization> groupOrganizations =
+			groupPersistence.getOrganizations(groupId);
+
+		Set<Organization> uniqueOrganizations = SetUtil.fromList(
+			groupOrganizations);
+
+		if (groupOrganizations.isEmpty()) {
+			return groupOrganizations;
+		}
+		else {
+			List<Organization> suborganizations =
+				organizationLocalService.getSuborganizations(
+					groupOrganizations);
+
+			uniqueOrganizations.addAll(suborganizations);
+
+			uniqueOrganizations.removeAll(groupOrganizations);
+
+			inheritedOrganizations = new ArrayList<>(uniqueOrganizations);
+
+			return inheritedOrganizations;
+		}
+	}
+
 	@Override
 	public List<Organization> getNoAssetOrganizations() {
 		return organizationFinder.findO_ByNoAssets();
@@ -697,6 +723,23 @@ public class OrganizationLocalServiceImpl
 			return organizationPersistence.countByC_P(
 				companyId, parentOrganizationId);
 		}
+	}
+
+	public List<User> getOrganizationsUsers(
+		List<Organization> organizationList) {
+
+		List<User> organizationUsers = new ArrayList<>();
+
+		for (Organization organization : organizationList) {
+			long organizationId = organization.getOrganizationId();
+
+			List<User> users = userLocalService.getOrganizationUsers(
+				organizationId);
+
+			organizationUsers.addAll(users);
+		}
+
+		return organizationUsers;
 	}
 
 	/**

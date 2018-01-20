@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.PersistedModel;
 import com.liferay.portal.kernel.model.SystemEventConstants;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.BaseModelSearchResult;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexable;
@@ -354,6 +355,9 @@ public interface OrganizationLocalService extends BaseLocalService,
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Organization> getInheritedOrganizations(long groupId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Organization> getNoAssetOrganizations();
 
 	/**
@@ -526,6 +530,9 @@ public interface OrganizationLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getOrganizationsCount(long companyId, long parentOrganizationId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<User> getOrganizationsUsers(List<Organization> organizationList);
 
 	/**
 	* Returns the OSGi service identifier.

@@ -479,6 +479,12 @@ public class OrganizationLocalServiceWrapper implements OrganizationLocalService
 	}
 
 	@Override
+	public java.util.List<com.liferay.portal.kernel.model.Organization> getInheritedOrganizations(
+		long groupId) {
+		return _organizationLocalService.getInheritedOrganizations(groupId);
+	}
+
+	@Override
 	public java.util.List<com.liferay.portal.kernel.model.Organization> getNoAssetOrganizations() {
 		return _organizationLocalService.getNoAssetOrganizations();
 	}
@@ -694,6 +700,12 @@ public class OrganizationLocalServiceWrapper implements OrganizationLocalService
 	public int getOrganizationsCount(long companyId, long parentOrganizationId) {
 		return _organizationLocalService.getOrganizationsCount(companyId,
 			parentOrganizationId);
+	}
+
+	@Override
+	public java.util.List<com.liferay.portal.kernel.model.User> getOrganizationsUsers(
+		java.util.List<com.liferay.portal.kernel.model.Organization> organizationList) {
+		return _organizationLocalService.getOrganizationsUsers(organizationList);
 	}
 
 	/**
