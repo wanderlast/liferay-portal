@@ -55,6 +55,10 @@ organizationSearch.setTotal(organizationsCount);
 
 List<Organization> organizations = OrganizationLocalServiceUtil.search(company.getCompanyId(), parentOrganizationId, searchTerms.getKeywords(), searchTerms.getType(), searchTerms.getRegionIdObj(), searchTerms.getCountryIdObj(), organizationParams, organizationSearch.getStart(), organizationSearch.getEnd(), organizationSearch.getOrderByComparator());
 
+List<Organization> inheritedOrganizations = OrganizationLocalServiceUtil.getSuborganizations(organizations);
+
+organizations.addAll(inheritedOrganizations);
+
 organizationSearch.setResults(organizations);
 %>
 

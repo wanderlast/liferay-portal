@@ -58,6 +58,12 @@
 				<span><%= UsersAdmin.ORGANIZATION_REGION_NAME_ACCESSOR.get(organization) %></span>
 				<span><%= UsersAdmin.ORGANIZATION_COUNTRY_NAME_ACCESSOR.get(organization) %></span>
 			</h6>
+
+			<c:if test='<%= inheritedOrganizations.contains(organization)%>'>
+				<h6>
+					<span>Organization has membership due to inheritance.</span>
+				</h6>
+			</c:if>
 		</liferay-ui:search-container-column-text>
 
 		<c:if test="<%= !selectOrganizations %>">
@@ -100,6 +106,20 @@
 			name="country"
 			value="<%= UsersAdmin.ORGANIZATION_COUNTRY_NAME_ACCESSOR.get(organization) %>"
 		/>
+
+		<c:if test="<%= inheritedOrganizations.contains(organization) %>">
+			<liferay-ui:search-container-column-text
+				name="inherited"
+				value="Yes"
+			/>
+		</c:if>
+
+		<c:if test="<%= !inheritedOrganizations.contains(organization) %>">
+			<liferay-ui:search-container-column-text
+				name="inherited"
+				value="No"
+			/>
+		</c:if>
 
 		<c:if test="<%= !selectOrganizations %>">
 			<liferay-ui:search-container-column-jsp
