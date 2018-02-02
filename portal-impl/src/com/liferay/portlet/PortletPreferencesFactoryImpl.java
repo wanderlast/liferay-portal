@@ -794,6 +794,16 @@ public class PortletPreferencesFactoryImpl
 				ownerType = PortletKeys.PREFS_OWNER_TYPE_COMPANY;
 			}
 		}
+		else {
+			if (uniquePerGroup) {
+				if (siteGroupId > LayoutConstants.DEFAULT_PLID) {
+					ownerId = siteGroupId;
+				}
+				else {
+					ownerId = PortletKeys.PREFS_OWNER_ID_DEFAULT;
+				}
+			}
+		}
 
 		if (strictMode) {
 			return PortletPreferencesLocalServiceUtil.getStrictPreferences(
