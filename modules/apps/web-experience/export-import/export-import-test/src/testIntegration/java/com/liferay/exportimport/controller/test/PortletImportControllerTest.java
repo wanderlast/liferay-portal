@@ -92,7 +92,10 @@ public class PortletImportControllerTest extends BaseExportImportTestCase {
 				importedGroup.getCompanyId(), importedGroup.getGroupId(),
 				BookmarksPortletKeys.BOOKMARKS);
 
+		System.out.println("group = " + group.getGroupId() + " importedGroup = " + importedGroup.getGroupId());
 		Assert.assertNotNull(portletPreferences);
+
+		System.out.println(portletPreferences);
 
 		Assert.assertEquals(
 			Long.valueOf(lastPublishDate.getTime()),
