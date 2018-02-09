@@ -800,7 +800,7 @@ public class PortletPreferencesFactoryImpl
 					ownerId = siteGroupId;
 				}
 				else {
-					ownerId = PortletKeys.PREFS_OWNER_ID_DEFAULT;
+					ownerId = layoutGroupId;
 				}
 			}
 		}

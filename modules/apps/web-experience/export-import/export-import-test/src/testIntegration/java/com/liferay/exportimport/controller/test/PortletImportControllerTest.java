@@ -74,7 +74,7 @@ public class PortletImportControllerTest extends BaseExportImportTestCase {
 			group, lastPublishDate, null);
 
 		Assert.assertEquals(
-			PortletKeys.PREFS_OWNER_ID_DEFAULT,
+			group.getGroupId(),
 			portletPreferencesImpl.getOwnerId());
 		Assert.assertEquals(
 			PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
@@ -89,8 +89,7 @@ public class PortletImportControllerTest extends BaseExportImportTestCase {
 
 		PortletPreferences portletPreferences =
 			PortletPreferencesFactoryUtil.getStrictPortletSetup(
-				importedGroup.getCompanyId(), importedGroup.getGroupId(),
-				BookmarksPortletKeys.BOOKMARKS);
+				importedGroupLayout, BookmarksPortletKeys.BOOKMARKS);
 
 		Assert.assertEquals(
 			Long.valueOf(lastPublishDate.getTime()),
@@ -109,7 +108,7 @@ public class PortletImportControllerTest extends BaseExportImportTestCase {
 			group, lastPublishDate1, layout);
 
 		Assert.assertEquals(
-			PortletKeys.PREFS_OWNER_ID_DEFAULT,
+			group.getGroupId(),
 			portletPreferencesImpl1.getOwnerId());
 		Assert.assertEquals(
 			PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
@@ -121,7 +120,7 @@ public class PortletImportControllerTest extends BaseExportImportTestCase {
 			importedGroup, lastPublishDate2, importedGroupLayout);
 
 		Assert.assertEquals(
-			PortletKeys.PREFS_OWNER_ID_DEFAULT,
+			importedGroup.getGroupId(),
 			portletPreferencesImpl2.getOwnerId());
 		Assert.assertEquals(
 			PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
@@ -152,7 +151,7 @@ public class PortletImportControllerTest extends BaseExportImportTestCase {
 			group, lastPublishDate, layout);
 
 		Assert.assertEquals(
-			PortletKeys.PREFS_OWNER_ID_DEFAULT,
+			group.getGroupId(),
 			portletPreferencesImpl.getOwnerId());
 		Assert.assertEquals(
 			PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
@@ -180,7 +179,7 @@ public class PortletImportControllerTest extends BaseExportImportTestCase {
 			importedGroup, lastPublishDate, importedGroupLayout);
 
 		Assert.assertEquals(
-			PortletKeys.PREFS_OWNER_ID_DEFAULT,
+			importedGroup.getGroupId(),
 			portletPreferencesImpl.getOwnerId());
 		Assert.assertEquals(
 			PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
