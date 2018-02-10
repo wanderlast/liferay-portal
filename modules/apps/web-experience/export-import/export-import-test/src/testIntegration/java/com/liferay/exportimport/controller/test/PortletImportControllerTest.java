@@ -74,8 +74,7 @@ public class PortletImportControllerTest extends BaseExportImportTestCase {
 			group, lastPublishDate, null);
 
 		Assert.assertEquals(
-			group.getGroupId(),
-			portletPreferencesImpl.getOwnerId());
+			group.getGroupId(), portletPreferencesImpl.getOwnerId());
 		Assert.assertEquals(
 			PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
 			portletPreferencesImpl.getOwnerType());
@@ -151,8 +150,7 @@ public class PortletImportControllerTest extends BaseExportImportTestCase {
 			group, lastPublishDate, layout);
 
 		Assert.assertEquals(
-			group.getGroupId(),
-			portletPreferencesImpl.getOwnerId());
+			group.getGroupId(), portletPreferencesImpl.getOwnerId());
 		Assert.assertEquals(
 			PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
 			portletPreferencesImpl.getOwnerType());
@@ -179,8 +177,7 @@ public class PortletImportControllerTest extends BaseExportImportTestCase {
 			importedGroup, lastPublishDate, importedGroupLayout);
 
 		Assert.assertEquals(
-			importedGroup.getGroupId(),
-			portletPreferencesImpl.getOwnerId());
+			importedGroup.getGroupId(), portletPreferencesImpl.getOwnerId());
 		Assert.assertEquals(
 			PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
 			portletPreferencesImpl.getOwnerType());
