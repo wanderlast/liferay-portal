@@ -26,7 +26,6 @@ import java.io.File;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -207,7 +206,8 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 				new UnsyncByteArrayOutputStream(), true,
 				sourceFormatterArgs.getBaseDirName());
 			_configuration = CheckstyleUtil.getConfiguration(
-				"checkstyle.xml", sourceFormatterArgs.getMaxLineLength(),
+				"checkstyle.xml", getPropertiesMap(),
+				sourceFormatterArgs.getMaxLineLength(),
 				sourceFormatterArgs.isShowDebugInformation());
 		}
 
@@ -220,7 +220,7 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 	private CheckstyleLogger _checkstyleLogger;
 	private Configuration _configuration;
 	private final Set<SourceFormatterMessage> _sourceFormatterMessages =
-		new HashSet<>();
+		new TreeSet<>();
 	private final List<File> _ungeneratedFiles = new ArrayList<>();
 
 }

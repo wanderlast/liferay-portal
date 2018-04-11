@@ -25,17 +25,17 @@ import org.osgi.service.component.annotations.Component;
 public class SecurityConfigurationCategory implements ConfigurationCategory {
 
 	@Override
-	public String getCategorySection() {
-		return _CATEGORY_SET_KEY;
+	public String getCategoryKey() {
+		return _CATEGORY_KEY;
 	}
 
 	@Override
-	public String getKey() {
-		return _KEY;
+	public String getCategorySection() {
+		return _CATEGORY_SECTION;
 	}
 
-	private static final String _CATEGORY_SET_KEY = "security";
+	private static final String _CATEGORY_KEY = "security";
 
-	private static final String _KEY = "security";
+	private static final String _CATEGORY_SECTION = "security";
 
 }

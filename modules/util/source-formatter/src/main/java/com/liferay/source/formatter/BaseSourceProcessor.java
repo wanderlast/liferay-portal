@@ -378,6 +378,10 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		return _progressStatusQueue;
 	}
 
+	protected Map<String, Properties> getPropertiesMap() {
+		return _propertiesMap;
+	}
+
 	protected SourceFormatterExcludes getSourceFormatterExcludes() {
 		return _sourceFormatterExcludes;
 	}
@@ -597,8 +601,9 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		Class<?> clazz = getClass();
 
 		List<SourceCheck> sourceChecks = SourceChecksUtil.getSourceChecks(
-			sourceFormatterConfiguration, clazz.getSimpleName(), portalSource,
-			subrepository, includeModuleChecks);
+			sourceFormatterConfiguration, clazz.getSimpleName(),
+			getPropertiesMap(), portalSource, subrepository,
+			includeModuleChecks);
 
 		for (SourceCheck sourceCheck : sourceChecks) {
 			_initSourceCheck(sourceCheck);

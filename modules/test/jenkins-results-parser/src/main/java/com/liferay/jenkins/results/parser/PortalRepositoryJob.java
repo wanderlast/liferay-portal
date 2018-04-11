@@ -14,6 +14,7 @@
 
 package com.liferay.jenkins.results.parser;
 
+import java.io.File;
 import java.io.IOException;
 
 import java.util.ArrayList;
@@ -32,28 +33,50 @@ public abstract class PortalRepositoryJob extends RepositoryJob {
 
 	@Override
 	public List<String> getBatchNames() {
-		String testBatchNames = portalTestProperies.getProperty(
-			"test.batch.names");
+		String testBatchNames = getProperty(
+			portalTestProperties, "test.batch.names");
 
 		return getListFromString(testBatchNames);
 	}
 
 	@Override
 	public List<String> getDistTypes() {
-		String testBatchDistAppServers = portalTestProperies.getProperty(
-			"test.batch.dist.app.servers");
+		String testBatchDistAppServers = getProperty(
+			portalTestProperties, "test.batch.dist.app.servers");
 
 		return getListFromString(testBatchDistAppServers);
+	}
+
+	@Override
+	public GitWorkingDirectory getGitWorkingDirectory() {
+		return _getPortalGitWorkingDirectory();
+	}
+
+	public String getPoshiQuery(String testBatchName) {
+		String propertyName = JenkinsResultsParserUtil.combine(
+			"test.batch.run.property.query[", testBatchName, "]");
+
+		if (portalTestProperties.containsKey(propertyName)) {
+			String propertyValue = getProperty(
+				portalTestProperties, propertyName);
+
+			if ((propertyValue != null) && !propertyValue.isEmpty()) {
+				return propertyValue;
+			}
+		}
+
+		return null;
 	}
 
 	protected PortalRepositoryJob(String jobName) {
 		super(jobName);
 
 		branchName = _getBranchName();
-		gitWorkingDirectory = _getGitWorkingDirectory();
+		gitWorkingDirectory = _getPortalGitWorkingDirectory();
 
-		portalTestProperies = getGitWorkingDirectoryProperties(
-			"test.properties");
+		portalTestProperties = JenkinsResultsParserUtil.getProperties(
+			new File(
+				gitWorkingDirectory.getWorkingDirectory(), "test.properties"));
 	}
 
 	protected List<String> getListFromString(String string) {
@@ -76,10 +99,29 @@ public abstract class PortalRepositoryJob extends RepositoryJob {
 		return list;
 	}
 
-	protected final Properties portalTestProperies;
+	protected String getProperty(Properties properties, String name) {
+		if (!properties.containsKey(name)) {
+			return null;
+		}
+
+		String value = properties.getProperty(name);
+
+		Matcher matcher = _propertiesPattern.matcher(value);
+
+		String newValue = value;
+
+		while (matcher.find()) {
+			newValue = newValue.replace(
+				matcher.group(0), getProperty(properties, matcher.group(1)));
+		}
+
+		return newValue;
+	}
+
+	protected final Properties portalTestProperties;
 
 	private String _getBranchName() {
-		Matcher matcher = _pattern.matcher(jobName);
+		Matcher matcher = _jobNamePattern.matcher(jobName);
 
 		if (matcher.find()) {
 			return matcher.group("branchName");
@@ -88,7 +130,13 @@ public abstract class PortalRepositoryJob extends RepositoryJob {
 		return "master";
 	}
 
-	private GitWorkingDirectory _getGitWorkingDirectory() {
+	private PortalGitWorkingDirectory _getPortalGitWorkingDirectory() {
+		if ((gitWorkingDirectory != null) &&
+			gitWorkingDirectory instanceof PortalGitWorkingDirectory) {
+
+			return (PortalGitWorkingDirectory)gitWorkingDirectory;
+		}
+
 		String branchName = _getBranchName();
 		String workingDirectoryPath = "/opt/dev/projects/github/liferay-portal";
 
@@ -97,16 +145,25 @@ public abstract class PortalRepositoryJob extends RepositoryJob {
 				workingDirectoryPath, "-", branchName);
 		}
 
+		PortalGitWorkingDirectory portalGitWorkingDirectory = null;
+
 		try {
-			return new GitWorkingDirectory(branchName, workingDirectoryPath);
+			portalGitWorkingDirectory = new PortalGitWorkingDirectory(
+				branchName, workingDirectoryPath);
 		}
 		catch (IOException ioe) {
 			throw new RuntimeException(
 				"Invalid Git working directory " + workingDirectoryPath, ioe);
 		}
+
+		gitWorkingDirectory = portalGitWorkingDirectory;
+
+		return portalGitWorkingDirectory;
 	}
 
-	private static final Pattern _pattern = Pattern.compile(
+	private static final Pattern _jobNamePattern = Pattern.compile(
 		"[^\\(]+\\((?<branchName>[^\\)]+)\\)");
+	private static final Pattern _propertiesPattern = Pattern.compile(
+		"\\$\\{([^\\}]+)\\}");
 
 }

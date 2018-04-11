@@ -26,22 +26,24 @@ public class ThirdPartyUtilitiesConfigurationCategory
 	implements ConfigurationCategory {
 
 	@Override
+	public String getCategoryIcon() {
+		return _CATEGORY_ICON;
+	}
+
+	@Override
+	public String getCategoryKey() {
+		return _CATEGORY_KEY;
+	}
+
+	@Override
 	public String getCategorySection() {
-		return _CATEGORY_SET_KEY;
+		return _CATEGORY_SECTION;
 	}
 
-	@Override
-	public String getIcon() {
-		return "magic";
-	}
+	private static final String _CATEGORY_ICON = "magic";
 
-	@Override
-	public String getKey() {
-		return _KEY;
-	}
+	private static final String _CATEGORY_KEY = "third-party-utilities";
 
-	private static final String _CATEGORY_SET_KEY = "platform";
-
-	private static final String _KEY = "third-party-utilities";
+	private static final String _CATEGORY_SECTION = "platform";
 
 }

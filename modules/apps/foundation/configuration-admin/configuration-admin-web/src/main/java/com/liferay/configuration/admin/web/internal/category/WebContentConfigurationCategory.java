@@ -25,22 +25,24 @@ import org.osgi.service.component.annotations.Component;
 public class WebContentConfigurationCategory implements ConfigurationCategory {
 
 	@Override
+	public String getCategoryIcon() {
+		return _CATEGORY_ICON;
+	}
+
+	@Override
+	public String getCategoryKey() {
+		return _CATEGORY_KEY;
+	}
+
+	@Override
 	public String getCategorySection() {
-		return _CATEGORY_SET_KEY;
+		return _CATEGORY_SECTION;
 	}
 
-	@Override
-	public String getIcon() {
-		return "web-content";
-	}
+	private static final String _CATEGORY_ICON = "web-content";
 
-	@Override
-	public String getKey() {
-		return _KEY;
-	}
+	private static final String _CATEGORY_KEY = "web-content";
 
-	private static final String _CATEGORY_SET_KEY = "content-management";
-
-	private static final String _KEY = "web-content";
+	private static final String _CATEGORY_SECTION = "content-management";
 
 }
