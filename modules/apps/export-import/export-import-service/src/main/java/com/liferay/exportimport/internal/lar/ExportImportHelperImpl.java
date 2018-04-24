@@ -257,6 +257,61 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 		return PortletIdCodec.decodePortletName(portletId);
 	}
 
+	public List<Portlet> getExportableSiteLevelPortlets(long companyId) {
+		return getExportableSiteLevelPortlets(companyId, false);
+	}
+
+	public List<Portlet> getExportableSiteLevelPortlets(
+		long companyId, boolean excludeDataAlwaysStaged) {
+
+		List<Portlet> dataSiteLevelPortlets = new ArrayList<>();
+
+		Map<Integer, List<Portlet>> rankedPortletsMap = new TreeMap<>();
+
+		List<Portlet> portlets = _portletLocalService.getPortlets(companyId);
+
+		for (Portlet portlet : portlets) {
+			if (!portlet.isActive()) {
+				continue;
+			}
+
+			PortletDataHandler portletDataHandler =
+				portlet.getPortletDataHandlerInstance();
+
+			if ((portletDataHandler == null) ||
+				!portletDataHandler.isDataSiteLevel() ||
+				(excludeDataAlwaysStaged &&
+				 portletDataHandler.isDataAlwaysStaged())) {
+
+				continue;
+			}
+
+			if (portlet.isPreferencesOwnedByGroup() &&
+				portlet.isPreferencesUniquePerLayout() &&
+				portlet.isFullPageDisplayable()) {
+
+				continue;
+			}
+
+			List<Portlet> rankedPortlets = rankedPortletsMap.get(
+				portletDataHandler.getRank());
+
+			if (rankedPortlets == null) {
+				rankedPortlets = new ArrayList<>();
+			}
+
+			rankedPortlets.add(portlet);
+
+			rankedPortletsMap.put(portletDataHandler.getRank(), rankedPortlets);
+		}
+
+		for (List<Portlet> rankedPortlets : rankedPortletsMap.values()) {
+			dataSiteLevelPortlets.addAll(rankedPortlets);
+		}
+
+		return dataSiteLevelPortlets;
+	}
+
 	/**
 	 * @deprecated As of 3.0.0, replaced by {@link
 	 *             #getExportPortletControlsMap(long, String, Map)}
