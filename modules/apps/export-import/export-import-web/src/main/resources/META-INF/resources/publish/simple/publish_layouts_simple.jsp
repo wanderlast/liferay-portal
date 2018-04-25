@@ -144,7 +144,7 @@ Map<String, String[]> parameterMap = (Map<String, String[]>)settingsMap.get("par
 								<%
 								Set<String> portletDataHandlerClassNames = new HashSet<String>();
 
-								List<Portlet> dataSiteLevelPortlets = ExportImportHelperUtil.getDataSiteLevelPortlets(company.getCompanyId(), false);
+								List<Portlet> dataSiteLevelPortlets = ExportImportHelperUtil.getExportableSiteLevelPortlets(company.getCompanyId(), false);
 
 								if (!dataSiteLevelPortlets.isEmpty()) {
 									for (Portlet portlet : dataSiteLevelPortlets) {
