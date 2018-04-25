@@ -257,10 +257,12 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 		return PortletIdCodec.decodePortletName(portletId);
 	}
 
+	@Override
 	public List<Portlet> getExportableSiteLevelPortlets(long companyId) {
 		return getExportableSiteLevelPortlets(companyId, false);
 	}
 
+	@Override
 	public List<Portlet> getExportableSiteLevelPortlets(
 		long companyId, boolean excludeDataAlwaysStaged) {
 

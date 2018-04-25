@@ -165,6 +165,11 @@ public interface ExportImportHelper {
 	public String getExportableRootPortletId(long companyId, String portletId)
 		throws Exception;
 
+	public List<Portlet> getExportableSiteLevelPortlets(long companyId);
+
+	public List<Portlet> getExportableSiteLevelPortlets(
+		long companyId, boolean excludeDataAlwaysStaged);
+
 	/**
 	 * @deprecated As of 7.0.0, replaced by {@link
 	 *             #getExportPortletControlsMap(long, String, Map)}

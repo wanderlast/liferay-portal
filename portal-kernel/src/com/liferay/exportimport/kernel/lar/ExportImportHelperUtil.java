@@ -115,6 +115,16 @@ public class ExportImportHelperUtil {
 			companyId, portletId);
 	}
 
+	public static List<Portlet> getExportableSiteLevelPortlets(long companyId) {
+		return _exportImportHelper.getExportableSiteLevelPortlets(companyId);
+	}
+
+	public static List<Portlet> getExportableSiteLevelPortlets(
+		long companyId, boolean excludeDataAlwaysStaged) {
+		return _exportImportHelper.getExportableSiteLevelPortlets(
+			companyId, excludeDataAlwaysStaged);
+	}
+
 	/**
 	 * @deprecated As of 7.0.0, replaced by {@link
 	 *             #getExportPortletControlsMap(long, String, Map)}
