@@ -4689,6 +4689,70 @@ to version 2.3.174.
 - [LPS-81555]: Update the [Liferay Source Formatter] dependency to version
 1.0.647.
 
+## 3.12.24 - 2018-05-31
+
+### Changed
+- [LPS-79679]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 2.3.175.
+- [LPS-79679]: Update the [Liferay Source Formatter] dependency to version
+1.0.648.
+
+## 3.12.25 - 2018-05-31
+
+### Changed
+- [LPS-81795]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 2.3.176.
+- [LPS-81795]: Update the [Liferay Source Formatter] dependency to version
+1.0.649.
+
+## 3.12.26 - 2018-06-01
+
+### Changed
+- [LPS-79679]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 2.3.177.
+- [LPS-79679]: Update the [Liferay Source Formatter] dependency to version
+1.0.650.
+
+## 3.12.27 - 2018-06-04
+
+### Changed
+- [LPS-81795]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 2.3.178.
+- [LPS-81795]: Update the [Liferay Source Formatter] dependency to version
+1.0.651.
+
+## 3.12.28 - 2018-06-04
+
+### Changed
+- [LPS-79919]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 2.3.179.
+- [LPS-79919]: Update the [Liferay Source Formatter] dependency to version
+1.0.652.
+- [LPS-81336]: Update the [Liferay Gradle Plugins Service Builder] dependency to
+version 2.1.39.
+- [LPS-81336]: Update the [Liferay Portal Tools Service Builder] dependency to
+version 1.0.222.
+
+## 3.12.29 - 2018-06-05
+
+### Changed
+- [LPS-81336]: Update the [Liferay Gradle Plugins Service Builder] dependency to
+version 2.1.40.
+- [LPS-81336]: Update the [Liferay Portal Tools Service Builder] dependency to
+version 1.0.223.
+
+## 3.12.30 - 2018-06-05
+
+### Changed
+- [LPS-82001]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 2.3.180.
+- [LPS-82001]: Update the [Liferay Source Formatter] dependency to version
+1.0.653.
+
+### Fixed
+- [LPS-75530]: Fix the log message for `ExecuteBndTask` so it displays the
+correct amount of time it took to build the file.
+
 [Gradle Bundle Plugin]: https://github.com/TomDmitriev/gradle-bundle-plugin
 [Liferay Alloy Taglib]: https://github.com/liferay/alloy-taglibs
 [Liferay Ant BND]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/ant-bnd
@@ -5078,7 +5142,10 @@ to version 2.3.174.
 [LPS-80840]: https://issues.liferay.com/browse/LPS-80840
 [LPS-80920]: https://issues.liferay.com/browse/LPS-80920
 [LPS-81106]: https://issues.liferay.com/browse/LPS-81106
+[LPS-81336]: https://issues.liferay.com/browse/LPS-81336
 [LPS-81404]: https://issues.liferay.com/browse/LPS-81404
 [LPS-81555]: https://issues.liferay.com/browse/LPS-81555
 [LPS-81635]: https://issues.liferay.com/browse/LPS-81635
+[LPS-81795]: https://issues.liferay.com/browse/LPS-81795
+[LPS-82001]: https://issues.liferay.com/browse/LPS-82001
 [LRDOCS-3023]: https://issues.liferay.com/browse/LRDOCS-3023

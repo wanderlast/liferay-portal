@@ -3682,6 +3682,60 @@ to version 1.0.4.
 - [LPS-81555]: Update the [Liferay Gradle Plugins] dependency to version
 3.12.23.
 
+## 5.4.22 - 2018-05-31
+
+### Changed
+- [LPS-79679]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.24.
+
+## 5.4.23 - 2018-05-31
+
+### Changed
+- [LPS-81795]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.25.
+
+## 5.4.24 - 2018-06-01
+
+### Added
+- [LPS-80944]: Show full JUnit log when running tests on Spring Boot and any
+Java project.
+
+### Changed
+- [LPS-79679]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.26.
+
+## 5.4.25 - 2018-06-04
+
+### Changed
+- [LPS-81795]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.27.
+- [LPS-81895]: Update the [Liferay Gradle Plugins Lang Merger] dependency to
+version 1.1.0.
+
+## 5.4.26 - 2018-06-04
+
+### Fixed
+- [LPS-67694]: Fix error when `-PsnapshotIfStale` is set and the latest snapshot
+of a module includes transitive dependencies.
+
+## 5.4.27 - 2018-06-04
+
+### Changed
+- [LPS-81336]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.28.
+
+## 5.4.28 - 2018-06-05
+
+### Changed
+- [LPS-81336]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.29.
+
+## 5.4.29 - 2018-06-05
+
+### Changed
+- [LPS-82001]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.30.
+
 [Find Security Bugs]: https://github.com/liferay/liferay-portal/tree/master/modules/third-party/com-h3xstream-findsecbugs
 [Gradle License Report]: https://github.com/jk1/Gradle-License-Report
 [Liferay CDN]: https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public
@@ -4091,9 +4145,13 @@ to version 1.0.4.
 [LPS-80944]: https://issues.liferay.com/browse/LPS-80944
 [LPS-80950]: https://issues.liferay.com/browse/LPS-80950
 [LPS-81106]: https://issues.liferay.com/browse/LPS-81106
+[LPS-81336]: https://issues.liferay.com/browse/LPS-81336
 [LPS-81404]: https://issues.liferay.com/browse/LPS-81404
 [LPS-81555]: https://issues.liferay.com/browse/LPS-81555
 [LPS-81635]: https://issues.liferay.com/browse/LPS-81635
+[LPS-81795]: https://issues.liferay.com/browse/LPS-81795
+[LPS-81895]: https://issues.liferay.com/browse/LPS-81895
+[LPS-82001]: https://issues.liferay.com/browse/LPS-82001
 [LRDOCS-2594]: https://issues.liferay.com/browse/LRDOCS-2594
 [LRDOCS-2841]: https://issues.liferay.com/browse/LRDOCS-2841
 [LRDOCS-2981]: https://issues.liferay.com/browse/LRDOCS-2981

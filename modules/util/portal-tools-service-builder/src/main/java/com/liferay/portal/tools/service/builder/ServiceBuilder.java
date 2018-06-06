@@ -3980,7 +3980,7 @@ public class ServiceBuilder {
 
 		String uadDirName = uadOutputPath.substring(0, index);
 
-		File file = new File(StringBundler.concat(uadDirName, "/bnd.bnd"));
+		File file = new File(uadDirName + "/bnd.bnd");
 
 		if (!file.exists()) {
 			ToolsUtil.writeFileRaw(file, content, _modifiedFileNames);
@@ -4124,8 +4124,7 @@ public class ServiceBuilder {
 		String uadDirName = uadOutputPath.substring(0, index);
 
 		File file = new File(
-			StringBundler.concat(
-				uadDirName, "/src/main/resources/content/Language.properties"));
+			uadDirName + "/src/main/resources/content/Language.properties");
 
 		if (!file.exists()) {
 			ToolsUtil.writeFileRaw(file, content, _modifiedFileNames);
@@ -4156,8 +4155,7 @@ public class ServiceBuilder {
 		String uadTestIntegrationDirName =
 			uadTestIntegrationOutputPath.substring(0, index);
 
-		File file = new File(
-			StringBundler.concat(uadTestIntegrationDirName, "/bnd.bnd"));
+		File file = new File(uadTestIntegrationDirName + "/bnd.bnd");
 
 		if (!file.exists()) {
 			ToolsUtil.writeFileRaw(file, content, _modifiedFileNames);
@@ -5487,6 +5485,8 @@ public class ServiceBuilder {
 			entityElement.attributeValue("uuid"));
 		boolean uuidAccessor = GetterUtil.getBoolean(
 			entityElement.attributeValue("uuid-accessor"));
+		boolean externalReferenceCode = GetterUtil.getBoolean(
+			entityElement.attributeValue("external-reference-code"));
 		boolean localService = GetterUtil.getBoolean(
 			entityElement.attributeValue("local-service"));
 		boolean remoteService = GetterUtil.getBoolean(
@@ -5607,14 +5607,7 @@ public class ServiceBuilder {
 
 		List<Element> columnElements = entityElement.elements("column");
 
-		if (uuid) {
-			Element columnElement = DocumentHelper.createElement("column");
-
-			columnElement.addAttribute("name", "uuid");
-			columnElement.addAttribute("type", "String");
-
-			columnElements.add(0, columnElement);
-		}
+		List<Element> derivedColumnElements = new ArrayList<>();
 
 		if (mvccEnabled && !columnElements.isEmpty()) {
 			Element columnElement = DocumentHelper.createElement("column");
@@ -5622,7 +5615,25 @@ public class ServiceBuilder {
 			columnElement.addAttribute("name", "mvccVersion");
 			columnElement.addAttribute("type", "long");
 
-			columnElements.add(0, columnElement);
+			derivedColumnElements.add(columnElement);
+		}
+
+		if (uuid) {
+			Element columnElement = DocumentHelper.createElement("column");
+
+			columnElement.addAttribute("name", "uuid");
+			columnElement.addAttribute("type", "String");
+
+			derivedColumnElements.add(columnElement);
+		}
+
+		if (externalReferenceCode) {
+			Element columnElement = DocumentHelper.createElement("column");
+
+			columnElement.addAttribute("name", "externalReferenceCode");
+			columnElement.addAttribute("type", "String");
+
+			derivedColumnElements.add(columnElement);
 		}
 
 		if (versioned) {
@@ -5631,7 +5642,7 @@ public class ServiceBuilder {
 			columnElement.addAttribute("name", "headId");
 			columnElement.addAttribute("type", "long");
 
-			columnElements.add(columnElement);
+			derivedColumnElements.add(columnElement);
 		}
 
 		Element localizedEntityElement = entityElement.element(
@@ -5643,8 +5654,10 @@ public class ServiceBuilder {
 			columnElement.addAttribute("name", "defaultLanguageId");
 			columnElement.addAttribute("type", "String");
 
-			columnElements.add(columnElement);
+			derivedColumnElements.add(columnElement);
 		}
+
+		columnElements.addAll(0, derivedColumnElements);
 
 		for (Element columnElement : columnElements) {
 			String columnName = columnElement.attributeValue("name");
@@ -5889,6 +5902,27 @@ public class ServiceBuilder {
 			finderElements.add(0, finderElement);
 		}
 
+		if (externalReferenceCode) {
+			if (entityColumns.contains(new EntityColumn("companyId"))) {
+				Element finderElement = DocumentHelper.createElement("finder");
+
+				finderElement.addAttribute("name", "C_ERC");
+				finderElement.addAttribute("return-type", entityName);
+
+				Element finderColumnElement = finderElement.addElement(
+					"finder-column");
+
+				finderColumnElement.addAttribute("name", "companyId");
+
+				finderColumnElement = finderElement.addElement("finder-column");
+
+				finderColumnElement.addAttribute(
+					"name", "externalReferenceCode");
+
+				finderElements.add(finderElement);
+			}
+		}
+
 		if (permissionedModel) {
 			Element finderElement = DocumentHelper.createElement("finder");
 
@@ -6063,15 +6097,16 @@ public class ServiceBuilder {
 
 		Entity entity = new Entity(
 			_packagePath, _apiPackagePath, _portletShortName, entityName,
-			humanName, tableName, alias, uuid, uuidAccessor, localService,
-			remoteService, persistenceClassName, finderClassName, dataSource,
-			sessionFactory, txManager, cacheEnabled, dynamicUpdateEnabled,
-			jsonEnabled, mvccEnabled, trashEnabled, uadApplicationName,
-			uadAutoDelete, uadOutputPath, uadPackagePath, deprecated,
-			pkEntityColumns, regularEntityColumns, blobEntityColumns,
-			collectionEntityColumns, entityColumns, entityOrder, entityFinders,
-			referenceEntities, unresolvedReferenceEntityNames,
-			txRequiredMethodNames, resourceActionModel);
+			humanName, tableName, alias, uuid, uuidAccessor,
+			externalReferenceCode, localService, remoteService,
+			persistenceClassName, finderClassName, dataSource, sessionFactory,
+			txManager, cacheEnabled, dynamicUpdateEnabled, jsonEnabled,
+			mvccEnabled, trashEnabled, uadApplicationName, uadAutoDelete,
+			uadOutputPath, uadPackagePath, deprecated, pkEntityColumns,
+			regularEntityColumns, blobEntityColumns, collectionEntityColumns,
+			entityColumns, entityOrder, entityFinders, referenceEntities,
+			unresolvedReferenceEntityNames, txRequiredMethodNames,
+			resourceActionModel);
 
 		_entities.add(entity);
 
