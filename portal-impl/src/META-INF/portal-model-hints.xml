@@ -207,6 +207,13 @@
 		</field>
 		<field name="currentId" type="long" />
 	</model>
+	<model name="com.liferay.document.library.kernel.model.DLEncryption">
+		<field name="fileEncryptionId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="fileEntryId" type="long" />
+		<field name="fileVersionId" type="long" />
+		<field name="status" type="String" />
+	</model>
 	<model name="com.liferay.document.library.kernel.model.DLFileEntry">
 		<field name="uuid" type="String" />
 		<field name="fileEntryId" type="long" />

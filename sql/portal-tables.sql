@@ -272,6 +272,14 @@ create table Country (
 	active_ BOOLEAN
 );
 
+create table DLEncryption (
+	fileEncryptionId LONG not null primary key,
+	groupId LONG,
+	fileEntryId LONG,
+	fileVersionId LONG,
+	status VARCHAR(75) null
+);
+
 create table DLFileEntry (
 	uuid_ VARCHAR(75) null,
 	fileEntryId LONG not null primary key,

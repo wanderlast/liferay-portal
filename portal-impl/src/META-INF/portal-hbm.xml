@@ -11,6 +11,7 @@
 	<import class="com.liferay.asset.kernel.model.AssetTag" />
 	<import class="com.liferay.asset.kernel.model.AssetVocabulary" />
 	<import class="com.liferay.counter.kernel.model.Counter" />
+	<import class="com.liferay.document.library.kernel.model.DLEncryption" />
 	<import class="com.liferay.document.library.kernel.model.DLFileEntry" />
 	<import class="com.liferay.document.library.kernel.model.DLFileEntryMetadata" />
 	<import class="com.liferay.document.library.kernel.model.DLFileEntryType" />
@@ -1230,6 +1231,15 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" column="settings_" name="settings" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="lastPublishDate" type="org.hibernate.type.TimestampType" />
+	</class>
+	<class name="com.liferay.portlet.documentlibrary.model.impl.DLEncryptionImpl" table="DLEncryption">
+		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="fileEncryptionId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="groupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="fileEntryId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="fileVersionId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="status" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
 	<class name="com.liferay.portlet.documentlibrary.model.impl.DLFileEntryImpl" table="DLFileEntry">
 		<id access="com.liferay.portal.dao.orm.hibernate.LiferayPropertyAccessor" name="fileEntryId" type="long">
