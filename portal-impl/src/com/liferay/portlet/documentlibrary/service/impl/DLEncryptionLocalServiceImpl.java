@@ -75,6 +75,8 @@ public class DLEncryptionLocalServiceImpl
 
 		dlEncryption.setGroupId(groupId);
 
+		dlEncryptionPersistence.update(dlEncryption);
+
 		return dlEncryption;
 	}
 
@@ -116,6 +118,19 @@ public class DLEncryptionLocalServiceImpl
 			true);
 
 		return getDLEncryptionStatus(fileVersion);
+	}
+
+	public DLEncryption updateDLEncryption(long dlEncryptionId, long fileEntryId, long fileVersionId, String status) {
+		DLEncryption dlEncryption = DLEncryptionUtil.fetchByPrimaryKey(
+			dlEncryptionId);
+
+		dlEncryption.setFileEntryId(fileEntryId);
+		dlEncryption.setFileVersionId(fileVersionId);
+		dlEncryption.setStatus(status);
+
+		dlEncryptionPersistence.update(dlEncryption);
+
+		return dlEncryption;
 	}
 
 }

@@ -683,6 +683,8 @@ public class PDFProcessorImpl
 				"Unable to decrypt PDF document for file version " +
 					fileVersion.getFileVersionId());
 
+			dlEncryption =
+
 			return;
 		}
 

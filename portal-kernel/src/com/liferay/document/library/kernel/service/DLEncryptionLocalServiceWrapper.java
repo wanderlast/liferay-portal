@@ -52,6 +52,14 @@ public class DLEncryptionLocalServiceWrapper implements DLEncryptionLocalService
 	*/
 	@Override
 	public com.liferay.document.library.kernel.model.DLEncryption addDLEncryption(
+		long fileEntryId, long fileVersionId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _dlEncryptionLocalService.addDLEncryption(fileEntryId,
+			fileVersionId);
+	}
+
+	@Override
+	public com.liferay.document.library.kernel.model.DLEncryption addDLEncryption(
 		long fileEntryId, long fileVersionId, String status)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _dlEncryptionLocalService.addDLEncryption(fileEntryId,

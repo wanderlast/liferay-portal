@@ -76,6 +76,9 @@ public interface DLEncryptionLocalService extends BaseLocalService,
 	*
 	* Never reference this class directly. Always use {@link DLEncryptionLocalServiceUtil} to access the document library encryption local service.
 	*/
+	public DLEncryption addDLEncryption(long fileEntryId, long fileVersionId)
+		throws PortalException;
+
 	public DLEncryption addDLEncryption(long fileEntryId, long fileVersionId,
 		String status) throws PortalException;
 

@@ -58,6 +58,12 @@ public class DLEncryptionLocalServiceUtil {
 	* Never reference this class directly. Always use {@link DLEncryptionLocalServiceUtil} to access the document library encryption local service.
 	*/
 	public static com.liferay.document.library.kernel.model.DLEncryption addDLEncryption(
+		long fileEntryId, long fileVersionId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().addDLEncryption(fileEntryId, fileVersionId);
+	}
+
+	public static com.liferay.document.library.kernel.model.DLEncryption addDLEncryption(
 		long fileEntryId, long fileVersionId, String status)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().addDLEncryption(fileEntryId, fileVersionId, status);
