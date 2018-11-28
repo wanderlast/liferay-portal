@@ -17,7 +17,6 @@ package com.liferay.document.library.kernel.service;
 import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.document.library.kernel.model.DLEncryption;
-import com.liferay.document.library.kernel.model.DLFileVersion;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -26,6 +25,7 @@ import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.PersistedModel;
+import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalService;
@@ -181,7 +181,7 @@ public interface DLEncryptionLocalService extends BaseLocalService,
 		Projection projection);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public DLEncryption fetchDLEncryption(DLFileVersion fileVersion);
+	public DLEncryption fetchDLEncryption(FileVersion fileVersion);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public DLEncryption fetchDLEncryption(long fileEncryptionId);
@@ -223,7 +223,7 @@ public interface DLEncryptionLocalService extends BaseLocalService,
 	public int getDLEncryptionsCount();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public String getDLEncryptionStatus(DLFileVersion fileVersion);
+	public String getDLEncryptionStatus(FileVersion fileVersion);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public String getDLEncryptionStatus(long fileEntryId)

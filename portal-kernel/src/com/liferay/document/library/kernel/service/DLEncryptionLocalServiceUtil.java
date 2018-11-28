@@ -186,7 +186,7 @@ public class DLEncryptionLocalServiceUtil {
 	}
 
 	public static com.liferay.document.library.kernel.model.DLEncryption fetchDLEncryption(
-		com.liferay.document.library.kernel.model.DLFileVersion fileVersion) {
+		com.liferay.portal.kernel.repository.model.FileVersion fileVersion) {
 		return getService().fetchDLEncryption(fileVersion);
 	}
 
@@ -238,7 +238,7 @@ public class DLEncryptionLocalServiceUtil {
 	}
 
 	public static String getDLEncryptionStatus(
-		com.liferay.document.library.kernel.model.DLFileVersion fileVersion) {
+		com.liferay.portal.kernel.repository.model.FileVersion fileVersion) {
 		return getService().getDLEncryptionStatus(fileVersion);
 	}
 

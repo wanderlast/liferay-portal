@@ -15,11 +15,12 @@
 package com.liferay.portlet.documentlibrary.service.impl;
 
 import com.liferay.document.library.kernel.model.DLEncryption;
+import com.liferay.document.library.kernel.model.DLEncryptionConstants;
 import com.liferay.document.library.kernel.model.DLFileEntry;
-import com.liferay.document.library.kernel.model.DLFileVersion;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.persistence.DLEncryptionUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portlet.documentlibrary.service.base.DLEncryptionLocalServiceBaseImpl;
 
 import java.util.List;
@@ -46,6 +47,14 @@ public class DLEncryptionLocalServiceImpl
 	 *
 	 * Never reference this class directly. Always use {@link com.liferay.document.library.kernel.service.DLEncryptionLocalServiceUtil} to access the document library encryption local service.
 	 */
+	public DLEncryption addDLEncryption(long fileEntryId, long fileVersionId)
+		throws PortalException {
+
+		return addDLEncryption(
+			fileEntryId, fileVersionId,
+			DLEncryptionConstants.STATUS_NOT_CREATED);
+	}
+
 	public DLEncryption addDLEncryption(
 			long fileEntryId, long fileVersionId, String status)
 		throws PortalException {
@@ -69,7 +78,7 @@ public class DLEncryptionLocalServiceImpl
 		return dlEncryption;
 	}
 
-	public DLEncryption fetchDLEncryption(DLFileVersion fileVersion) {
+	public DLEncryption fetchDLEncryption(FileVersion fileVersion) {
 		long fileVersionId = fileVersion.getFileVersionId();
 
 		List<DLEncryption> dlEncryptionList =
@@ -82,7 +91,7 @@ public class DLEncryptionLocalServiceImpl
 		return dlEncryptionList.get(0);
 	}
 
-	public String getDLEncryptionStatus(DLFileVersion fileVersion) {
+	public String getDLEncryptionStatus(FileVersion fileVersion) {
 		long fileVersionId = fileVersion.getFileVersionId();
 
 		List<DLEncryption> dlEncryptionList =
@@ -103,7 +112,8 @@ public class DLEncryptionLocalServiceImpl
 		DLFileEntry fileEntry = DLFileEntryLocalServiceUtil.getFileEntry(
 			fileEntryId);
 
-		DLFileVersion fileVersion = fileEntry.getLatestFileVersion(true);
+		FileVersion fileVersion = (FileVersion)fileEntry.getLatestFileVersion(
+			true);
 
 		return getDLEncryptionStatus(fileVersion);
 	}

@@ -16,7 +16,10 @@ package com.liferay.portlet.documentlibrary.util;
 
 import com.liferay.document.library.kernel.document.conversion.DocumentConversionUtil;
 import com.liferay.document.library.kernel.exception.NoSuchFileEntryException;
+import com.liferay.document.library.kernel.model.DLEncryption;
 import com.liferay.document.library.kernel.model.DLProcessorConstants;
+import com.liferay.document.library.kernel.service.DLEncryptionLocalService;
+import com.liferay.document.library.kernel.service.DLEncryptionLocalServiceUtil;
 import com.liferay.document.library.kernel.store.DLStoreUtil;
 import com.liferay.document.library.kernel.util.DLPreviewableProcessor;
 import com.liferay.document.library.kernel.util.DLUtil;
@@ -659,6 +662,14 @@ public class PDFProcessorImpl
 
 	private void _generateImagesPB(FileVersion fileVersion, File file)
 		throws Exception {
+
+		DLEncryption dlEncryption =
+			DLEncryptionLocalServiceUtil.fetchDLEncryption(fileVersion);
+
+		if(dlEncryption == null) {
+			dlEncryption = DLEncryptionLocalServiceUtil.addDLEncryption(
+				fileVersion.getFileEntryId(), fileVersion.getFileVersionId());
+		}
 
 		String tempFileId = DLUtil.getTempFileId(
 			fileVersion.getFileEntryId(), fileVersion.getVersion());

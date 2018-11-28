@@ -193,7 +193,7 @@ public class DLEncryptionLocalServiceWrapper implements DLEncryptionLocalService
 
 	@Override
 	public com.liferay.document.library.kernel.model.DLEncryption fetchDLEncryption(
-		com.liferay.document.library.kernel.model.DLFileVersion fileVersion) {
+		com.liferay.portal.kernel.repository.model.FileVersion fileVersion) {
 		return _dlEncryptionLocalService.fetchDLEncryption(fileVersion);
 	}
 
@@ -251,7 +251,7 @@ public class DLEncryptionLocalServiceWrapper implements DLEncryptionLocalService
 
 	@Override
 	public String getDLEncryptionStatus(
-		com.liferay.document.library.kernel.model.DLFileVersion fileVersion) {
+		com.liferay.portal.kernel.repository.model.FileVersion fileVersion) {
 		return _dlEncryptionLocalService.getDLEncryptionStatus(fileVersion);
 	}
 
