@@ -17,8 +17,8 @@ package com.liferay.portlet.documentlibrary.util;
 import com.liferay.document.library.kernel.document.conversion.DocumentConversionUtil;
 import com.liferay.document.library.kernel.exception.NoSuchFileEntryException;
 import com.liferay.document.library.kernel.model.DLEncryption;
+import com.liferay.document.library.kernel.model.DLEncryptionConstants;
 import com.liferay.document.library.kernel.model.DLProcessorConstants;
-import com.liferay.document.library.kernel.service.DLEncryptionLocalService;
 import com.liferay.document.library.kernel.service.DLEncryptionLocalServiceUtil;
 import com.liferay.document.library.kernel.store.DLStoreUtil;
 import com.liferay.document.library.kernel.util.DLPreviewableProcessor;
@@ -666,7 +666,7 @@ public class PDFProcessorImpl
 		DLEncryption dlEncryption =
 			DLEncryptionLocalServiceUtil.fetchDLEncryption(fileVersion);
 
-		if(dlEncryption == null) {
+		if (dlEncryption == null) {
 			dlEncryption = DLEncryptionLocalServiceUtil.addDLEncryption(
 				fileVersion.getFileEntryId(), fileVersion.getFileVersionId());
 		}
@@ -683,7 +683,9 @@ public class PDFProcessorImpl
 				"Unable to decrypt PDF document for file version " +
 					fileVersion.getFileVersionId());
 
-			dlEncryption =
+			dlEncryption.setStatus(DLEncryptionConstants.STATUS_FAILURE);
+
+			DLEncryptionLocalServiceUtil.updateDLEncryption(dlEncryption);
 
 			return;
 		}
@@ -788,6 +790,10 @@ public class PDFProcessorImpl
 
 				_log.error(errorMessage);
 
+				dlEncryption.setStatus(DLEncryptionConstants.STATUS_FAILURE);
+
+				DLEncryptionLocalServiceUtil.updateDLEncryption(dlEncryption);
+
 				throw te;
 			}
 			catch (Exception e) {
@@ -829,6 +835,10 @@ public class PDFProcessorImpl
 						fileVersion.getCompanyId(), PREVIEW_PATH,
 						getPreviewFilePath(fileVersion, index + 1),
 						previewFile);
+
+					dlEncryption.setStatus(DLEncryptionConstants.STATUS_CREATED);
+
+					DLEncryptionLocalServiceUtil.updateDLEncryption(dlEncryption);
 				}
 				finally {
 					FileUtil.delete(previewFile);

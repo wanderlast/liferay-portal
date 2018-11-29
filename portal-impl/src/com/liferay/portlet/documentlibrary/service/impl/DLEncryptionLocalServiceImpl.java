@@ -120,7 +120,10 @@ public class DLEncryptionLocalServiceImpl
 		return getDLEncryptionStatus(fileVersion);
 	}
 
-	public DLEncryption updateDLEncryption(long dlEncryptionId, long fileEntryId, long fileVersionId, String status) {
+	public DLEncryption updateDLEncryption(
+		long dlEncryptionId, long fileEntryId, long fileVersionId,
+		String status) {
+
 		DLEncryption dlEncryption = DLEncryptionUtil.fetchByPrimaryKey(
 			dlEncryptionId);
 

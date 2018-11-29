@@ -21,7 +21,8 @@ public class DLEncryptionConstants {
 
 	public static final String STATUS_CREATED = "Created";
 
+	public static final String STATUS_FAILURE = "Failure";
+
 	public static final String STATUS_NOT_CREATED = "Not Created";
 
-	public static final String STATUS_FAILURE = "Failure";
 }
