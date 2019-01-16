@@ -1504,10 +1504,6 @@ public class JournalPortlet extends MVCPortlet {
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		if (layoutPageTemplateEntryId == 0) {
-			return;
-		}
-
 		long classNameId = _portal.getClassNameId(JournalArticle.class);
 		long classPK = article.getResourcePrimKey();
 
@@ -1532,15 +1528,17 @@ public class JournalPortlet extends MVCPortlet {
 				layoutPageTemplateEntryId, displayPageType);
 		}
 
-		LayoutPageTemplateEntry layoutPageTemplateEntry =
-			_layoutPageTemplateEntryLocalService.getLayoutPageTemplateEntry(
-				layoutPageTemplateEntryId);
+		if (layoutPageTemplateEntryId > 0) {
+			LayoutPageTemplateEntry layoutPageTemplateEntry =
+				_layoutPageTemplateEntryLocalService.getLayoutPageTemplateEntry(
+					layoutPageTemplateEntryId);
 
-		if (layoutPageTemplateEntry != null) {
-			layoutPageTemplateEntry.setModifiedDate(new Date());
+			if (layoutPageTemplateEntry != null) {
+				layoutPageTemplateEntry.setModifiedDate(new Date());
 
-			_layoutPageTemplateEntryLocalService.updateLayoutPageTemplateEntry(
-				layoutPageTemplateEntry);
+				_layoutPageTemplateEntryLocalService.
+					updateLayoutPageTemplateEntry(layoutPageTemplateEntry);
+			}
 		}
 	}
 
