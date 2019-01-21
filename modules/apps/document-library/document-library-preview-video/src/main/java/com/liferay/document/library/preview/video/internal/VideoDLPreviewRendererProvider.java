@@ -33,7 +33,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.util.PropsValues;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -169,7 +169,7 @@ public class VideoDLPreviewRendererProvider
 			}
 		}
 		else {
-			return Arrays.asList(videoPosterURL);
+			return Collections.singletonList(videoPosterURL);
 		}
 	}
 
