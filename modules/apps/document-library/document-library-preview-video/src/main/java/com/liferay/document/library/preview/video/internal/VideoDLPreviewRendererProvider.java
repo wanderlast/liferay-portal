@@ -24,6 +24,7 @@ import com.liferay.document.library.preview.exception.DLFileEntryPreviewGenerati
 import com.liferay.document.library.preview.exception.DLPreviewGenerationInProcessException;
 import com.liferay.document.library.preview.exception.DLPreviewSizeException;
 import com.liferay.document.library.preview.video.internal.constants.DLPreviewVideoWebKeys;
+import com.liferay.document.library.service.DLFileEntryPreviewLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -48,10 +49,10 @@ public class VideoDLPreviewRendererProvider
 	implements DLPreviewRendererProvider {
 
 	public VideoDLPreviewRendererProvider(
-		DLFileEntryPreviewHandler dlFileEntryPreviewHandler,
+		DLFileEntryPreviewLocalService dlFileEntryPreviewLocalService,
 		ServletContext servletContext) {
 
-		_dlFileEntryPreviewHandler = dlFileEntryPreviewHandler;
+		_dlFileEntryPreviewLocalService = dlFileEntryPreviewLocalService;
 		_servletContext = servletContext;
 	}
 
@@ -97,12 +98,11 @@ public class VideoDLPreviewRendererProvider
 	protected void checkForPreviewGenerationExceptions(FileVersion fileVersion)
 		throws PortalException {
 
-		long fileEntryPreviewId =
-			_dlFileEntryPreviewHandler.getDLFileEntryPreviewId(
+		if (_dlFileEntryPreviewLocalService.hasDLFileEntryPreview(
 				fileVersion.getFileEntryId(), fileVersion.getFileVersionId(),
-				DLFileEntryPreviewHandler.DLFileEntryPreviewType.FAIL);
+				DLFileEntryPreviewHandler.
+					DLFileEntryPreviewType.FAIL.toInteger())) {
 
-		if (fileEntryPreviewId > 0) {
 			throw new DLFileEntryPreviewGenerationException();
 		}
 
@@ -182,7 +182,8 @@ public class VideoDLPreviewRendererProvider
 			"&videoThumbnail=1");
 	}
 
-	private final DLFileEntryPreviewHandler _dlFileEntryPreviewHandler;
+	private final DLFileEntryPreviewLocalService
+		_dlFileEntryPreviewLocalService;
 	private final ServletContext _servletContext;
 
 }

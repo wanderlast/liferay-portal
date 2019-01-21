@@ -14,9 +14,9 @@
 
 package com.liferay.document.library.preview.video.internal;
 
-import com.liferay.document.library.kernel.service.DLFileEntryPreviewHandler;
 import com.liferay.document.library.kernel.util.VideoProcessorUtil;
 import com.liferay.document.library.preview.DLPreviewRendererProvider;
+import com.liferay.document.library.service.DLFileEntryPreviewLocalService;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 
 import java.util.Dictionary;
@@ -51,7 +51,7 @@ public class VideoDLPreviewRendererProviderFactory {
 			bundleContext.registerService(
 				DLPreviewRendererProvider.class,
 				new VideoDLPreviewRendererProvider(
-					_dlFileEntryPreviewHandler, _servletContext),
+					_dlFileEntryPreviewLocalService, _servletContext),
 				properties);
 	}
 
@@ -61,7 +61,7 @@ public class VideoDLPreviewRendererProviderFactory {
 	}
 
 	@Reference
-	private DLFileEntryPreviewHandler _dlFileEntryPreviewHandler;
+	private DLFileEntryPreviewLocalService _dlFileEntryPreviewLocalService;
 
 	private ServiceRegistration<DLPreviewRendererProvider>
 		_dlPreviewRendererProviderServiceRegistration;
