@@ -3929,21 +3929,19 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		String newLanguageIds = typeSettingsProperties.getProperty(
 			PropsKeys.LOCALES);
 
-		if (Validator.isNotNull(newLanguageIds)) {
-			UnicodeProperties oldTypeSettingsProperties =
-				group.getTypeSettingsProperties();
+		UnicodeProperties oldTypeSettingsProperties =
+			group.getTypeSettingsProperties();
 
-			String oldLanguageIds = oldTypeSettingsProperties.getProperty(
-				PropsKeys.LOCALES, StringPool.BLANK);
+		String oldLanguageIds = oldTypeSettingsProperties.getProperty(
+			PropsKeys.LOCALES, StringPool.BLANK);
 
-			String defaultLanguageId = typeSettingsProperties.getProperty(
-				"languageId", LocaleUtil.toLanguageId(LocaleUtil.getDefault()));
+		String defaultLanguageId = typeSettingsProperties.getProperty(
+			"languageId", LocaleUtil.toLanguageId(LocaleUtil.getDefault()));
 
-			validateLanguageIds(defaultLanguageId, newLanguageIds);
+		validateLanguageIds(defaultLanguageId, newLanguageIds);
 
-			if (!Objects.equals(oldLanguageIds, newLanguageIds)) {
-				LanguageUtil.resetAvailableGroupLocales(groupId);
-			}
+		if (!Objects.equals(oldLanguageIds, newLanguageIds)) {
+			LanguageUtil.resetAvailableGroupLocales(groupId);
 		}
 
 		group.setTypeSettings(typeSettings);
@@ -5125,6 +5123,19 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 		String[] languageIdsArray = StringUtil.split(languageIds);
 
+		if (ArrayUtil.isEmpty(languageIdsArray) ||
+			!ArrayUtil.contains(languageIdsArray, defaultLanguageId)) {
+
+			LocaleException le = new LocaleException(
+				LocaleException.TYPE_DEFAULT);
+
+			le.setSourceAvailableLocales(LanguageUtil.getAvailableLocales());
+			le.setTargetAvailableLocales(
+				Arrays.asList(LocaleUtil.fromLanguageIds(languageIdsArray)));
+
+			throw le;
+		}
+
 		for (String languageId : languageIdsArray) {
 			if (!LanguageUtil.isAvailableLocale(
 					LocaleUtil.fromLanguageId(languageId))) {
@@ -5140,17 +5151,6 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 				throw le;
 			}
-		}
-
-		if (!ArrayUtil.contains(languageIdsArray, defaultLanguageId)) {
-			LocaleException le = new LocaleException(
-				LocaleException.TYPE_DEFAULT);
-
-			le.setSourceAvailableLocales(LanguageUtil.getAvailableLocales());
-			le.setTargetAvailableLocales(
-				Arrays.asList(LocaleUtil.fromLanguageIds(languageIdsArray)));
-
-			throw le;
 		}
 	}
 
