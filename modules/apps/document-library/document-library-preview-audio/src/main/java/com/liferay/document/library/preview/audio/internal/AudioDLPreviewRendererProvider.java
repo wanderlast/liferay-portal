@@ -14,7 +14,7 @@
 
 package com.liferay.document.library.preview.audio.internal;
 
-import com.liferay.document.library.constants.DLFileEntryPreviewConstants;
+import com.liferay.document.library.constants.FileVersionPreviewConstants;
 import com.liferay.document.library.kernel.util.AudioProcessorUtil;
 import com.liferay.document.library.kernel.util.DLProcessorRegistryUtil;
 import com.liferay.document.library.kernel.util.DLUtil;
@@ -24,7 +24,7 @@ import com.liferay.document.library.preview.audio.internal.constants.DLPreviewAu
 import com.liferay.document.library.preview.exception.DLFileEntryPreviewGenerationException;
 import com.liferay.document.library.preview.exception.DLPreviewGenerationInProcessException;
 import com.liferay.document.library.preview.exception.DLPreviewSizeException;
-import com.liferay.document.library.service.DLFileEntryPreviewLocalService;
+import com.liferay.document.library.service.FileVersionPreviewLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -48,10 +48,10 @@ public class AudioDLPreviewRendererProvider
 	implements DLPreviewRendererProvider {
 
 	public AudioDLPreviewRendererProvider(
-		DLFileEntryPreviewLocalService dlFileEntryPreviewLocalService,
+		FileVersionPreviewLocalService fileVersionPreviewLocalService,
 		ServletContext servletContext) {
 
-		_dlFileEntryPreviewLocalService = dlFileEntryPreviewLocalService;
+		_fileVersionPreviewLocalService = fileVersionPreviewLocalService;
 		_servletContext = servletContext;
 	}
 
@@ -91,9 +91,9 @@ public class AudioDLPreviewRendererProvider
 	protected void checkForPreviewGenerationExceptions(FileVersion fileVersion)
 		throws PortalException {
 
-		if (_dlFileEntryPreviewLocalService.hasDLFileEntryPreview(
+		if (_fileVersionPreviewLocalService.hasFileVersionPreview(
 				fileVersion.getFileEntryId(), fileVersion.getFileVersionId(),
-				DLFileEntryPreviewConstants.FAILURE)) {
+				FileVersionPreviewConstants.FAILURE)) {
 
 			throw new DLFileEntryPreviewGenerationException();
 		}
@@ -153,8 +153,8 @@ public class AudioDLPreviewRendererProvider
 		return previewFileURLs;
 	}
 
-	private final DLFileEntryPreviewLocalService
-		_dlFileEntryPreviewLocalService;
+	private final FileVersionPreviewLocalService
+		_fileVersionPreviewLocalService;
 	private final ServletContext _servletContext;
 
 }

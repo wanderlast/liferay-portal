@@ -16,7 +16,7 @@ package com.liferay.document.library.preview.video.internal;
 
 import com.liferay.document.library.kernel.util.VideoProcessorUtil;
 import com.liferay.document.library.preview.DLPreviewRendererProvider;
-import com.liferay.document.library.service.DLFileEntryPreviewLocalService;
+import com.liferay.document.library.service.FileVersionPreviewLocalService;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 
 import java.util.Dictionary;
@@ -51,7 +51,7 @@ public class VideoDLPreviewRendererProviderFactory {
 			bundleContext.registerService(
 				DLPreviewRendererProvider.class,
 				new VideoDLPreviewRendererProvider(
-					_dlFileEntryPreviewLocalService, _servletContext),
+					_fileVersionPreviewLocalService, _servletContext),
 				properties);
 	}
 
@@ -60,11 +60,11 @@ public class VideoDLPreviewRendererProviderFactory {
 		_dlPreviewRendererProviderServiceRegistration.unregister();
 	}
 
-	@Reference
-	private DLFileEntryPreviewLocalService _dlFileEntryPreviewLocalService;
-
 	private ServiceRegistration<DLPreviewRendererProvider>
 		_dlPreviewRendererProviderServiceRegistration;
+
+	@Reference
+	private FileVersionPreviewLocalService _fileVersionPreviewLocalService;
 
 	@Reference(
 		target = "(osgi.web.symbolicname=com.liferay.document.library.preview.video)"
