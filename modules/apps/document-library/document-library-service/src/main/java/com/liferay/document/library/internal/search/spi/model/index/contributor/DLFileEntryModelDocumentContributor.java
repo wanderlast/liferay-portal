@@ -26,6 +26,7 @@ import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
@@ -36,6 +37,8 @@ import com.liferay.portal.kernel.search.RelatedEntryIndexerRegistry;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.Localization;
+import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -101,18 +104,22 @@ public class DLFileEntryModelDocumentContributor
 		try {
 			DLFileVersion dlFileVersion = dlFileEntry.getFileVersion();
 
+			Localization localization = getLocalization();
+
+			String[] languageIds = getAvailableLanguageIds(dlFileEntry);
+
 			if (indexContent) {
 				if (is != null) {
 					try {
-						Locale defaultLocale = portal.getSiteDefaultLocale(
-							dlFileEntry.getGroupId());
+						for (String languageId : languageIds) {
+							String localizedField =
+								localization.getLocalizedName(
+									Field.CONTENT, languageId);
 
-						String localizedField = Field.getLocalizedName(
-							defaultLocale.toString(), Field.CONTENT);
-
-						document.addFile(
-							localizedField, is, dlFileEntry.getTitle(),
-							PropsValues.DL_FILE_INDEXING_MAX_SIZE);
+							document.addFile(
+								localizedField, is, dlFileEntry.getTitle(),
+								PropsValues.DL_FILE_INDEXING_MAX_SIZE);
+						}
 					}
 					catch (IOException ioe) {
 						if (_log.isWarnEnabled()) {
@@ -129,20 +136,28 @@ public class DLFileEntryModelDocumentContributor
 
 			document.addKeyword(
 				Field.CLASS_TYPE_ID, dlFileEntry.getFileEntryTypeId());
-			document.addText(Field.DESCRIPTION, dlFileEntry.getDescription());
 			document.addKeyword(Field.FOLDER_ID, dlFileEntry.getFolderId());
 			document.addKeyword(Field.HIDDEN, dlFileEntry.isInHiddenFolder());
 			document.addText(
 				Field.PROPERTIES, dlFileEntry.getLuceneProperties());
 			document.addKeyword(Field.STATUS, dlFileVersion.getStatus());
 
-			String title = dlFileEntry.getTitle();
+			for (String languageId : languageIds) {
+				document.addText(
+					localization.getLocalizedName(
+						Field.DESCRIPTION, languageId),
+					dlFileEntry.getDescription());
 
-			if (dlFileEntry.isInTrash()) {
-				title = trashHelper.getOriginalTitle(title);
+				String title = dlFileEntry.getTitle();
+
+				if (dlFileEntry.isInTrash()) {
+					title = trashHelper.getOriginalTitle(title);
+				}
+
+				document.addText(
+					localization.getLocalizedName(Field.TITLE, languageId),
+					title);
 			}
-
-			document.addText(Field.TITLE, title);
 
 			document.addKeyword(
 				Field.TREE_PATH,
@@ -271,6 +286,28 @@ public class DLFileEntryModelDocumentContributor
 		return sb.toString();
 	}
 
+	protected String[] getAvailableLanguageIds(DLFileEntry dlFileEntry) {
+		if (_availableLanguageIds != null) {
+			return _availableLanguageIds;
+		}
+
+		_availableLanguageIds = LocaleUtil.toLanguageIds(
+			LanguageUtil.getAvailableLocales(dlFileEntry.getGroupId()));
+
+		return _availableLanguageIds;
+	}
+
+	protected Localization getLocalization() {
+
+		// See LPS-72507
+
+		if (_localization != null) {
+			return _localization;
+		}
+
+		return LocalizationUtil.getLocalization();
+	}
+
 	@Reference
 	protected DDMStructureManager ddmStructureManager;
 
@@ -291,5 +328,8 @@ public class DLFileEntryModelDocumentContributor
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		DLFileEntryModelDocumentContributor.class);
+
+	private String[] _availableLanguageIds;
+	private Localization _localization;
 
 }
