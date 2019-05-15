@@ -41,16 +41,19 @@ public class DLFileEntrySearchRegistrar {
 			DLFileEntry.class, bundleContext,
 			modelSearchDefinition -> {
 				modelSearchDefinition.setDefaultSelectedFieldNames(
-					Field.ASSET_TAG_NAMES, Field.COMPANY_ID, Field.CONTENT,
+					Field.ASSET_TAG_NAMES, Field.COMPANY_ID,
 					Field.ENTRY_CLASS_NAME, Field.ENTRY_CLASS_PK,
 					Field.GROUP_ID, Field.MODIFIED_DATE, Field.SCOPE_GROUP_ID,
-					Field.TITLE, Field.UID);
+					Field.UID);
+				modelSearchDefinition.setDefaultSelectedLocalizedFieldNames(
+					Field.CONTENT, Field.TITLE);
 				modelSearchDefinition.setModelIndexWriteContributor(
 					modelIndexWriterContributor);
 				modelSearchDefinition.setModelVisibilityContributor(
 					modelVisibilityContributor);
 				modelSearchDefinition.setModelSummaryContributor(
 					modelSummaryContributor);
+				modelSearchDefinition.setSelectAllLocales(true);
 			});
 	}
 
