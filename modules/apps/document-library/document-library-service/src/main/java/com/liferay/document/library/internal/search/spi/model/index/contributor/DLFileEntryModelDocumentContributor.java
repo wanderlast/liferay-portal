@@ -119,6 +119,8 @@ public class DLFileEntryModelDocumentContributor
 							document.addFile(
 								localizedField, is, dlFileEntry.getTitle(),
 								PropsValues.DL_FILE_INDEXING_MAX_SIZE);
+
+							is = dlFileVersion.getContentStream(false);
 						}
 					}
 					catch (IOException ioe) {
