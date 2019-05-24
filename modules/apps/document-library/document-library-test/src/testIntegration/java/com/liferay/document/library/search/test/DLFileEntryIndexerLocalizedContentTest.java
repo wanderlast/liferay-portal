@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.SearchContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.search.test.util.FieldValuesAssert;
 import com.liferay.portal.service.test.ServiceTestUtil;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
@@ -135,6 +136,21 @@ public class DLFileEntryIndexerLocalizedContentTest {
 	}
 
 	@Test
+	public void testJapaneseTitle() throws Exception {
+		String title = "平家物語";
+
+		addFileEntry(title);
+
+		String searchTerm = "平家";
+
+		Document document = _search(searchTerm, LocaleUtil.JAPAN);
+
+		FieldValuesAssert.assertFieldValues(
+			Collections.singletonMap(
+				"title_ja_JP", "平家物語"), "title", document, searchTerm);
+	}
+
+	@Test
 	public void testSiteLocale() throws Exception {
 		Group testGroup = GroupTestUtil.addGroup();
 
@@ -152,10 +168,10 @@ public class DLFileEntryIndexerLocalizedContentTest {
 			addFileEntry("locale_ja.txt", _group.getGroupId());
 			addFileEntry("locale_en.txt", testGroup.getGroupId());
 
-			Document japenseDocument = _search(
+			Document japaneseDocument = _search(
 				"新規", LocaleUtil.JAPAN, _group.getGroupId());
 
-			assertLocalization(japaneseContentStrings, japenseDocument);
+			assertLocalization(japaneseContentStrings, japaneseDocument);
 
 			Document englishDocument = _search(
 				"Locale Test", LocaleUtil.ENGLISH, testGroup.getGroupId());
