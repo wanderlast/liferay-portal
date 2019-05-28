@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.Sync;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
 import com.liferay.portal.search.test.util.DocumentsAssert;
 import com.liferay.portal.test.rule.Inject;
@@ -43,6 +44,7 @@ import com.liferay.users.admin.test.util.search.UserSearchFixture;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -240,11 +242,16 @@ public class DLFileEntryFileNameSearchTest {
 
 		SearchContext searchContext = getSearchContext(keyword);
 
+		String languageId = searchContext.getLanguageId();
+
+		String localizedTitleField = LocalizationUtil.getLocalizedName(
+			Field.TITLE, languageId);
+
 		Hits hits = indexer.search(searchContext);
 
 		DocumentsAssert.assertValuesIgnoreRelevance(
 			(String)searchContext.getAttribute("queryString"), hits.getDocs(),
-			Field.TITLE, titles);
+			localizedTitleField, titles);
 	}
 
 	protected long getAdminUserId(Group group) throws Exception {
