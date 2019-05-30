@@ -57,14 +57,14 @@ public class DLFileEntryKeywordQueryContributor
 			keywordQueryContributorHelper.getSearchContext();
 
 		if (Validator.isNull(keywords)) {
-			addSearchLocalizedTerm(
-				booleanQuery, searchContext, Field.DESCRIPTION, false);
-			addSearchLocalizedTerm(
-				booleanQuery, searchContext, Field.TITLE, false);
 			queryHelper.addSearchTerm(
 				booleanQuery, searchContext, Field.USER_NAME, false);
 		}
 
+		addSearchLocalizedTerm(
+			booleanQuery, searchContext, Field.DESCRIPTION, false);
+		addSearchLocalizedTerm(
+			booleanQuery, searchContext, Field.TITLE, false);
 		queryHelper.addSearchTerm(
 			booleanQuery, searchContext, "ddmContent", false);
 		queryHelper.addSearchTerm(
