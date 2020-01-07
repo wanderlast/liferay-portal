@@ -14,6 +14,7 @@
 
 package com.liferay.layout.content.page.editor.web.internal.util.layout.structure;
 
+import com.liferay.layout.util.constants.LayoutDataItemTypeConstants;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
@@ -41,8 +42,8 @@ public class LayoutStructure {
 
 		addLayoutStructureItem(
 			JSONUtil.put("fragmentEntryLinkId", fragmentEntryLinkId),
-			String.valueOf(UUID.randomUUID()), "fragment", parentItemId,
-			position);
+			String.valueOf(UUID.randomUUID()),
+			LayoutDataItemTypeConstants.TYPE_FRAGMENT, parentItemId, position);
 	}
 
 	public void addLayoutStructureItem(
@@ -71,6 +72,27 @@ public class LayoutStructure {
 
 		parentLayoutStructureItem.addChildrenItem(
 			position, layoutStructureItem.getItemId());
+	}
+
+	public void addRowLayoutStructureItem(
+		JSONObject itemConfigJSONObject, String itemId, String parentItemId,
+		int position) {
+
+		addLayoutStructureItem(
+			itemConfigJSONObject, itemId, LayoutDataItemTypeConstants.TYPE_ROW,
+			parentItemId, position);
+
+		addLayoutStructureItem(
+			JSONUtil.put("size", "4"), String.valueOf(UUID.randomUUID()),
+			LayoutDataItemTypeConstants.TYPE_COLUMN, itemId, 0);
+
+		addLayoutStructureItem(
+			JSONUtil.put("size", "4"), String.valueOf(UUID.randomUUID()),
+			LayoutDataItemTypeConstants.TYPE_COLUMN, itemId, 1);
+
+		addLayoutStructureItem(
+			JSONUtil.put("size", "4"), String.valueOf(UUID.randomUUID()),
+			LayoutDataItemTypeConstants.TYPE_COLUMN, itemId, 2);
 	}
 
 	public void deleteLayoutStructureItem(String itemId) {
@@ -146,6 +168,15 @@ public class LayoutStructure {
 		).put(
 			"version", 1
 		);
+	}
+
+	public void updateItemConfig(
+		JSONObject itemConfigJSONObject, String itemId) {
+
+		LayoutStructureItem layoutStructureItem = _layoutStructureItems.get(
+			itemId);
+
+		layoutStructureItem.updateItemConfigJSONObject(itemConfigJSONObject);
 	}
 
 	private final Map<String, LayoutStructureItem> _layoutStructureItems;

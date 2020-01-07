@@ -2257,7 +2257,6 @@ public class ProjectTemplatesTest implements BaseProjectTemplatesTestCase {
 			"--dependency-management-enabled");
 	}
 
-	@Ignore
 	@Test
 	public void testBuildTemplateTheme70() throws Exception {
 		File gradleProjectDir = _buildTemplateWithGradle(
@@ -2283,7 +2282,6 @@ public class ProjectTemplatesTest implements BaseProjectTemplatesTestCase {
 		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
-	@Ignore
 	@Test
 	public void testBuildTemplateTheme71() throws Exception {
 		File gradleProjectDir = _buildTemplateWithGradle(
@@ -2309,7 +2307,6 @@ public class ProjectTemplatesTest implements BaseProjectTemplatesTestCase {
 		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
-	@Ignore
 	@Test
 	public void testBuildTemplateTheme72() throws Exception {
 		File gradleProjectDir = _buildTemplateWithGradle(
@@ -2335,43 +2332,19 @@ public class ProjectTemplatesTest implements BaseProjectTemplatesTestCase {
 		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
-	@Ignore
 	@Test
-	public void testBuildTemplateThemeInWorkspace() throws Exception {
-		File gradleProjectDir = _buildTemplateWithGradle("theme", "theme-test");
+	public void testBuildTemplateThemeInWorkspace70() throws Exception {
+		_testBuildTemplateProjectWarInWorkspace("theme", "theme-test", "7.0.6");
+	}
 
-		testContains(
-			gradleProjectDir, "build.gradle", "buildscript {",
-			"apply plugin: \"com.liferay.portal.tools.theme.builder\"",
-			"repositories {");
+	@Test
+	public void testBuildTemplateThemeInWorkspace71() throws Exception {
+		_testBuildTemplateProjectWarInWorkspace("theme", "theme-test", "7.1.3");
+	}
 
-		File workspaceDir = buildWorkspace(temporaryFolder);
-
-		File warsDir = new File(workspaceDir, "wars");
-
-		File workspaceProjectDir = buildTemplateWithGradle(
-			warsDir, "theme", "theme-test", "--dependency-management-enabled");
-
-		testNotContains(
-			workspaceProjectDir, "build.gradle", true, "^repositories \\{.*");
-		testNotContains(
-			workspaceProjectDir, "build.gradle", "version: \"[0-9].*");
-
-		if (isBuildProjects()) {
-			executeGradle(
-				gradleProjectDir, _gradleDistribution, GRADLE_TASK_PATH_BUILD);
-
-			File gradleWarFile = testExists(
-				gradleProjectDir, "build/libs/theme-test.war");
-
-			executeGradle(
-				workspaceDir, _gradleDistribution, ":wars:theme-test:build");
-
-			File workspaceWarFile = testExists(
-				workspaceProjectDir, "build/libs/theme-test.war");
-
-			testWarsDiff(gradleWarFile, workspaceWarFile);
-		}
+	@Test
+	public void testBuildTemplateThemeInWorkspace72() throws Exception {
+		_testBuildTemplateProjectWarInWorkspace("theme", "theme-test", "7.2.1");
 	}
 
 	@Test
@@ -3957,10 +3930,17 @@ public class ProjectTemplatesTest implements BaseProjectTemplatesTestCase {
 		File workspaceProjectDir = buildTemplateWithGradle(
 			warsDir, template, name, "--dependency-management-enabled");
 
-		if (!template.equals("war-hook")) {
+		if (!template.equals("war-hook") && !template.equals("theme")) {
 			testContains(
 				workspaceProjectDir, "build.gradle", "buildscript {",
 				"cssBuilder group", "portalCommonCSS group");
+		}
+
+		if (template.equals("theme")) {
+			testContains(
+				workspaceProjectDir, "build.gradle", "buildscript {",
+				"apply plugin: \"com.liferay.portal.tools.theme.builder\"",
+				"repositories {");
 		}
 
 		testNotContains(

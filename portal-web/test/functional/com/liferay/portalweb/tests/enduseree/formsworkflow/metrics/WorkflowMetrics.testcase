@@ -55,6 +55,7 @@ definition {
 		property portal.acceptance = "true";
 
 		var key_testSLADefinitionDays = "1";
+		var key_testSLADefinitionHours = "0000";
 		var key_testSLADefinitionDescription = "SLA Description";
 		var key_testSLADefinitionEnd = "Process Ends: Approved";
 		var key_testSLADefinitionName = "SLA Name";
@@ -68,6 +69,7 @@ definition {
 			slaDefinitionDays = "${key_testSLADefinitionDays}",
 			slaDefinitionDescription = "${key_testSLADefinitionDescription}",
 			slaDefinitionEnd = "${key_testSLADefinitionEnd}",
+			slaDefinitionHours = "${key_testSLADefinitionHours}",
 			slaDefinitionName = "${key_testSLADefinitionName}",
 			slaDefinitionStart = "${key_testSLADefinitionStart}");
 
@@ -143,6 +145,87 @@ definition {
 			completionVelocityDateRange = "Last Year",
 			isNotPresent = "INST_DAY,INST_HOUR,INST_YEAR",
 			isPresent = "INST_WEEK,INST_MONTH");
+	}
+
+	@description = "LRQA-53628 Automate LPS-98517 [Dashboard] Filter items list by assignee name"
+	@priority = "5"
+	test FilterAllItemsListByAssigneeName {
+		property portal.acceptance = "false";
+		property test.name.skip.portal.instance = "WorkflowMetrics#FilterAllItemsListByAssigneeName";
+
+		WorkflowMetrics.createUsersAndAssignInstances();
+
+		ProductMenu.gotoPortlet(
+			category = "Content &amp; Data",
+			panel = "Site Administration",
+			portlet = "Blogs");
+
+		WorkflowMetrics.executeWorkflowScript(scriptName = "CompleteTasksAssignedToUsers.groovy");
+
+		ProductMenu.gotoPortlet(
+			category = "Content &amp; Data",
+			panel = "Site Administration",
+			portlet = "Blogs");
+
+		for (var blogNumber : list "5,6,7,8") {
+			JSONBlog.addEntry(
+				entryContent = "Blogs Entry ${blogNumber} Content",
+				entryTitle = "Blogs Entry Title ${blogNumber}");
+		}
+
+		UserBar.gotoDropdownItem(dropdownItem = "My Workflow Tasks");
+
+		Navigator.gotoNavTab(navTab = "Assigned to My Roles");
+
+		for (var assignUserNumber : list "1,2,3") {
+			var InstanceNameNumber = ${assignUserNumber} + 4;
+
+			Workflow.assignTaskToUser(
+				assetTitle = "Blogs Entry Title ${InstanceNameNumber}",
+				assetType = "Blogs Entry",
+				assigneeName = "${assignUserNumber}user user${assignUserNumber}",
+				workflowTask = "Review");
+		}
+
+		WorkflowMetrics.goToWorkflowProcessMetrics(workflowProcessName = "Single Approver");
+
+		WorkflowMetrics.goToDashboardAllItemsWithFilter(
+			workflowFilterOption = "PENDING",
+			workflowMetricsTab = "DASHBOARD",
+			workflowProcess = "Single Approver");
+
+		WorkflowMetrics.viewItemFilterByOnAllItemsPage(
+			allItemsFilterName = "Assignee",
+			assigneeName = "1user user1",
+			isNotPresent = "2user user2,3user user3",
+			isPresent = "Blogs Entry Title 5",
+			taskName = "Review");
+
+		WorkflowMetrics.viewItemFilterByOnAllItemsPage(
+			allItemsFilterName = "Assignee",
+			assigneeName = "2user user2",
+			isNotPresent = "1user user1,3user user3",
+			isPresent = "Blogs Entry Title 6",
+			taskName = "Review");
+
+		WorkflowMetrics.viewItemFilterByOnAllItemsPage(
+			allItemsFilterName = "Assignee",
+			assigneeName = "3user user3",
+			isNotPresent = "1user user1,2user user2",
+			isPresent = "Blogs Entry Title 7",
+			taskName = "Review");
+
+		WorkflowMetrics.allItemPageFilterCheck(
+			allItemsFilterName = "Process Status",
+			assigneeName = "Pending");
+
+		WorkflowMetrics.viewItemFilterByOnAllItemsPage(
+			allItemsFilterName = "Process Status",
+			assigneeName = "N/A",
+			filterValueName = "Completed",
+			isNotPresent = "1user user1,2user user2,3user user3",
+			isPresent = "Blogs Entry Title 1,Blogs Entry Title 2,Blogs Entry Title 3,Blogs Entry Title 4",
+			taskName = "Completed");
 	}
 
 	@description = "LRQA-53638 Automate LPS-100677: [Performance] Search for a step in all steps performance list and LRQA-53637 Automate LPS-100678: [Performance] Filter all step performance by completion period"
@@ -370,6 +453,90 @@ definition {
 		WorkflowMetrics.assertChartTotalValue(
 			velocityUnitTotal = "inst / week",
 			velocityValueTotal = "0");
+	}
+
+	@description = "LRQA-53639 - Automate LPS-100675"
+	test VerifyFilterTopStepPerformance {
+		property portal.acceptance = "false";
+
+		var key_testSLADefinitionDays = "0";
+		var key_testSLADefinitionHours = "0001";
+		var key_testSLADefinitionHoursCheck = "00:01";
+		var key_testSLADefinitionDescription = "SLA Description";
+		var key_testSLADefinitionEnd = "Process Ends: Approved";
+		var key_testSLADefinitionName = "SLA Name";
+		var key_testSLADefinitionStart = "Process Begins";
+
+		WorkflowMetrics.goToWorkflowSLASettings(workflowProcessName = "Single Approver");
+
+		Click(locator1 = "WorkflowMetricsSLA#ADD_NEW_SLA_BUTTON");
+
+		WorkflowMetrics.fillSLAForm(
+			slaDefinitionDays = "${key_testSLADefinitionDays}",
+			slaDefinitionDescription = "${key_testSLADefinitionDescription}",
+			slaDefinitionEnd = "${key_testSLADefinitionEnd}",
+			slaDefinitionHours = "${key_testSLADefinitionHours}",
+			slaDefinitionName = "${key_testSLADefinitionName}",
+			slaDefinitionStart = "${key_testSLADefinitionStart}");
+
+		Button.clickSave();
+
+		Alert.viewSuccessMessage();
+
+		ProductMenu.gotoPortlet(
+			category = "Configuration",
+			panel = "Site Administration",
+			portlet = "Workflow");
+
+		Workflow.configureWorkflow(
+			workflowDefinition = "Single Approver",
+			workflowResourceValue = "Blogs Entry");
+
+		JSONBlog.addEntry(
+			entryContent = "Blogs Entry1 Content",
+			entryTitle = "Blogs Entry Title");
+
+		UserBar.gotoDropdownItem(dropdownItem = "My Workflow Tasks");
+
+		Workflow.assignToMeTaskByActions(
+			workflowAssetTitle = "Blogs Entry Title",
+			workflowAssetType = "Blogs Entry",
+			workflowTask = "Review");
+
+		WorkflowMetrics.goToWorkflowProcessMetrics(workflowProcessName = "Single Approver");
+
+		WorkflowMetrics.waitForSLAtoBecomeOverdue(timesToRun = "12");
+
+		UserBar.gotoDropdownItem(dropdownItem = "My Workflow Tasks");
+
+		Workflow.approveTaskByActions(
+			workflowAssetTitle = "Blogs Entry Title",
+			workflowAssetType = "Blogs Entry",
+			workflowTask = "Review");
+
+		ProductMenu.gotoPortlet(
+			category = "Workflow",
+			panel = "Control Panel",
+			portlet = "Metrics");
+
+		WorkflowMetrics.goToWorkflowProcessMetrics(workflowProcessName = "Single Approver");
+
+		Click(locator1 = "WorkflowMetrics#METRICS_PERFORMANCE_TAB");
+
+		WorkflowMetrics.waitForCompletedSLAtoBecomeOverdue(timesToRun = "12");
+
+		WorkflowMetrics.assertChartTotalValuePerformanceByStep(
+			rowName = "Review",
+			slaBreachedValue = "1 (100%)");
+
+		WorkflowMetrics.selectDateRangePerformanceByStep(
+			completionVelocityDateRange = "Custom Range",
+			endDateRange = "11/11/2018",
+			startDateRange = "09/22/2018");
+
+		WorkflowMetrics.assertChartTotalValuePerformanceByStep(
+			rowName = "Review",
+			slaBreachedValue = "0 (0%)");
 	}
 
 	@description = "LRQA-53634 - LPS-99441: [Performance] View performance for all assignees"

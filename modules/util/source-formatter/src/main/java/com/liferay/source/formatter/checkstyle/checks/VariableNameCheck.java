@@ -14,7 +14,6 @@
 
 package com.liferay.source.formatter.checkstyle.checks;
 
-import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -23,7 +22,6 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.source.formatter.checkstyle.util.DetailASTUtil;
 
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
-import com.puppycrawl.tools.checkstyle.api.FileContents;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
 
 import java.util.ArrayList;
@@ -64,15 +62,13 @@ public class VariableNameCheck extends BaseCheck {
 
 		DetailAST firstChildDetailAST = typeDetailAST.getFirstChild();
 
-		if ((firstChildDetailAST == null) ||
-			(firstChildDetailAST.getType() != TokenTypes.IDENT)) {
-
+		if (firstChildDetailAST == null) {
 			return;
 		}
 
-		String typeName = firstChildDetailAST.getText();
+		if (firstChildDetailAST.getType() == TokenTypes.IDENT) {
+			String typeName = firstChildDetailAST.getText();
 
-		if (isAttributeValue(_CHECK_TYPE_NAME_KEY)) {
 			_checkExceptionVariableName(detailAST, name, typeName);
 
 			_checkInstanceVariableName(detailAST, name, typeName);
@@ -80,9 +76,58 @@ public class VariableNameCheck extends BaseCheck {
 			_checkTypeName(
 				detailAST, name, typeName, "DetailAST", "HttpServletRequest",
 				"HttpServletResponse", "ServletRequest", "ServletResponse");
+
+			_checkTypo(detailAST, name, typeName);
 		}
 
-		_checkTypo(detailAST, name, typeName);
+		DetailAST parentDetailAST = DetailASTUtil.getParentWithTokenType(
+			detailAST, TokenTypes.CLASS_DEF, TokenTypes.CTOR_DEF,
+			TokenTypes.METHOD_DEF);
+
+		if (parentDetailAST == null) {
+			return;
+		}
+
+		List<DetailAST> assignDetailASTList = DetailASTUtil.getAllChildTokens(
+			parentDetailAST, true, TokenTypes.ASSIGN);
+
+		for (DetailAST assignDetailAST : assignDetailASTList) {
+			firstChildDetailAST = assignDetailAST.getFirstChild();
+
+			if (firstChildDetailAST == null) {
+				continue;
+			}
+
+			String methodName = StringPool.BLANK;
+
+			if (DetailASTUtil.equals(assignDetailAST.getParent(), detailAST)) {
+				if (firstChildDetailAST.getType() != TokenTypes.EXPR) {
+					continue;
+				}
+
+				firstChildDetailAST = firstChildDetailAST.getFirstChild();
+
+				if (firstChildDetailAST.getType() == TokenTypes.METHOD_CALL) {
+					methodName = DetailASTUtil.getMethodName(
+						firstChildDetailAST);
+				}
+			}
+			else if ((firstChildDetailAST.getType() == TokenTypes.IDENT) &&
+					 name.equals(firstChildDetailAST.getText())) {
+
+				DetailAST nextSiblingDetailAST =
+					firstChildDetailAST.getNextSibling();
+
+				if (nextSiblingDetailAST.getType() == TokenTypes.METHOD_CALL) {
+					methodName = DetailASTUtil.getMethodName(
+						nextSiblingDetailAST);
+				}
+			}
+
+			if (methodName.matches("get[A-Z].*")) {
+				_checkTypo(detailAST, name, methodName.substring(3));
+			}
+		}
 	}
 
 	private void _checkCaps(DetailAST detailAST, String name) {
@@ -126,12 +171,9 @@ public class VariableNameCheck extends BaseCheck {
 			return;
 		}
 
-		FileContents fileContents = getFileContents();
+		String absolutePath = getAbsolutePath();
 
-		String fileName = StringUtil.replace(
-			fileContents.getFileName(), CharPool.BACK_SLASH, CharPool.SLASH);
-
-		if (fileName.endsWith("ExceptionMapper.java")) {
+		if (absolutePath.endsWith("ExceptionMapper.java")) {
 			String expectedName = _getExpectedVariableName(typeName);
 
 			if (!name.equals(expectedName)) {
@@ -251,6 +293,13 @@ public class VariableNameCheck extends BaseCheck {
 		if (StringUtil.isUpperCase(variableName) ||
 			typeName.contains(StringPool.UNDERLINE)) {
 
+			return;
+		}
+
+		List<String> allowedVariableNames = getAttributeValues(
+			_ALLOWED_VARIABLE_NAMES_KEY);
+
+		if (allowedVariableNames.contains(variableName)) {
 			return;
 		}
 
@@ -408,7 +457,7 @@ public class VariableNameCheck extends BaseCheck {
 	}
 
 	private String _getExpectedVariableName(String typeName) {
-		if (StringUtil.isUpperCase(typeName)) {
+		if (StringUtil.isUpperCase(typeName) || typeName.matches("[A-Z]+s")) {
 			return StringUtil.toLowerCase(typeName);
 		}
 
@@ -492,7 +541,8 @@ public class VariableNameCheck extends BaseCheck {
 		{"DDL", "Ddl"}, {"DDM", "Ddm"}, {"DL", "Dl"}, {"PK", "Pk"}
 	};
 
-	private static final String _CHECK_TYPE_NAME_KEY = "checkTypeName";
+	private static final String _ALLOWED_VARIABLE_NAMES_KEY =
+		"allowedVariableNames";
 
 	private static final String _MSG_INCORRECT_ENDING_VARIABLE =
 		"variable.incorrect.ending";

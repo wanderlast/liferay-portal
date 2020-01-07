@@ -12,23 +12,14 @@
  * details.
  */
 
-package com.liferay.portal.kernel.upload;
-
-import com.liferay.portal.kernel.exception.PortalException;
-
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
+package com.liferay.analytics.message.sender.constants;
 
 /**
- * @author     Adolfo Pérez
- * @deprecated As of Judson (7.1.x), replaced by {@link
- *             com.liferay.upload.UploadHandler}
+ * @author Rachael Koestartyo
  */
-@Deprecated
-public interface UploadHandler {
+public class AnalyticsMessageDestinationNames {
 
-	public void upload(
-			PortletRequest portletRequest, PortletResponse portletResponse)
-		throws PortalException;
+	public static final String ADD_ANALYTICS_MESSAGES_PROCESSOR =
+		"liferay/add_analytics_messages_processor";
 
 }

@@ -68,16 +68,15 @@ buildChangelogs {
 			gitLogOutput.eachLine {
 				String gitLogLine ->
 
-				matcher = gitLogLine =~ /([a-f0-9]+):(.+):[^A-Z]*([A-Z]+-\d+)(.*)/
+				matcher = gitLogLine =~ /([a-f0-9]+):.+:[^A-Z]*([A-Z]+-\d+)(.*)/
 
 				if (matcher.find()) {
-					publishDate = matcher.group(2)
-					ticket = matcher.group(3)
+					ticket = matcher.group(2)
 
-					if (matcher.group(4) ==~ /(?!.*([Pp]rep next|[Uu]se (\d+\.\d+\.\d+|latest))).*/) {
+					if (matcher.group(3) ==~ /(?!.*([Pp]rep next|[Uu]se (\d+\.\d+\.\d+|latest))).*/) {
 						commits = commits + """\
 							|
-							|- [${ticket}]: ${matcher.group(4).trim()} (${matcher.group(1).substring(0, 10)})""".stripMargin()
+							|- [${ticket}]: ${matcher.group(3).trim()} (${matcher.group(1).substring(0, 10)})""".stripMargin()
 					}
 				}
 
@@ -98,21 +97,20 @@ buildChangelogs {
 
 				if (matcher.find()) {
 					descriptions = "\n" + matcher.group(1).trim()
-
-					if (Validator.isNull(publishDate)) {
-						String endRange = commitRange.split("\\.\\.")[1]
-
-						exec {
-							commandLine "git", "log", "-1", "--pretty=format:%H:%cd:%s", "--date=short", "${endRange}"
-							standardOutput = standardOutputByteArrayOutputStream
-							workingDir = projectDir.parentFile
-						}
-
-						publishDate = standardOutputByteArrayOutputStream.toString().split(":")[1]
-					}
-
 				}
 			}
+
+			String endRange = commitRange.split("\\.\\.")[1]
+
+			standardOutputByteArrayOutputStream = new ByteArrayOutputStream()
+
+			exec {
+				commandLine "git", "log", "-1", "--pretty=format:%H:%cd:%s", "--date=short", "${endRange}"
+				standardOutput = standardOutputByteArrayOutputStream
+				workingDir = projectDir.parentFile
+			}
+
+			publishDate = standardOutputByteArrayOutputStream.toString().split(":")[1]
 
 			if ((commits.length() > 0) || (dependencies.length() > 0) || (descriptions.length() > 0)) {
 				text += """\
@@ -151,11 +149,7 @@ buildChangelogs {
 
 		File changelogMarkdownFile = file("sdk/" + projectName + "/CHANGELOG.markdown")
 
-		changelogMarkdownFile.text = text.replaceAll(/(\n(?=.{80,}).{1,80})[ \t]+(.*)/) {
-			String all, String s1, String s2 ->
-
-			"${s1}\n${s2}"
-		}
+		changelogMarkdownFile.text = text.replaceAll(/(?=.{81,})(.{1,81})(?:[ \t])/, "\$1\n")
 
 		logger.lifecycle "Updated '{}'", changelogMarkdownFile
 	}
