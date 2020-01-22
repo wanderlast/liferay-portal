@@ -48,7 +48,6 @@ import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.search.BaseModelSearchResult;
-import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
@@ -699,8 +698,6 @@ public class AssetPublisherHelperImpl implements AssetPublisherHelper {
 
 					_log.warn(sb.toString());
 				}
-
-				throw new PrincipalException();
 			}
 
 			return childGroupId;
@@ -762,8 +759,6 @@ public class AssetPublisherHelperImpl implements AssetPublisherHelper {
 						"Parent group " + parentGroupId +
 							"does not have content sharing enabled.");
 				}
-
-				throw new PrincipalException();
 			}
 
 			Group group = _groupLocalService.getGroup(siteGroupId);
@@ -779,8 +774,6 @@ public class AssetPublisherHelperImpl implements AssetPublisherHelper {
 
 					_log.warn(sb.toString());
 				}
-
-				throw new PrincipalException();
 			}
 
 			return parentGroupId;
