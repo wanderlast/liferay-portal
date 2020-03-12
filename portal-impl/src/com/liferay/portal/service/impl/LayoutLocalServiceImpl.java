@@ -3027,6 +3027,14 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 		Layout layout = updateParentLayoutId(plid, parentPlid);
 
+		Layout draftLayout = fetchLayout(
+			classNameLocalService.getClassNameId(Layout.class),
+			layout.getPlid());
+
+		if (draftLayout != null) {
+			updateParentLayoutId(draftLayout.getPlid(), parentPlid);
+		}
+
 		return layoutLocalService.updatePriority(layout, priority);
 	}
 
