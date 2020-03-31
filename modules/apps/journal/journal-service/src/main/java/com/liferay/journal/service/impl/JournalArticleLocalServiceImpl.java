@@ -7129,18 +7129,14 @@ public class JournalArticleLocalServiceImpl
 			_previousCheckDate);
 
 		for (JournalArticle article : articles) {
-			if (article.isInTrash()) {
-				continue;
-			}
-
 			long groupId = article.getGroupId();
 			String articleId = article.getArticleId();
 
-			if (!journalArticleLocalService.isLatestVersion(
+			if (article.isInTrash() ||
+				!journalArticleLocalService.isLatestVersion(
 					groupId, articleId, article.getVersion())) {
 
-				article = journalArticleLocalService.getLatestArticle(
-					groupId, articleId);
+				continue;
 			}
 
 			if (latestArticleIds.add(article.getPrimaryKey())) {
