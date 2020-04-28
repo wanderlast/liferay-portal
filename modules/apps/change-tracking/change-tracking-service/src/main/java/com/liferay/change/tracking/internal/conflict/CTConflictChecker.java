@@ -115,6 +115,9 @@ public class CTConflictChecker<T extends CTModel<T>> {
 		List<ConflictInfo> conflictInfos = new ArrayList<>();
 
 		if (_modificationCTEntries != null) {
+			_checkErasures(
+				connection, ctPersistence,  conflictInfos, primaryKeyName);
+
 			_checkModifications(
 				connection, ctPersistence, conflictInfos, primaryKeyName);
 		}
@@ -225,6 +228,45 @@ public class CTConflictChecker<T extends CTModel<T>> {
 					constraintResolver, currentPrimaryKeys.getKey(),
 					currentPrimaryKeys.getValue(), false));
 		}
+	}
+
+	private void _checkErasures(
+		Connection connection, CTPersistence<T> ctPersistence,
+		List<ConflictInfo> conflictInfos, String primaryKeyName) {
+
+		_modificationCTEntries.forEach((pk, ctEntry) -> {
+				ctEntry = _modificationCTEntries.get(pk);
+
+				//write sql statement to count if the entry in the pk exists
+				//if it doesn't, add it to the conflict info
+				StringBundler sb = new StringBundler();
+
+				sb.append("SELECT (");
+				sb.append(primaryKeyName);
+				sb.append(") FROM ");
+				sb.append(ctPersistence.getTableName());
+				sb.append(" where ");
+				sb.append(ctPersistence.getTableName());
+				sb.append(".");
+				sb.append(primaryKeyName);
+				sb.append(" = ");
+				sb.append(ctEntry.getModelClassPK());
+
+				try {
+					PreparedStatement preparedStatement =
+						connection.prepareStatement(sb.toString());
+					int count = preparedStatement.executeUpdate();
+
+					if(count == 0) {
+						conflictInfos.add(
+							new ModificationConflictInfo(
+								ctEntry.getModelClassPK(), false));
+					}
+				} catch(SQLException sqlException){
+					throw new ORMException(sqlException);
+				}
+			}
+			);
 	}
 
 	private void _checkModifications(
