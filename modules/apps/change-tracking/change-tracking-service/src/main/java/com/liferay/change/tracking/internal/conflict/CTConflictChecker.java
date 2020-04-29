@@ -116,7 +116,7 @@ public class CTConflictChecker<T extends CTModel<T>> {
 
 		if (_modificationCTEntries != null) {
 			_checkErasures(
-				connection, ctPersistence,  conflictInfos, primaryKeyName);
+				connection, ctPersistence, conflictInfos, primaryKeyName);
 
 			_checkModifications(
 				connection, ctPersistence, conflictInfos, primaryKeyName);
@@ -234,14 +234,15 @@ public class CTConflictChecker<T extends CTModel<T>> {
 		Connection connection, CTPersistence<T> ctPersistence,
 		List<ConflictInfo> conflictInfos, String primaryKeyName) {
 
-		_modificationCTEntries.forEach((pk, ctEntry) -> {
+		_modificationCTEntries.forEach(
+			(pk, ctEntry) -> {
 				ctEntry = _modificationCTEntries.get(pk);
 
 				//write sql statement to count if the entry in the pk exists
 				//if it doesn't, add it to the conflict info
-				StringBundler sb = new StringBundler();
+				StringBundler sb = new StringBundler(10);
 
-				sb.append("SELECT (");
+				sb.append("SELECT COUNT(");
 				sb.append(primaryKeyName);
 				sb.append(") FROM ");
 				sb.append(ctPersistence.getTableName());
@@ -251,22 +252,29 @@ public class CTConflictChecker<T extends CTModel<T>> {
 				sb.append(primaryKeyName);
 				sb.append(" = ");
 				sb.append(ctEntry.getModelClassPK());
+				sb.append(" AND ctCollectionId = ");
+				sb.append(_sourceCTCollectionId);
 
 				try {
 					PreparedStatement preparedStatement =
 						connection.prepareStatement(sb.toString());
-					int count = preparedStatement.executeUpdate();
 
-					if(count == 0) {
+					ResultSet resultSet = preparedStatement.executeQuery();
+
+					resultSet.next();
+					int count = resultSet.getInt(
+						"count(" + primaryKeyName + ")");
+
+					if (count == 0) {
 						conflictInfos.add(
 							new ModificationConflictInfo(
 								ctEntry.getModelClassPK(), false));
 					}
-				} catch(SQLException sqlException){
+				}
+				catch (SQLException sqlException) {
 					throw new ORMException(sqlException);
 				}
-			}
-			);
+			});
 	}
 
 	private void _checkModifications(
