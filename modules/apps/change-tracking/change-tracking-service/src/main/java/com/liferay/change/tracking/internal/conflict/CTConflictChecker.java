@@ -242,13 +242,9 @@ public class CTConflictChecker<T extends CTModel<T>> {
 				//if it doesn't, add it to the conflict info
 				StringBundler sb = new StringBundler(10);
 
-				sb.append("SELECT COUNT(");
-				sb.append(primaryKeyName);
-				sb.append(") FROM ");
+				sb.append("select count(*) from ");
 				sb.append(ctPersistence.getTableName());
 				sb.append(" where ");
-				sb.append(ctPersistence.getTableName());
-				sb.append(".");
 				sb.append(primaryKeyName);
 				sb.append(" = ");
 				sb.append(ctEntry.getModelClassPK());
@@ -261,9 +257,11 @@ public class CTConflictChecker<T extends CTModel<T>> {
 
 					ResultSet resultSet = preparedStatement.executeQuery();
 
-					resultSet.next();
-					int count = resultSet.getInt(
-						"count(" + primaryKeyName + ")");
+					int count = 0;
+
+					if(resultSet.next()) {
+						count = resultSet.getInt(1);
+					}
 
 					if (count == 0) {
 						conflictInfos.add(
