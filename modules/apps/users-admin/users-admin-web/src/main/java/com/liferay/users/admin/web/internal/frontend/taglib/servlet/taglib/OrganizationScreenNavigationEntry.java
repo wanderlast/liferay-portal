@@ -22,12 +22,14 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.UserConstants;
 import com.liferay.portal.kernel.portlet.PortletURLFactory;
 import com.liferay.portal.kernel.service.OrganizationService;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.users.admin.constants.UserScreenNavigationEntryConstants;
+import com.liferay.users.admin.constants.UsersAdminPortletKeys;
 import com.liferay.users.admin.web.internal.constants.UsersAdminWebKeys;
 import com.liferay.users.admin.web.internal.display.context.OrganizationScreenNavigationDisplayContext;
 
@@ -108,7 +110,9 @@ public class OrganizationScreenNavigationEntry
 			organizationScreenNavigationDisplayContext =
 				new OrganizationScreenNavigationDisplayContext();
 
-		String redirect = ParamUtil.getString(httpServletRequest, "redirect");
+		String redirect = ParamUtil.getString(
+			httpServletRequest, "redirect",
+			_createDefaultRedirectURL(httpServletRequest));
 
 		String backURL = ParamUtil.getString(
 			httpServletRequest, "backURL", redirect);
@@ -184,6 +188,21 @@ public class OrganizationScreenNavigationEntry
 		_jspRenderer.renderJSP(
 			httpServletRequest, httpServletResponse,
 			"/edit_organization_navigation.jsp");
+	}
+
+	private String _createDefaultRedirectURL(
+		HttpServletRequest httpServletRequest) {
+
+		PortletURL redirectURL = _portal.getControlPanelPortletURL(
+			httpServletRequest, UsersAdminPortletKeys.USERS_ADMIN,
+			PortletRequest.RENDER_PHASE);
+
+		redirectURL.setParameter("toolbarItem", "view-all-organizations");
+		redirectURL.setParameter("saveUsersListView", "true");
+		redirectURL.setParameter(
+			"usersListView", UserConstants.LIST_VIEW_FLAT_ORGANIZATIONS);
+
+		return redirectURL.toString();
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
