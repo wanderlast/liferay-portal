@@ -19,6 +19,16 @@
 <%
 String redirect = ParamUtil.getString(request, "redirect");
 
+if (Validator.isNull(redirect)) {
+	PortletURL redirectURL = renderResponse.createRenderURL();
+
+	redirectURL.setParameter("toolbarItem", "view-all-organizations");
+	redirectURL.setParameter("saveUsersListView", "true");
+	redirectURL.setParameter("usersListView", UserConstants.LIST_VIEW_FLAT_ORGANIZATIONS);
+
+	redirect = redirectURL.toString();
+}
+
 String backURL = ParamUtil.getString(request, "backURL", redirect);
 
 long organizationId = ParamUtil.getLong(request, "organizationId");
