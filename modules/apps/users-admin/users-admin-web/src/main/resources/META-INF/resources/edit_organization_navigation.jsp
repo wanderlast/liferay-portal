@@ -1,4 +1,7 @@
-<%--
+<%@ page import="com.liferay.portal.kernel.portlet.PortletURLFactoryUtil" %>
+<%@ page import="javax.portlet.PortletRequest" %>
+<%@ page
+	import="com.liferay.users.admin.web.internal.portlet.action.ActionUtil" %><%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -18,9 +21,27 @@
 
 <%
 OrganizationScreenNavigationDisplayContext organizationScreenNavigationDisplayContext = (OrganizationScreenNavigationDisplayContext)request.getAttribute(UsersAdminWebKeys.ORGANIZATION_SCREEN_NAVIGATION_DISPLAY_CONTEXT);
+
+long organizationId = organizationScreenNavigationDisplayContext.getOrganizationId();
+
+String backURL = organizationScreenNavigationDisplayContext.getBackURL();
+
+if (Validator.isNull(backURL)) {
+	backURL = ParamUtil.getString(request, "backURL", currentURL);
+}
+
+PortletURL redirectURL = PortletURLFactoryUtil.create(request, UsersAdminPortletKeys.USERS_ADMIN, PortletRequest.RENDER_PHASE);
+
+redirectURL.setParameter("mvcRenderCommandName", "/users_admin/edit_organization");
+redirectURL.setParameter("organizationId", String.valueOf(organizationId));
+redirectURL.setParameter("backURL", backURL);
+
+String redirect = redirectURL.toString();
 %>
 
 <aui:form action="<%= organizationScreenNavigationDisplayContext.getEditOrganizationActionURL() %>" cssClass="portlet-users-admin-edit-organization" method="post" name="fm">
+	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
+
 	<clay:sheet>
 		<c:if test="<%= organizationScreenNavigationDisplayContext.isShowTitle() %>">
 			<clay:sheet-header>
@@ -36,7 +57,7 @@ OrganizationScreenNavigationDisplayContext organizationScreenNavigationDisplayCo
 			<clay:sheet-footer>
 				<aui:button primary="<%= true %>" type="submit" />
 
-				<aui:button href="<%= organizationScreenNavigationDisplayContext.getBackURL() %>" type="cancel" />
+				<aui:button href="<%= backURL %>" type="cancel" />
 			</clay:sheet-footer>
 		</c:if>
 	</clay:sheet>
