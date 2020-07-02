@@ -1,7 +1,4 @@
-<%@ page import="com.liferay.portal.kernel.portlet.PortletURLFactoryUtil" %>
-<%@ page import="javax.portlet.PortletRequest" %>
-<%@ page
-	import="com.liferay.users.admin.web.internal.portlet.action.ActionUtil" %><%--
+<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
