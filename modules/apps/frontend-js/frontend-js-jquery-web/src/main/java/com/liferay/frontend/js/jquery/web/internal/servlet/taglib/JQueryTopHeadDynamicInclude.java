@@ -77,6 +77,10 @@ public class JQueryTopHeadDynamicInclude extends BaseDynamicInclude {
 			String comboPath = _portal.getStaticResourceURL(
 				httpServletRequest, "/combo", "minifierType=js", _lastModified);
 
+			if (!themeDisplay.isCDNDynamicResourcesEnabled()) {
+				absolutePortalURLBuilder.ignoreCDNHost();
+			}
+
 			sb.append(
 				absolutePortalURLBuilder.forResource(
 					comboPath
