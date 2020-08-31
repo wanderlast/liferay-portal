@@ -1442,6 +1442,7 @@ public class ServicePreAction extends Action {
 		boolean secure = PortalUtil.isForwardedSecure(httpServletRequest);
 
 		themeDisplay.setCDNHost(cdnHost);
+		themeDisplay.setCDNDynamicResourcesEnabled(cdnDynamicResourceEnabled);
 		themeDisplay.setCDNDynamicResourcesHost(dynamicResourcesCDNHost);
 		themeDisplay.setPortalDomain(_getPortalDomain(portalURL));
 		themeDisplay.setPortalURL(portalURL);

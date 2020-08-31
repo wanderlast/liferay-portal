@@ -1091,6 +1091,10 @@ public class ThemeDisplay
 		return _async;
 	}
 
+	public boolean isCDNDynamicResourcesEnabled() {
+		return _cdnDynamicResourcesEnabled;
+	}
+
 	public boolean isHubAction() {
 		return _hubAction;
 	}
@@ -1289,6 +1293,12 @@ public class ThemeDisplay
 
 	public void setCDNBaseURL(String cdnBase) {
 		_cdnBaseURL = cdnBase;
+	}
+
+	public void setCDNDynamicResourcesEnabled(
+		boolean cdnDynamicResourcesEnabled) {
+
+		_cdnDynamicResourcesEnabled = cdnDynamicResourcesEnabled;
 	}
 
 	public void setCDNDynamicResourcesHost(String cdnDynamicResourcesHost) {
@@ -1893,6 +1903,7 @@ public class ThemeDisplay
 	private boolean _ajax;
 	private boolean _async;
 	private String _cdnBaseURL;
+	private boolean _cdnDynamicResourcesEnabled;
 	private String _cdnDynamicResourcesHost = StringPool.BLANK;
 	private String _cdnHost = StringPool.BLANK;
 	private ColorScheme _colorScheme;
