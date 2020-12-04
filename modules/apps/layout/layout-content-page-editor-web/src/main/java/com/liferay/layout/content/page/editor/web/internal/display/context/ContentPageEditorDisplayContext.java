@@ -1156,11 +1156,6 @@ public class ContentPageEditorDisplayContext {
 
 		List<Map<String, Object>> allFragmentCollections = new ArrayList<>();
 
-		if (includeSystem) {
-			allFragmentCollections.addAll(_getFragmentCollectionContributors());
-			allFragmentCollections.addAll(_getDynamicFragments());
-		}
-
 		List<FragmentCollection> fragmentCollections =
 			FragmentCollectionServiceUtil.getFragmentCollections(
 				new long[] {
@@ -1207,6 +1202,12 @@ public class ContentPageEditorDisplayContext {
 				).put(
 					"name", fragmentCollection.getName()
 				).build());
+		}
+
+		//move to the bottom so they're added last to our list
+		if (includeSystem) {
+			allFragmentCollections.addAll(_getFragmentCollectionContributors());
+			allFragmentCollections.addAll(_getDynamicFragments());
 		}
 
 		return allFragmentCollections;
