@@ -72,7 +72,7 @@ export default function fragmentsReducer(fragments = [], action) {
 					CONTENT_DISPLAY_COLLECTION_ID
 			);
 
-			newFragments.unshift({
+			newFragments.push({
 				fragmentCollectionId: 'layout-elements',
 				fragmentEntries: [
 					{
@@ -97,7 +97,7 @@ export default function fragmentsReducer(fragments = [], action) {
 				name: Liferay.Language.get('layout-elements'),
 			});
 
-			newFragments.splice(2, 0, {
+			newFragments.push( {
 				...(contentDisplayCollection ||
 					DEFAULT_CONTENT_DISPLAY_COLLECTION),
 
