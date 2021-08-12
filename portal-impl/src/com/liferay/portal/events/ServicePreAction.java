@@ -1079,7 +1079,7 @@ public class ServicePreAction extends Action {
 				viewableStaging = true;
 			}
 
-			if(layout.isPrivateLayout() && !signedIn){
+			if (layout.isPrivateLayout() && !signedIn) {
 				loginRequest = true;
 			}
 
