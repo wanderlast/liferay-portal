@@ -170,31 +170,15 @@ public class AssetTagsSelectorTag extends IncludeTag {
 	}
 
 	protected long[] getGroupIds() {
-		if (_groupIds != null) {
-			return _groupIds;
-		}
-
 		HttpServletRequest httpServletRequest = getRequest();
 
 		ThemeDisplay themeDisplay =
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
-		long[] groupIds = null;
+		long[] groupIds = {};
 
-		Group group = themeDisplay.getScopeGroup();
-
-		if (group.isLayout()) {
-			groupIds = new long[] {group.getParentGroupId()};
-		}
-		else {
-			groupIds = new long[] {group.getGroupId()};
-		}
-
-		if (group.getParentGroupId() != themeDisplay.getCompanyGroupId()) {
-			groupIds = ArrayUtil.append(
-				groupIds, themeDisplay.getCompanyGroupId());
-		}
+		groupIds = ArrayUtil.append(groupIds, themeDisplay.getCompanyGroupId());
 
 		return groupIds;
 	}
@@ -227,7 +211,7 @@ public class AssetTagsSelectorTag extends IncludeTag {
 
 			if (_groupIds != null) {
 				portletURL.setParameter(
-					"groupIds", StringUtil.merge(_groupIds, StringPool.COMMA));
+					"groupIds", StringUtil.merge(getGroupIds(), StringPool.COMMA));
 			}
 
 			portletURL.setParameter("eventName", getEventName());
