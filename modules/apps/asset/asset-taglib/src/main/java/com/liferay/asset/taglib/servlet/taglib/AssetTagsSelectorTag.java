@@ -17,6 +17,7 @@ package com.liferay.asset.taglib.servlet.taglib;
 import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.asset.kernel.service.AssetTagServiceUtil;
 import com.liferay.asset.taglib.internal.servlet.ServletContextUtil;
+import com.liferay.depot.util.SiteConnectedGroupGroupProviderUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.petra.string.StringUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -170,33 +171,29 @@ public class AssetTagsSelectorTag extends IncludeTag {
 	}
 
 	protected long[] getGroupIds() {
-		if (_groupIds != null) {
-			return _groupIds;
-		}
-
 		HttpServletRequest httpServletRequest = getRequest();
 
 		ThemeDisplay themeDisplay =
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
-		long[] groupIds = null;
+		try {
+			if (ArrayUtil.isEmpty(_groupIds)) {
+				return PortalUtil.
+					getCurrentAndAncestorSiteGroupIds(
+						themeDisplay.getScopeGroupId());
+			}
 
-		Group group = themeDisplay.getScopeGroup();
-
-		if (group.isLayout()) {
-			groupIds = new long[] {group.getParentGroupId()};
+			return PortalUtil.
+				getCurrentAndAncestorSiteGroupIds(_groupIds);
 		}
-		else {
-			groupIds = new long[] {group.getGroupId()};
+		catch (Exception exception) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(exception, exception);
+			}
 		}
 
-		if (group.getParentGroupId() != themeDisplay.getCompanyGroupId()) {
-			groupIds = ArrayUtil.append(
-				groupIds, themeDisplay.getCompanyGroupId());
-		}
-
-		return groupIds;
+		return new long[0];
 	}
 
 	protected String getId() {
@@ -227,7 +224,7 @@ public class AssetTagsSelectorTag extends IncludeTag {
 
 			if (_groupIds != null) {
 				portletURL.setParameter(
-					"groupIds", StringUtil.merge(_groupIds, StringPool.COMMA));
+					"groupIds", StringUtil.merge(getGroupIds(), StringPool.COMMA));
 			}
 
 			portletURL.setParameter("eventName", getEventName());
