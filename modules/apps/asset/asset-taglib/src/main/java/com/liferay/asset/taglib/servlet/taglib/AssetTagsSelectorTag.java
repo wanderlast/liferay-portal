@@ -17,12 +17,10 @@ package com.liferay.asset.taglib.servlet.taglib;
 import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.asset.kernel.service.AssetTagServiceUtil;
 import com.liferay.asset.taglib.internal.servlet.ServletContextUtil;
-import com.liferay.depot.util.SiteConnectedGroupGroupProviderUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.petra.string.StringUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
@@ -179,13 +177,11 @@ public class AssetTagsSelectorTag extends IncludeTag {
 
 		try {
 			if (ArrayUtil.isEmpty(_groupIds)) {
-				return PortalUtil.
-					getCurrentAndAncestorSiteGroupIds(
-						themeDisplay.getScopeGroupId());
+				return PortalUtil.getCurrentAndAncestorSiteGroupIds(
+					themeDisplay.getScopeGroupId());
 			}
 
-			return PortalUtil.
-				getCurrentAndAncestorSiteGroupIds(_groupIds);
+			return PortalUtil.getCurrentAndAncestorSiteGroupIds(_groupIds);
 		}
 		catch (Exception exception) {
 			if (_log.isDebugEnabled()) {
@@ -224,7 +220,8 @@ public class AssetTagsSelectorTag extends IncludeTag {
 
 			if (_groupIds != null) {
 				portletURL.setParameter(
-					"groupIds", StringUtil.merge(getGroupIds(), StringPool.COMMA));
+					"groupIds",
+					StringUtil.merge(getGroupIds(), StringPool.COMMA));
 			}
 
 			portletURL.setParameter("eventName", getEventName());
