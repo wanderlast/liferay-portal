@@ -19,6 +19,7 @@ import com.liferay.expando.kernel.model.ExpandoColumn;
 import com.liferay.expando.kernel.model.ExpandoColumnConstants;
 import com.liferay.expando.kernel.model.ExpandoTable;
 import com.liferay.expando.kernel.model.ExpandoTableConstants;
+import com.liferay.expando.kernel.model.ExpandoValue;
 import com.liferay.expando.kernel.service.ExpandoColumnLocalServiceUtil;
 import com.liferay.expando.kernel.service.ExpandoColumnServiceUtil;
 import com.liferay.expando.kernel.service.ExpandoTableLocalServiceUtil;
@@ -302,6 +303,11 @@ public class ExpandoBridgeImpl implements ExpandoBridge {
 		for (ExpandoColumn column : getAttributeColumns()) {
 			attributes.put(
 				column.getName(), getAttribute(column.getName(), secure));
+		}
+
+		for (ExpandoValue value : getAttributeValues()) {
+			attributes.put(
+				value.getClassName(), getAttribute(value.getClassName(), secure));
 		}
 
 		return attributes;
@@ -696,6 +702,19 @@ public class ExpandoBridgeImpl implements ExpandoBridge {
 		}
 
 		return columns;
+	}
+
+	protected List<ExpandoValue> getAttributeValues() {
+		List<ExpandoValue> values = new ArrayList<>();
+
+		try {
+			values = ExpandoValueLocalServiceUtil.getColumnValues(_classPK, -1, -1);
+		}
+		catch (Exception exception) {
+			throw new RuntimeException(exception);
+		}
+
+		return values;
 	}
 
 	protected ExpandoTable getTable() throws PortalException {
