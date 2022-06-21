@@ -20,8 +20,11 @@ import com.liferay.asset.kernel.service.AssetLinkLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.expando.kernel.model.ExpandoColumn;
+import com.liferay.expando.kernel.model.ExpandoValue;
 import com.liferay.expando.kernel.model.adapter.StagedExpandoColumn;
+import com.liferay.expando.kernel.model.adapter.StagedExpandoValue;
 import com.liferay.expando.kernel.service.ExpandoColumnLocalServiceUtil;
+import com.liferay.expando.kernel.service.ExpandoValueLocalServiceUtil;
 import com.liferay.exportimport.internal.util.ExportImportPermissionUtil;
 import com.liferay.exportimport.internal.xstream.ConverterAdapter;
 import com.liferay.exportimport.internal.xstream.XStreamStagedModelTypeHierarchyPermission;
@@ -1872,6 +1875,20 @@ public class PortletDataContextImpl implements PortletDataContext {
 				addReferenceElement(
 					classedModel, element, stagedExpandoColumn,
 					REFERENCE_TYPE_DEPENDENCY, true);
+
+				List<ExpandoValue> expandoValues =
+					ExpandoValueLocalServiceUtil.getColumnValues(expandoColumn.getColumnId(), -1, -1);
+
+				for(ExpandoValue expandoValue : expandoValues){
+					StagedExpandoValue stagedExpandoValue =
+						ModelAdapterUtil.adapt(
+							expandoValue, ExpandoValue.class,
+							StagedExpandoValue.class);
+
+					addReferenceElement(
+						classedModel, element, stagedExpandoValue,
+						REFERENCE_TYPE_DEPENDENCY, true);
+				}
 			}
 		}
 

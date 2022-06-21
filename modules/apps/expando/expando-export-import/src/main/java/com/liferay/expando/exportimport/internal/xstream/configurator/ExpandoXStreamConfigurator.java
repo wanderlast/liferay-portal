@@ -16,12 +16,14 @@ package com.liferay.expando.exportimport.internal.xstream.configurator;
 
 import com.liferay.expando.exportimport.internal.model.adapter.StagedExpandoColumnImpl;
 import com.liferay.expando.exportimport.internal.model.adapter.StagedExpandoTableImpl;
+import com.liferay.expando.exportimport.internal.model.adapter.StagedExpandoValueImpl;
 import com.liferay.exportimport.kernel.xstream.XStreamAlias;
 import com.liferay.exportimport.kernel.xstream.XStreamConverter;
 import com.liferay.exportimport.kernel.xstream.XStreamType;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portlet.expando.model.impl.ExpandoColumnImpl;
 import com.liferay.portlet.expando.model.impl.ExpandoTableImpl;
+import com.liferay.portlet.expando.model.impl.ExpandoValueImpl;
 import com.liferay.xstream.configurator.XStreamConfigurator;
 
 import java.util.List;
@@ -55,12 +57,14 @@ public class ExpandoXStreamConfigurator implements XStreamConfigurator {
 		_xStreamAliases = new XStreamAlias[] {
 			new XStreamAlias(
 				StagedExpandoColumnImpl.class, "StagedExpandoColumn"),
-			new XStreamAlias(StagedExpandoTableImpl.class, "StagedExpandoTable")
+			new XStreamAlias(StagedExpandoTableImpl.class, "StagedExpandoTable"),
+			new XStreamAlias(StagedExpandoValueImpl.class, "StagedExpandoValue")
 		};
 
 		_xStreamTypes = new XStreamType[] {
 			new XStreamType(ExpandoColumnImpl.class),
-			new XStreamType(ExpandoTableImpl.class)
+			new XStreamType(ExpandoTableImpl.class),
+			new XStreamType(ExpandoValueImpl.class)
 		};
 	}
 
