@@ -14,6 +14,9 @@
 
 package com.liferay.site.navigation.internal.exportimport.data.handler;
 
+import com.liferay.expando.kernel.model.ExpandoTableConstants;
+import com.liferay.expando.kernel.model.ExpandoValue;
+import com.liferay.expando.kernel.service.ExpandoValueLocalService;
 import com.liferay.exportimport.data.handler.base.BaseStagedModelDataHandler;
 import com.liferay.exportimport.kernel.lar.ExportImportPathUtil;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
@@ -29,6 +32,7 @@ import com.liferay.site.navigation.service.SiteNavigationMenuLocalService;
 import com.liferay.site.navigation.type.SiteNavigationMenuItemType;
 import com.liferay.site.navigation.type.SiteNavigationMenuItemTypeRegistry;
 
+import java.util.List;
 import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
@@ -187,6 +191,20 @@ public class SiteNavigationMenuItemStagedModelDataHandler
 					portletDataContext, importedSiteNavigationMenuItem);
 		}
 
+		List<ExpandoValue> expandoValues =
+			_expandoValueLocalService.getRowValues(
+				siteNavigationMenuItem.getCompanyId(),
+				SiteNavigationMenuItem.class.getName(),
+				ExpandoTableConstants.DEFAULT_TABLE_NAME,
+				siteNavigationMenuItem.getSiteNavigationMenuItemId(), -1, -1);
+
+		for (ExpandoValue expandoValue : expandoValues) {
+			expandoValue.setClassPK(
+				importedSiteNavigationMenuItem.getSiteNavigationMenuItemId());
+
+			_expandoValueLocalService.updateExpandoValue(expandoValue);
+		}
+
 		SiteNavigationMenuItemType siteNavigationMenuItemType =
 			_siteNavigationMenuItemTypeRegistry.getSiteNavigationMenuItemType(
 				siteNavigationMenuItem.getType());
@@ -214,6 +232,9 @@ public class SiteNavigationMenuItemStagedModelDataHandler
 
 		return _stagedModelRepository;
 	}
+
+	@Reference
+	private ExpandoValueLocalService _expandoValueLocalService;
 
 	@Reference
 	private SiteNavigationMenuItemLocalService
