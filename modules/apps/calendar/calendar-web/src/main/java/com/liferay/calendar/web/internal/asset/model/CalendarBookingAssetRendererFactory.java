@@ -62,6 +62,7 @@ public class CalendarBookingAssetRendererFactory
 		setClassName(CalendarBooking.class.getName());
 		setPortletId(CalendarPortletKeys.CALENDAR);
 		setSearchable(true);
+		setSelectable(false);
 	}
 
 	@Override
