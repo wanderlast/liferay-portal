@@ -207,6 +207,8 @@ else {
 	</aui:button-row>
 </aui:form>
 
+<script src="../js/ReportParameters.js" type="text/javascript"></script>
+
 <liferay-frontend:component
 	context='<%=
 		HashMapBuilder.<String, Object>put(
