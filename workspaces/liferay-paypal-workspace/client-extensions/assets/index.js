@@ -6,5 +6,22 @@
 import App from "./app";
 
 export default function CommerceCheckoutStep() {
+	const commerceCheckoutStepContainer = document.getElementById(
+		'_com_liferay_commerce_checkout_web_internal_portlet_CommerceCheckoutPortlet_commerceCheckoutStepContainer'
+	);
+
+	const newInput = document.createElement('input');
+
+	const inputName =
+		'_com_liferay_commerce_checkout_web_internal_portlet_CommerceCheckoutPortlet_pon';
+
+	newInput.setAttribute('id', inputName);
+	newInput.setAttribute('name', inputName);
+
+	newInput.setAttribute('placeholder', 'Purchase order number');
+	newInput.setAttribute('type', 'text');
+
+	commerceCheckoutStepContainer.appendChild(newInput);
+
 	App();
 }
