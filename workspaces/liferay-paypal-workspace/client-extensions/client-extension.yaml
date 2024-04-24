@@ -20,4 +20,19 @@ liferay-sample-commerce-checkout-step-oauth-application-user-agent:
     name: Liferay Sample Commerce Checkout Step OAuth Application User Agent
     scopes:
         - Liferay.Headless.Admin.Workflow.everything
+        - Liferay.Headless.Commerce.Admin.Order.everything
     type: oAuthApplicationUserAgent
+liferay-paypal-commerce-payment-integration:
+    key: liferay-paypal-commerce-payment-integration
+    name: Liferay Paypal Commerce Payment Integration
+    oAuth2ApplicationExternalReferenceCode: liferay-sample-commerce-checkout-step-oauth-application-user-agent
+    #since these are technically supposed to be all working together, I'm assuming we can just share our oauth agent
+    paymentIntegrationType: 4 
+    #I'm not sure if this is correct, this may need to be 1 for INTERNAL but it appears there's no difference in handling
+    #And technically this is not an internal piece of code(?) -- I couldn't find an explanation for what these mean
+    paymentIntegrationTypeSettings:
+        clientId: enter your client ID here
+        clientSecret: enter client secret here
+        merchantId: enter merchant Id
+        mode: enter payment mode
+    type: commercePaymentIntegration

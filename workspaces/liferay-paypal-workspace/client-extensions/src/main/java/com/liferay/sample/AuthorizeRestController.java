@@ -3,9 +3,12 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-package com.liferay.paypal;
+package com.liferay.sample;
 
+import com.liferay.commerce.payment.method.paypal.internal.PayPalCommercePaymentIntegration;
 import com.liferay.petra.string.StringBundler;
+
+import com.paypal.core.PayPalHttpClient;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -55,22 +58,43 @@ public class AuthorizeRestController extends BaseRestController {
 		try {
 			JSONObject jsonObject = new JSONObject(json);
 
-			JSONObject typeSettingsJSONObject = jsonObject.getJSONObject(
-				"typeSettings");
-
-//			Stripe.apiKey = typeSettingsJSONObject.getString("apiKey");
-
 			JSONObject commercePaymentEntryJSONObject =
 				jsonObject.getJSONObject("commercePaymentEntry");
 
-//			Session session = _createSession(
-//				commercePaymentEntryJSONObject, jwt);
+			JSONObject paypalEnabled = jsonObject.getBoolean("payPalEnabled");
+
+			if(paypalEnabled) {
+				PayPalCommercePaymentIntegration.authorize(httpServletRequest, commercePaymentEntry);
+			} 
+
+			JSONObject typeSettingsJSONObject = jsonObject.getJSONObject(
+				"typeSettings");
+
+			//this is only needed if we cannot find the settings already
+			String clientId = typeSettingsJSONObject.getString("clientId");
+			String clientSecret = typeSettingsJSONObject.getString("clientSecret");
+			String merchantId = typeSettingsJSONObject.getString("merchantId");
+			String mode = typeSettingsJSONObject.getString("mode");
+
+			//set up http client with paypal
+			PayPalHttpClient payPalHttpClient = null;
+
+			if (Objects.equals(
+				mode,
+				PayPalCommercePaymentMethodConstants.MODE_LIVE)) {
+
+				payPalHttpClient = new PayPalHttpClient(
+					new PayPalEnvironment.Live(clientId, clientSecret));
+			} else {
+				payPalHttpClient = new PayPalHttpClient(
+					new PayPalEnvironment.Sandbox(clientId, clientSecret));
+			}
+
 //
 //			if (Objects.equals(session.getStatus(), "open")) {
 //				paymentStatus = "2";
 //				redirectURL = session.getUrl();
 //				transactionCode = session.getId();
-//			}
 		}
 		catch (Exception exception) {
 			errorMessages = ExceptionUtils.getStackTrace(exception);
@@ -92,6 +116,7 @@ public class AuthorizeRestController extends BaseRestController {
 			HttpStatus.OK);
 	}
 
+	/*
 	private Session _createSession(
 			JSONObject commercePaymentEntryJSONObject, Jwt jwt)
 		throws Exception {
@@ -164,142 +189,7 @@ public class AuthorizeRestController extends BaseRestController {
 
 		return Session.create(sessionCreateParams);
 	}
-
-	private TaxRate _createTaxRate(String name, BigDecimal taxPercentage)
-		throws Exception {
-
-		return TaxRate.create(
-			TaxRateCreateParams.builder(
-			).setDisplayName(
-				name
-			).setPercentage(
-				taxPercentage
-			).setInclusive(
-				true
-			).build());
-	}
-
-	private List<SessionCreateParams.LineItem> _getLineItems(
-		JSONObject commercePaymentEntryJSONObject) {
-
-		return Collections.singletonList(
-			SessionCreateParams.LineItem.builder(
-			).setPriceData(
-				SessionCreateParams.LineItem.PriceData.builder(
-				).setCurrency(
-					commercePaymentEntryJSONObject.getString("currencyCode")
-				).setProductData(
-					SessionCreateParams.LineItem.PriceData.ProductData.builder(
-					).setName(
-						StringBundler.concat(
-							commercePaymentEntryJSONObject.getString(
-								"classNameLabel"),
-							" ",
-							commercePaymentEntryJSONObject.getString("classPK"))
-					).build()
-				).setUnitAmount(
-					BigDecimal.valueOf(
-						commercePaymentEntryJSONObject.getDouble("amount")
-					).multiply(
-						BigDecimal.valueOf(100)
-					).longValue()
-				).build()
-			).setQuantity(
-				BigDecimal.ONE.longValue()
-			).build());
-	}
-
-	private List<SessionCreateParams.LineItem> _getLineItems(
-			String currencyCode, String languageId,
-			JSONArray orderItemsJSONArray)
-		throws Exception {
-
-		List<SessionCreateParams.LineItem> lineItems = new ArrayList<>();
-
-		for (int i = 0; i < orderItemsJSONArray.length(); i++) {
-			JSONObject orderItemJSONObject = orderItemsJSONArray.getJSONObject(
-				i);
-
-			BigDecimal finalPrice = BigDecimal.valueOf(
-				orderItemJSONObject.getDouble("finalPrice"));
-			BigDecimal finalPriceWithTaxAmount = BigDecimal.valueOf(
-				orderItemJSONObject.getDouble("finalPriceWithTaxAmount"));
-
-			BigDecimal taxPercentage = finalPriceWithTaxAmount.subtract(
-				finalPrice
-			).divide(
-				finalPrice, 4, RoundingMode.HALF_DOWN
-			).multiply(
-				BigDecimal.valueOf(100)
-			);
-
-			String name = orderItemJSONObject.getJSONObject(
-				"name"
-			).getString(
-				languageId
-			);
-
-			TaxRate taxRate = _createTaxRate(name, taxPercentage);
-
-			long quantity = orderItemJSONObject.getLong("quantity");
-
-			SessionCreateParams.LineItem lineItem =
-				SessionCreateParams.LineItem.builder(
-				).addTaxRate(
-					taxRate.getId()
-				).setPriceData(
-					SessionCreateParams.LineItem.PriceData.builder(
-					).setCurrency(
-						currencyCode
-					).setProductData(
-						SessionCreateParams.LineItem.PriceData.ProductData.
-							builder(
-							).setName(
-								name
-							).build()
-					).setUnitAmount(
-						finalPriceWithTaxAmount.divide(
-							BigDecimal.valueOf(quantity)
-						).multiply(
-							BigDecimal.valueOf(100)
-						).longValue()
-					).build()
-				).setQuantity(
-					quantity
-				).build();
-
-			lineItems.add(lineItem);
-		}
-
-		return lineItems;
-	}
-
-	private SessionCreateParams.ShippingOption _getShippingOption(
-		String currencyCode, Long shippingAmountValue, String shippingOption) {
-
-		return SessionCreateParams.ShippingOption.builder(
-		).setShippingRateData(
-			SessionCreateParams.ShippingOption.ShippingRateData.builder(
-			).setDisplayName(
-				shippingOption
-			).setFixedAmount(
-				SessionCreateParams.ShippingOption.ShippingRateData.FixedAmount.
-					builder(
-					).setAmount(
-						BigDecimal.valueOf(
-							shippingAmountValue
-						).multiply(
-							BigDecimal.valueOf(100)
-						).longValue()
-					).setCurrency(
-						currencyCode
-					).build()
-			).setType(
-				SessionCreateParams.ShippingOption.ShippingRateData.Type.
-					FIXED_AMOUNT
-			).build()
-		).build();
-	}
+ */
 
 	private static final Log _log = LogFactory.getLog(
 		AuthorizeRestController.class);

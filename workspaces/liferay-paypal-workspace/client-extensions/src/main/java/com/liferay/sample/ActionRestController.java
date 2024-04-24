@@ -28,6 +28,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RestController
 public class ActionRestController extends BaseRestController {
 
+	//this is legacy code from the checkoutstep input
 	@PostMapping
 	public ResponseEntity<String> post(
 		@AuthenticationPrincipal Jwt jwt, @RequestBody String json) {
@@ -48,7 +49,8 @@ public class ActionRestController extends BaseRestController {
 			).bodyValue(
 				new JSONObject(
 				).put(
-					"purchaseOrderNumber", "test"
+					//this is from the inputname '_com_liferay_commerce_checkout_web_internal_portlet_CommerceCheckoutPortlet_pon'
+					"purchaseOrderNumber", jsonObject.getString("pon")
 				).toString()
 			).header(
 				HttpHeaders.AUTHORIZATION, "Bearer " + jwt.getTokenValue()

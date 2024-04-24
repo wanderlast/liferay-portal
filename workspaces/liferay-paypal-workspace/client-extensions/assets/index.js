@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import { getPaymentMethodsByCart, postCartByChannelId } from "./liferayServices";
+
 export default function CommerceCheckoutStep() {
 	const commerceCheckoutStepContainer = document.getElementById(
 		'_com_liferay_commerce_checkout_web_internal_portlet_CommerceCheckoutPortlet_commerceCheckoutStepContainer'
@@ -17,13 +19,47 @@ export default function CommerceCheckoutStep() {
 	const paypalScript = document.createElement('script');
 	//this is hard-coded for now, we'll accept arguments later
 	let clientId = "AbYFv5Emsgk85LbhRSu3Hp4ur-9YJdTBz27bWRYD0EnrGxN4BZxWD77upJ8tTQ2W2dbJ-Ln0CdVFaPXj";
+
+	const accountId = Liferay.CommerceContext.account?.accountId;
+	const channelId = Liferay.CommerceContext.commerceChannelId;
+
+	if (channelId == null || accountId == null) {
+		//handle this later, but this means we need to default to typesettings I think?
+		console.log("channelId or accountId is null");		
+	}
+
+	let cartsResponse = postCartByChannelId(accountId, channelId);
+
+	//get cartid from first json response
+	let json = JSON.parse(cartsResponse);
+	let cartId = json.id;
+
+	console.log("CartId is " + cartId);
+
+	let paymentResponse = getPaymentMethodsByCart(cartId);
+	json = JSON.parse(paymentResponse);
+	let items = json.items;
+	console.log("items are " + items);
+
+	let paypalEnabled = false;
+
+	//parse the json for payment methods
+	for (var i = 0; i < items.length; i++) {
+		//this is the default key name for the default paypal integration, I don't know if it's possible to change
+		if (items[i].key === 'paypal-integration') {
+			//paypal is active, we know that it's available -- this is the info we care about passing to our Rest Controllers
+			paypalEnabled = true;
+			console.log("Paypal Enabled");
+		}
+	}
+
 	paypalScript.setAttribute('src', "https://www.paypal.com/sdk/js?client-id=" + clientId + "&currency=USD");
 	paypalScript.addEventListener('load', () => {
 		window.paypal
 		.Buttons({
 		  async createOrder() {
 			try {
-			  const response = await fetch("/api/orders", {
+			  const response = await fetch("/set-up-payment", {
 				method: "POST",
 				headers: {
 				  "Content-Type": "application/json",
@@ -31,12 +67,7 @@ export default function CommerceCheckoutStep() {
 				// use the "body" param to optionally pass additional order information
 				// like product ids and quantities
 				body: JSON.stringify({
-				  cart: [
-					{
-					  id: "YOUR_PRODUCT_ID",
-					  quantity: "YOUR_PRODUCT_QUANTITY",
-					},
-				  ],
+				  paypalEnabled: paypalEnabled
 				}),
 			  });
 			  
@@ -59,11 +90,14 @@ export default function CommerceCheckoutStep() {
 		  },
 		  async onApprove(data, actions) {
 			try {
-			  const response = await fetch(`/api/orders/${data.orderID}/capture`, {
+			  const response = await fetch(`/capture`, {
 				method: "POST",
 				headers: {
 				  "Content-Type": "application/json",
 				},
+				body: {
+					paypalEnabled: paypalEnabled
+				}
 			  });
 			  
 			  const orderData = await response.json();

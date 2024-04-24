@@ -8,6 +8,21 @@ export const baseURL =
 
 const scopeGroupId = Liferay.ThemeDisplay.getScopeGroupId();
 
+export async function getCarts() {(
+    accountId,
+    channelId,
+)} {
+    const response = await fetch(
+        `${baseURL}/o/headless-commerce-delivery-cart/v1.0/channels/${channelId}/account/${accountId}/carts`,
+        {
+            headers,
+            method: 'GET',
+        }
+    );
+
+    return await response.json();
+}
+
 export async function getChannels() {
 	const response = await fetch(
 		`${baseURL}/o/headless-commerce-admin-channel/v1.0/channels`,
@@ -21,6 +36,19 @@ export async function getChannels() {
 }
 
 export async function getPaymentMethods({
+    accountChannelEntryId,
+}) {
+    const response = await fetch(
+        `${baseURL}/o/headless-commerce-admin-account/v1.0/account-channel-payment-methods/${accountChannelEntryId}`,
+        {
+            headers,
+            method: 'GET'
+        }
+    )
+}
+
+
+export async function getPaymentMethodsByCart({
     cartId,
 }) {
     const response = await fetch(
@@ -31,6 +59,7 @@ export async function getPaymentMethods({
         }
     )
 }
+
 
 export async function getScopeGroupIdChannel() {
     const response = await fetch(
@@ -45,14 +74,18 @@ export async function getScopeGroupIdChannel() {
 }
 
 export async function postCartByChannelId({
-	cartBody = {},
+    accountId,
 	channelId,
+    currencyCode = 'USD'
 }) {
 	const cartResponse = await fetch(
 		`${baseURL}/o/headless-commerce-delivery-cart/v1.0/channels/${channelId}/carts`,
 		{
-			body: JSON.stringify(cartBody),
-			headers,
+			body: JSON.stringify({
+				accountId,
+				currencyCode,
+			}),
+            headers,
 			method: 'POST',
 		}
 	);
