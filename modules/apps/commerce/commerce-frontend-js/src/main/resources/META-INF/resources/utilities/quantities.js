@@ -24,7 +24,7 @@ export function getMinQuantity(
 }
 
 export function getMultiple(
-	incrementalOrderQuantity= 1,
+	incrementalOrderQuantity = 1,
 	multipleQuantity = 1,
 	precision = 0
 ) {
@@ -32,8 +32,9 @@ export function getMultiple(
 
 	if (incrementalOrderQuantity < 1 && multipleQuantity < 1) {
 		let num =
-			(incrementalOrderQuantity < multipleQuantity) ?
-				incrementalOrderQuantity : multipleQuantity;
+			incrementalOrderQuantity < multipleQuantity
+				? incrementalOrderQuantity
+				: multipleQuantity;
 
 		while (num < 1) {
 			num *= 10;
@@ -47,18 +48,19 @@ export function getMultiple(
 	if (precisionAdjustment > 0) {
 		unitOfMeasureMultiple =
 			incrementalOrderQuantity * 10 * precisionAdjustment;
-		itemMultiple =
-			multipleQuantity * 10 * precisionAdjustment;
+		itemMultiple = multipleQuantity * 10 * precisionAdjustment;
 	}
 
-	let multiple = incrementalOrderQuantity;
+	let multiple = unitOfMeasureMultiple;
 
 	while (multiple % itemMultiple !== 0) {
 		multiple += unitOfMeasureMultiple;
 	}
 
-	return Number(multiple / Math.pow(10, precisionAdjustment))
-		.toFixed(precision);
+	return Number(multiple / Math.pow(10, precisionAdjustment)).toFixed(
+		precision
+	);
+
 }
 
 export function getProductMaxQuantity(
