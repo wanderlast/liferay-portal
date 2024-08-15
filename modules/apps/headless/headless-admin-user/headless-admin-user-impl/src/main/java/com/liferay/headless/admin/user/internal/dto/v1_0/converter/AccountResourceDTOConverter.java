@@ -102,6 +102,7 @@ public class AccountResourceDTOConverter
 					accountEntry::getDefaultShippingAddressId);
 				setDescription(accountEntry::getDescription);
 				setDomains(() -> StringUtil.split(accountEntry.getDomains()));
+				setEmailAddress(accountEntry::getEmailAddress);
 				setExternalReferenceCode(
 					accountEntry::getExternalReferenceCode);
 				setId(accountEntry::getAccountEntryId);

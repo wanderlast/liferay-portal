@@ -442,7 +442,7 @@ public class AccountResourceImpl extends BaseAccountResourceImpl {
 		AccountEntry accountEntry = _accountEntryService.addAccountEntry(
 			contextUser.getUserId(), _getParentAccountId(account),
 			account.getName(), account.getDescription(), _getDomains(account),
-			null, _getLogoBytes(account, null, false), account.getTaxId(),
+			account.getEmailAddress(), _getLogoBytes(account, null, false), account.getTaxId(),
 			_getType(account), _getStatus(account),
 			_createServiceContext(account));
 
@@ -545,7 +545,7 @@ public class AccountResourceImpl extends BaseAccountResourceImpl {
 		AccountEntry accountEntry = _accountEntryService.updateAccountEntry(
 			accountId, _getParentAccountId(account), account.getName(),
 			account.getDescription(), _isDeleteLogo(account, null),
-			_getDomains(account), null,
+			_getDomains(account), account.getEmailAddress(),
 			_getLogoBytes(
 				account, _accountEntryService.fetchAccountEntry(accountId),
 				false),
