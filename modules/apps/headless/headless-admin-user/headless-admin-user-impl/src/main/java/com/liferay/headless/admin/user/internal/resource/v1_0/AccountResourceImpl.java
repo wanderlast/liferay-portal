@@ -442,8 +442,8 @@ public class AccountResourceImpl extends BaseAccountResourceImpl {
 		AccountEntry accountEntry = _accountEntryService.addAccountEntry(
 			contextUser.getUserId(), _getParentAccountId(account),
 			account.getName(), account.getDescription(), _getDomains(account),
-			account.getEmailAddress(), _getLogoBytes(account, null, false), account.getTaxId(),
-			_getType(account), _getStatus(account),
+			account.getEmailAddress(), _getLogoBytes(account, null, false),
+			account.getTaxId(), _getType(account), _getStatus(account),
 			_createServiceContext(account));
 
 		if (_isValidId(account.getDefaultBillingAddressId())) {
