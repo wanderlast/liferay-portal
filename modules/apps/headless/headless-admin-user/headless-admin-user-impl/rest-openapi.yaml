@@ -108,6 +108,9 @@ components:
                     items:
                         type: string
                     type: array
+                emailAddress:
+                    format: email
+                    type: string
                 externalReferenceCode:
                     # @review
                     description:
