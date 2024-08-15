@@ -495,6 +495,47 @@ public class Account implements Serializable {
 	@JsonIgnore
 	private Supplier<String[]> _domainsSupplier;
 
+	@Schema
+	public String getEmailAddress() {
+		if (_emailAddressSupplier != null) {
+			emailAddress = _emailAddressSupplier.get();
+
+			_emailAddressSupplier = null;
+		}
+
+		return emailAddress;
+	}
+
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
+
+		_emailAddressSupplier = null;
+	}
+
+	@JsonIgnore
+	public void setEmailAddress(
+		UnsafeSupplier<String, Exception> emailAddressUnsafeSupplier) {
+
+		_emailAddressSupplier = () -> {
+			try {
+				return emailAddressUnsafeSupplier.get();
+			}
+			catch (RuntimeException runtimeException) {
+				throw runtimeException;
+			}
+			catch (Exception exception) {
+				throw new RuntimeException(exception);
+			}
+		};
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String emailAddress;
+
+	@JsonIgnore
+	private Supplier<String> _emailAddressSupplier;
+
 	@Schema(description = "The optional external key of this account.")
 	public String getExternalReferenceCode() {
 		if (_externalReferenceCodeSupplier != null) {
@@ -1194,6 +1235,22 @@ public class Account implements Serializable {
 			}
 
 			sb.append("]");
+		}
+
+		String emailAddress = getEmailAddress();
+
+		if (emailAddress != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"emailAddress\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(emailAddress));
+
+			sb.append("\"");
 		}
 
 		String externalReferenceCode = getExternalReferenceCode();

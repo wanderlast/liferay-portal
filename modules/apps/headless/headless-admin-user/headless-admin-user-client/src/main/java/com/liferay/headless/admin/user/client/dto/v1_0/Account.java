@@ -246,6 +246,27 @@ public class Account implements Cloneable, Serializable {
 
 	protected String[] domains;
 
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
+	}
+
+	public void setEmailAddress(
+		UnsafeSupplier<String, Exception> emailAddressUnsafeSupplier) {
+
+		try {
+			emailAddress = emailAddressUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected String emailAddress;
+
 	public String getExternalReferenceCode() {
 		return externalReferenceCode;
 	}

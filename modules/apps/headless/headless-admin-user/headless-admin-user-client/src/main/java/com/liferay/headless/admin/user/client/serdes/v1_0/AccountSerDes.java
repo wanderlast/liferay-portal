@@ -196,6 +196,20 @@ public class AccountSerDes {
 			sb.append("]");
 		}
 
+		if (account.getEmailAddress() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"emailAddress\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(account.getEmailAddress()));
+
+			sb.append("\"");
+		}
+
 		if (account.getExternalReferenceCode() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -459,6 +473,13 @@ public class AccountSerDes {
 			map.put("domains", String.valueOf(account.getDomains()));
 		}
 
+		if (account.getEmailAddress() == null) {
+			map.put("emailAddress", null);
+		}
+		else {
+			map.put("emailAddress", String.valueOf(account.getEmailAddress()));
+		}
+
 		if (account.getExternalReferenceCode() == null) {
 			map.put("externalReferenceCode", null);
 		}
@@ -607,6 +628,9 @@ public class AccountSerDes {
 			else if (Objects.equals(jsonParserFieldName, "domains")) {
 				return false;
 			}
+			else if (Objects.equals(jsonParserFieldName, "emailAddress")) {
+				return false;
+			}
 			else if (Objects.equals(
 						jsonParserFieldName, "externalReferenceCode")) {
 
@@ -740,6 +764,11 @@ public class AccountSerDes {
 				if (jsonParserFieldValue != null) {
 					account.setDomains(
 						toStrings((Object[])jsonParserFieldValue));
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "emailAddress")) {
+				if (jsonParserFieldValue != null) {
+					account.setEmailAddress((String)jsonParserFieldValue);
 				}
 			}
 			else if (Objects.equals(

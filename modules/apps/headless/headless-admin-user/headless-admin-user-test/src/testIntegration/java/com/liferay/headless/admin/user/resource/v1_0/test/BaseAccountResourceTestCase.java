@@ -175,6 +175,7 @@ public abstract class BaseAccountResourceTestCase {
 		Account account = randomAccount();
 
 		account.setDescription(regex);
+		account.setEmailAddress(regex);
 		account.setExternalReferenceCode(regex);
 		account.setLogoURL(regex);
 		account.setName(regex);
@@ -187,6 +188,7 @@ public abstract class BaseAccountResourceTestCase {
 		account = AccountSerDes.toDTO(json);
 
 		Assert.assertEquals(regex, account.getDescription());
+		Assert.assertEquals(regex, account.getEmailAddress());
 		Assert.assertEquals(regex, account.getExternalReferenceCode());
 		Assert.assertEquals(regex, account.getLogoURL());
 		Assert.assertEquals(regex, account.getName());
@@ -2650,6 +2652,14 @@ public abstract class BaseAccountResourceTestCase {
 				continue;
 			}
 
+			if (Objects.equals("emailAddress", additionalAssertFieldName)) {
+				if (account.getEmailAddress() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
 			if (Objects.equals(
 					"externalReferenceCode", additionalAssertFieldName)) {
 
@@ -2963,6 +2973,17 @@ public abstract class BaseAccountResourceTestCase {
 			if (Objects.equals("domains", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
 						account1.getDomains(), account2.getDomains())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("emailAddress", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						account1.getEmailAddress(),
+						account2.getEmailAddress())) {
 
 					return false;
 				}
@@ -3345,6 +3366,52 @@ public abstract class BaseAccountResourceTestCase {
 				"Invalid entity field " + entityFieldName);
 		}
 
+		if (entityFieldName.equals("emailAddress")) {
+			Object object = account.getEmailAddress();
+
+			String value = String.valueOf(object);
+
+			if (operator.equals("contains")) {
+				sb = new StringBundler();
+
+				sb.append("contains(");
+				sb.append(entityFieldName);
+				sb.append(",'");
+
+				if ((object != null) && (value.length() > 2)) {
+					sb.append(value.substring(1, value.length() - 1));
+				}
+				else {
+					sb.append(value);
+				}
+
+				sb.append("')");
+			}
+			else if (operator.equals("startswith")) {
+				sb = new StringBundler();
+
+				sb.append("startswith(");
+				sb.append(entityFieldName);
+				sb.append(",'");
+
+				if ((object != null) && (value.length() > 1)) {
+					sb.append(value.substring(0, value.length() - 1));
+				}
+				else {
+					sb.append(value);
+				}
+
+				sb.append("')");
+			}
+			else {
+				sb.append("'");
+				sb.append(value);
+				sb.append("'");
+			}
+
+			return sb.toString();
+		}
+
 		if (entityFieldName.equals("externalReferenceCode")) {
 			Object object = account.getExternalReferenceCode();
 
@@ -3622,6 +3689,9 @@ public abstract class BaseAccountResourceTestCase {
 				defaultShippingAddressId = RandomTestUtil.randomLong();
 				description = StringUtil.toLowerCase(
 					RandomTestUtil.randomString());
+				emailAddress =
+					StringUtil.toLowerCase(RandomTestUtil.randomString()) +
+						"@liferay.com";
 				externalReferenceCode = StringUtil.toLowerCase(
 					RandomTestUtil.randomString());
 				id = RandomTestUtil.randomLong();
