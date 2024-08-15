@@ -4,6 +4,7 @@
  */
 
 import {Locator, Page} from '@playwright/test';
+
 import {waitForSuccessAlert} from '../../utils/waitForSuccessAlert';
 
 export class EditAccountPage {

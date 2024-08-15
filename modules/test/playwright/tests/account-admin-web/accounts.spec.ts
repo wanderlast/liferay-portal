@@ -325,7 +325,9 @@ test('LPD-33636 Email address is not deleted by saving in the UI', async ({
 	await (await accountsPage.accountsTableRowLink(account.name)).click();
 	await editAccountPage.saveChange();
 
-	const accountResponse = await apiHelpers.headlessAdminUser.getAccountByName(account.name);
+	const accountResponse = await apiHelpers.headlessAdminUser.getAccountByName(
+		account.name
+	);
 
 	expect(accountResponse.emailAddress).toEqual(account.emailAddress);
 });
