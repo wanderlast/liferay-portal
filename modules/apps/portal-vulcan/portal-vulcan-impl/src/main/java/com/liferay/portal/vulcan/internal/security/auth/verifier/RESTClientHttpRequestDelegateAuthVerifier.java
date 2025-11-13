@@ -10,7 +10,7 @@ import com.liferay.portal.kernel.security.auth.AccessControlContext;
 import com.liferay.portal.kernel.security.auth.verifier.AuthVerifier;
 import com.liferay.portal.kernel.security.auth.verifier.AuthVerifierResult;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.vulcan.internal.template.servlet.RESTClientHttpRequestDelegate;
+import com.liferay.portal.vulcan.internal.template.servlet.RESTClientHttpServletRequestWrapper;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -45,7 +45,7 @@ public class RESTClientHttpRequestDelegateAuthVerifier
 			accessControlContext.getRequest();
 
 		Object attribute = httpServletRequest.getAttribute(
-			RESTClientHttpRequestDelegate.class.getName());
+			RESTClientHttpServletRequestWrapper.class.getName());
 
 		if (attribute == null) {
 			return authVerifierResult;
