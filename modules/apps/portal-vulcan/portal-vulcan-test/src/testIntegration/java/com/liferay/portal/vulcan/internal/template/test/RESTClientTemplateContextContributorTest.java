@@ -125,10 +125,12 @@ public class RESTClientTemplateContextContributorTest {
 			Assert.assertThat(
 				HTTPTestUtil.invokeToString(
 					null,
-					"web" + friendlyUrlPath + "/portal-vulcan-test",
+					"web" + friendlyUrlPath + "/portal-vulcan-test?pageSize=2",
 					Http.Method.GET),
 				CoreMatchers.allOf(
-					CoreMatchers.containsString("Countries: spain"),
+					CoreMatchers.containsString("Name: spain."),
+					CoreMatchers.containsString("Page Size (default): 20."),
+					CoreMatchers.containsString("Page Size (query): 1."),
 					CoreMatchers.containsString(
 						"User: " + user.getScreenName() + ".")));
 		}
