@@ -57,10 +57,14 @@ public class AccountUsersFilterContributor implements FilterContributor {
 							OrganizationConstants.ANY_PARENT_ORGANIZATION_ID});
 		}
 		else if(currentValue.equals("selected-account-users")) {
-			params.put("accountEntryIds", new long[] {Long.valueOf(currentValue)});
+			params.put(
+					"accountEntryIds", new long[] {
+							Long.valueOf(currentValue)});
 		}
 		else if (currentValue.equals("selected-organization-users")) {
-			params.put("selectedOrganizationIds", new long[] {Long.valueOf(currentValue)});
+			params.put(
+					"selectedOrganizationIds", new long[] {
+							Long.valueOf(currentValue)});
 		}
 		else if (currentValue.equals("unassociated-users")) {
 			params.put("noAccountEntriesAndNoOrganizations", new long[0]);
