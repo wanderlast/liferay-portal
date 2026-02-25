@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {sub} from 'frontend-js-web';
+
 import {
 	IBulkActionFDSData,
 	IBulkActionTaskType,
@@ -25,6 +27,8 @@ import {
 	BULK_ACTION_TAGS,
 	BULK_ACTION_UPDATE_OBJECT_VALUES,
 } from './constants';
+
+type MessageType = 'danger' | 'info' | 'success' | 'warning';
 
 type BulkActionMessage = {
 	[actionType in keyof IBulkActionTaskType]: {
@@ -351,12 +355,57 @@ const BULK_ACTION_MESSAGES: BulkActionMessage = {
 
 export function getBulkActionTaskMessage(
 	actionType: keyof IBulkActionTaskType,
-	messageType: 'danger' | 'info' | 'success' | 'warning' = 'info',
-	{items = [], selectAll = false}: IBulkActionFDSData
+	messageType: MessageType = 'info',
+	selectedData: IBulkActionFDSData,
+	additionalData?: {
+		assetName?: string;
+		replacement?: string;
+		search?: string;
+		targetName?: string;
+	}
 ): string {
-	return (
-		BULK_ACTION_MESSAGES?.[actionType]?.[messageType]?.[
-			selectAll ? 'all' : items.length === 1 ? 'singular' : 'plural'
-		] || ''
-	);
+	const {items = [], selectAll = false} = selectedData;
+	const messageKey = selectAll
+		? 'all'
+		: items.length === 1
+			? 'singular'
+			: 'plural';
+
+	const message =
+		BULK_ACTION_MESSAGES?.[actionType]?.[messageType]?.[messageKey];
+
+	if (!message) {
+		return '';
+	}
+
+	const args: (string | number)[] = [];
+
+	if (additionalData?.search) {
+		args.push(Liferay.Util.escapeHTML(additionalData.search));
+	}
+
+	if (additionalData?.replacement) {
+		args.push(Liferay.Util.escapeHTML(additionalData.replacement));
+	}
+
+	if (messageKey === 'singular') {
+		const assetName = additionalData?.assetName || items[0]?.title;
+
+		if (assetName) {
+			args.push(Liferay.Util.escapeHTML(assetName));
+		}
+	}
+	else if (messageKey === 'plural') {
+		args.push(items.length);
+	}
+
+	if (additionalData?.targetName) {
+		args.push(
+			`<strong>${Liferay.Util.escapeHTML(
+				additionalData.targetName
+			)}</strong>`
+		);
+	}
+
+	return sub(message, args);
 }

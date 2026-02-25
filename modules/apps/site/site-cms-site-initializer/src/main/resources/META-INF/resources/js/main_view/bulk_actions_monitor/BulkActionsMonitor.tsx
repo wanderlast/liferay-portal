@@ -12,6 +12,7 @@ import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
 import DropDown from '@clayui/drop-down';
 import ClayLink from '@clayui/link';
 import classnames from 'classnames';
+import {openToast} from 'frontend-js-components-web';
 import {debounce} from 'frontend-js-web';
 
 import AssetBulkActionTaskService from '../../common/services/AssetBulkActionTaskService';
@@ -31,6 +32,7 @@ import {
 	TASK_REPORT_FDS_ID,
 	URL_TASKS_REPORT,
 } from './util/constants';
+import {getBulkActionTaskMessage} from './util/notifications';
 
 type DataSetLoading = Record<string, {resetSearch?: boolean}>;
 
@@ -46,8 +48,25 @@ function BulkActionsMonitor() {
 	const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 	const [processingTasks, setProcessingTask] = useState(0);
 	const processingTasksRef = useRef(0);
+	const [taskContext, setTaskContext] = useState<Record<string, any>>(() => {
+		try {
+			return JSON.parse(
+				sessionStorage.getItem('cms_bulk_action_context') || '{}'
+			);
+		}
+		catch {
+			return {};
+		}
+	});
 	const [tasks, setTasks] = useState<IBulkActionTask[]>([]);
 	const [tasksLoading, setTasksLoading] = useState<boolean>(false);
+
+	useEffect(() => {
+		sessionStorage.setItem(
+			'cms_bulk_action_context',
+			JSON.stringify(taskContext)
+		);
+	}, [taskContext]);
 
 	const getTasks = useCallback(
 		() =>
@@ -59,10 +78,51 @@ function BulkActionsMonitor() {
 					sort: 'dateCreated:desc',
 				});
 
-				setTasks(data?.items || []);
+				const newTasks = data?.items || [];
+
+				tasks.forEach((oldTask) => {
+					const newTask = newTasks.find(
+						(task) => task.id === oldTask.id
+					);
+
+					if (
+						newTask &&
+						oldTask.executionStatus.key !== 'completed' &&
+						newTask.executionStatus.key === 'completed'
+					) {
+						const context = taskContext[newTask.id] || {};
+						const itemsCount =
+							context.itemCount ||
+							(newTask.numberOfItems || 0) -
+								(newTask.numberOfFailedItems || 0);
+
+						const message = getBulkActionTaskMessage(
+							newTask.type,
+							'success',
+							{
+								items: new Array(itemsCount),
+								selectAll: context.selectAll || false,
+							},
+							context
+						);
+
+						if (message) {
+							openToast({message, type: 'success'});
+						}
+
+						setTaskContext((prevContext) => {
+							const newContext = {...prevContext};
+							delete newContext[newTask.id];
+
+							return newContext;
+						});
+					}
+				});
+
+				setTasks(newTasks);
 				setTasksLoading(false);
 			}, 500)(),
-		[setTasks]
+		[tasks, taskContext]
 	);
 
 	const onActiveChange = useCallback(
@@ -148,6 +208,32 @@ function BulkActionsMonitor() {
 
 				if (response.data) {
 					bulkAction.onCreateSuccess(response);
+
+					const newTask = response.data as any;
+
+					if (newTask) {
+						const {additionalData, selectedData} = bulkActionDTO;
+						let assetName: string | undefined;
+
+						if (
+							selectedData.items &&
+							selectedData.items.length === 1
+						) {
+							assetName = selectedData.items[0].title;
+						}
+
+						setTaskContext((prevContext) => ({
+							...prevContext,
+							[newTask.id]: {
+								assetName,
+								itemCount: selectedData.items?.length || 0,
+								replacement: additionalData?.replacement,
+								search: additionalData?.search,
+								selectAll: selectedData.selectAll,
+								targetName: additionalData?.targetName,
+							},
+						}));
+					}
 
 					setDataSetLoading((prevState) => {
 						if (bulkActionDTO.dataSetId) {
