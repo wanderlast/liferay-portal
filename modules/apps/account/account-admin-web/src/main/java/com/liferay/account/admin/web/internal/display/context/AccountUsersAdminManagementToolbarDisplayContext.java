@@ -267,6 +267,43 @@ public class AccountUsersAdminManagementToolbarDisplayContext
 		).build();
 	}
 
+	/*
+			if (count > _DEFAULT_MAX_DISPLAY_ITEMS) {
+			MenuItem menuItem = menuItems.get(menuItems.size() - 1);
+
+			menuItem.setSeparator(true);
+
+			JavaScriptMenuItem javaScriptMenuItem = new JavaScriptMenuItem();
+
+			javaScriptMenuItem.setLabel(
+				_language.get(
+					_portal.getHttpServletRequest(portletRequest),
+					"show-more"));
+			javaScriptMenuItem.setOnClick(
+				StringBundler.concat(
+					"Liferay.Util.openSelectionModal({id: '",
+					portletResponse.getNamespace(), "selectDDMStructure', ",
+					"onSelect: function (selectedItem) {if (selectedItem) {",
+					"const itemValue = JSON.parse(selectedItem.value);",
+					"Liferay.Util.navigate(Liferay.Util.addParams({",
+					_portal.getPortletNamespace(JournalPortletKeys.JOURNAL),
+					"ddmStructureId: itemValue.ddmstructureid}, '",
+					_getEditJournalArticleURL(
+						portletDisplay, portletRequest, themeDisplay),
+					"'));}}, selectEventName: '",
+					portletResponse.getNamespace(),
+					"selectDDMStructure', title: '",
+					UnicodeLanguageUtil.get(
+						_portal.getHttpServletRequest(portletRequest),
+						"select-structure"),
+					"', url: '",
+					_getSelectDDMStructureURL(portletRequest, portletResponse),
+					"'});"));
+
+			menuItems.add(javaScriptMenuItem);
+		}
+	 */
+
 	@Override
 	public List<LabelItem> getFilterLabelItems() {
 		return new LabelItemList() {
