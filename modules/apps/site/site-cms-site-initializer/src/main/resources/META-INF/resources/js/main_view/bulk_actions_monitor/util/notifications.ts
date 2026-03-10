@@ -23,6 +23,7 @@ import {
 	BULK_ACTION_RESET_PERMISSIONS,
 	BULK_ACTION_STATUS,
 	BULK_ACTION_TAGS,
+	BULK_ACTION_UPDATE_OBJECT_VALUES,
 } from './constants';
 
 type BulkActionMessage = {
@@ -332,6 +333,18 @@ const BULK_ACTION_MESSAGES: BulkActionMessage = {
 			singular: Liferay.Language.get(
 				'tags-were-successfully-updated-for-one-asset'
 			),
+		},
+	},
+	[BULK_ACTION_UPDATE_OBJECT_VALUES]: {
+		info: {
+			all: Liferay.Language.get('replacing-x-with-x'),
+			plural: Liferay.Language.get('replacing-x-with-x-across-x-assets'),
+			singular: Liferay.Language.get('replacing-x-with-x-for-one-asset'),
+		},
+		success: {
+			all: Liferay.Language.get('replaced-x-with-x'),
+			plural: Liferay.Language.get('replaced-x-with-x-in-x-assets'),
+			singular: Liferay.Language.get('replaced-x-with-x-for-one-asset'),
 		},
 	},
 };

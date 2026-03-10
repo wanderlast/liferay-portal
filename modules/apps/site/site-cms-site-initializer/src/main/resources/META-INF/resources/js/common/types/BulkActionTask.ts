@@ -139,6 +139,9 @@ export interface IBulkActionType {
 		taxonomyCategoryIdsToAdd?: number[];
 		taxonomyCategoryIdsToRemove?: number[];
 	};
+	UpdateValuesBulkAction: {
+		values?: Record<string, unknown>;
+	};
 }
 
 export interface IBulkActionTaskType {
@@ -158,6 +161,7 @@ export interface IBulkActionTaskType {
 	ResetPermissionBulkAction: string;
 	StatusBulkAction: string;
 	TaxonomyCategoryBulkAction: string;
+	UpdateValuesBulkAction: string;
 }
 
 export type TBulkActionTaskDTO = {
