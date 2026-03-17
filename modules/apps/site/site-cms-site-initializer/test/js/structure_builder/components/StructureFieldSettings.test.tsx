@@ -405,7 +405,7 @@ describe('StructureFieldSettings', () => {
 		expect(MOCK_DISPATCH).toHaveBeenCalledWith({
 			settings: {
 				acceptedFileExtensions: 'jpeg, jpg, pdf, png',
-				fileSource: 'userComputerToDocumentsAndMedia',
+				fileSource: 'userComputerToCMSBasicDocument',
 				maximumFileSize: 100,
 				showFilesInLibrary: true,
 				storageDLFolderPath: '/new',
@@ -427,7 +427,7 @@ describe('StructureFieldSettings', () => {
 		expect(MOCK_DISPATCH).toHaveBeenCalledWith({
 			settings: {
 				acceptedFileExtensions: 'gif',
-				fileSource: 'userComputerToDocumentsAndMedia',
+				fileSource: 'userComputerToCMSBasicDocument',
 				maximumFileSize: 100,
 			},
 			type: 'update-field',
@@ -443,7 +443,7 @@ describe('StructureFieldSettings', () => {
 		expect(MOCK_DISPATCH).toHaveBeenCalledWith({
 			settings: {
 				acceptedFileExtensions: 'jpeg, jpg, pdf, png',
-				fileSource: 'userComputerToDocumentsAndMedia',
+				fileSource: 'userComputerToCMSBasicDocument',
 				maximumFileSize: 200,
 			},
 			type: 'update-field',
