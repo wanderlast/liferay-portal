@@ -7,7 +7,9 @@ import {test} from '@playwright/test';
 
 import {AssetsPage} from '../pages/AssetsPage';
 import {ContentsPage} from '../pages/ContentsPage';
+import {DataSetPage} from '../pages/DataSetPage';
 import {EditVocabularyPage} from '../pages/EditVocabularyPage';
+import {FindAndReplacePage} from '../pages/FindAndReplacePage';
 import {FolderPage} from '../pages/FolderPage';
 import {HomePage} from '../pages/HomePage';
 import {InfoPanelPage} from '../pages/InfoPanelPage';
@@ -23,7 +25,9 @@ import {VocabulariesPage} from '../pages/VocabulariesPage';
 const cmsPagesTest = test.extend<{
 	assetsPage: AssetsPage;
 	contentsPage: ContentsPage;
+	dataSetPage: DataSetPage;
 	editVocabularyPage: EditVocabularyPage;
+	findAndReplacePage: FindAndReplacePage;
 	folderPage: FolderPage;
 	homePage: HomePage;
 	infoPanelPage: InfoPanelPage;
@@ -42,8 +46,14 @@ const cmsPagesTest = test.extend<{
 	contentsPage: async ({page}, use) => {
 		await use(new ContentsPage(page));
 	},
+	dataSetPage: async ({page}, use) => {
+		await use(new DataSetPage(page));
+	},
 	editVocabularyPage: async ({page}, use) => {
 		await use(new EditVocabularyPage(page));
+	},
+	findAndReplacePage: async ({page}, use) => {
+		await use(new FindAndReplacePage(page));
 	},
 	folderPage: async ({page}, use) => {
 		await use(new FolderPage(page));
