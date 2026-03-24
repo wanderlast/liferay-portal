@@ -49,6 +49,7 @@ import com.liferay.portal.kernel.search.filter.TermFilter;
 import com.liferay.portal.kernel.search.filter.TermsFilter;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.GroupLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
@@ -711,10 +712,7 @@ public class TaxonomyCategoryResourceImpl
 				titleMap, descriptionMap, taxonomyVocabularyId,
 				_toStringArray(
 					taxonomyCategory.getTaxonomyCategoryProperties()),
-				ServiceContextBuilder.create(
-					groupId, contextHttpServletRequest,
-					taxonomyCategory.getViewableByAsString()
-				).build()));
+				_getServiceContext(groupId, taxonomyCategory)));
 	}
 
 	private AssetCategory _getAssetCategory(String taxonomyCategoryId)
@@ -911,6 +909,19 @@ public class TaxonomyCategoryResourceImpl
 		projectionList.add(ProjectionFactoryUtil.property("vocabularyId"));
 
 		return projectionList;
+	}
+
+	private ServiceContext _getServiceContext(
+		long groupId, TaxonomyCategory taxonomyCategory) {
+
+		ServiceContext serviceContext = ServiceContextBuilder.create(
+			groupId, contextHttpServletRequest,
+			taxonomyCategory.getViewableByAsString()
+		).build();
+
+		serviceContext.setUuid(taxonomyCategory.getUuid());
+
+		return serviceContext;
 	}
 
 	private Long _getTaxonomyVocabularyId(
