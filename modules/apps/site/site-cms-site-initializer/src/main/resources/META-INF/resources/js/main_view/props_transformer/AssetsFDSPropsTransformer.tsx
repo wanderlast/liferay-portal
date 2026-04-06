@@ -55,18 +55,14 @@ import transformViewsItemsProps from './utils/transformViewsItemProps';
 import GalleryView from './views/GalleryView';
 
 /**
- * Transforms additionalAPIURLParameters to remove folderId filter when searching at root folder.
+ * Transforms additionalAPIURLParameters to remove cmsRoot filter when searching.
  * Hoisted outside component to avoid recreation
  */
-export interface AdditionalAPIURLParametersTransformerArgs {
+const additionalAPIURLParametersTransformer = (loadDataArgs: {
 	additionalAPIURLParameters: string;
-	rootFolder?: boolean;
 	searchParam: string;
-}
-const additionalAPIURLParametersTransformer = (
-	args: AdditionalAPIURLParametersTransformerArgs
-): string | undefined => {
-	const {additionalAPIURLParameters, rootFolder, searchParam} = args;
+}): string | undefined => {
+	const {additionalAPIURLParameters, searchParam} = loadDataArgs;
 
 	if (!additionalAPIURLParameters) {
 		return additionalAPIURLParameters;
@@ -94,17 +90,7 @@ const additionalAPIURLParametersTransformer = (
 	const cleanedFilters = filterContent
 		.split(/\s+and\s+/i)
 		.map((part) => part.trim())
-		.filter((part) => {
-			if (part === 'cmsRoot eq true') {
-				return false;
-			}
-
-			if (rootFolder && part.startsWith('folderId eq')) {
-				return false;
-			}
-
-			return part !== '';
-		});
+		.filter((part) => part !== 'cmsRoot eq true' && part !== '');
 
 	if (!cleanedFilters.length) {
 		const beforeFilter = additionalAPIURLParameters.substring(
@@ -118,13 +104,8 @@ const additionalAPIURLParametersTransformer = (
 	return `${prefixPart}${cleanedFilters.join(' and ')}`.trim();
 };
 
-export interface IBreadcrumbProps {
-	breadcrumbItems: IBreadcrumbItem[];
-	displayType: string;
-	size: string;
-}
-
 export type AdditionalProps = {
+	additionalAPIURLParameters: string | undefined;
 	assetLibraries: AssetLibrary[];
 	autocompleteURL: string;
 	availableExportFileFormats: any[];
@@ -201,22 +182,14 @@ export default function AssetsFDSPropsTransformer({
 		mergedViews = [...nonDefaultViews, galleryViewRenderer];
 	}
 
-	const {
-		additionalAPIURLParameters,
-		rootFolder,
-		...remainingAdditionalProps
-	} = additionalProps || {};
-
-	const bulkActionAPIURL =
-		additionalAPIURLParameters && otherProps.apiURL
-			? `${otherProps.apiURL}${
-					otherProps.apiURL.includes('?') ? '&' : '?'
-				}${additionalAPIURLParameters}`
-			: otherProps.apiURL;
+	const {additionalAPIURLParameters, ...remainingAdditionalProps} =
+		additionalProps || {};
 
 	return {
 		...otherProps,
-		bulkActions: transformFDSBulkActions(bulkActions),
+		additionalAPIURLParameters,
+		additionalAPIURLParametersTransformer,
+		additionalProps: remainingAdditionalProps,
 		creationMenu: {
 			...creationMenu,
 			primaryItems: addOnClickToCreationMenuItems(
