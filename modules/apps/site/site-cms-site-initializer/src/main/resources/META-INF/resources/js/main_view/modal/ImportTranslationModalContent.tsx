@@ -4,16 +4,17 @@
  */
 
 import ClayModal from '@clayui/modal';
-import {openToast} from 'frontend-js-components-web';
+import {
+	FileData,
+	MultipleFileUploader,
+	UploadMessages,
+	openToast,
+} from 'frontend-js-components-web';
 import {sub} from 'frontend-js-web';
 import React from 'react';
 
 import ApiHelper from '../../common/services/ApiHelper';
 import {AssetLibrary} from '../../common/types/AssetLibrary';
-import MultipleFileUploader, {
-	FileData,
-	UploadMessages,
-} from '../multiple_file_uploader/MultipleFileUploader';
 
 const VALID_EXTENSIONS = '.xliff,.xlf,.zip';
 
@@ -95,7 +96,6 @@ export default function ImportTranslationModalContent({
 		failedFiles,
 		successFiles,
 	}: {
-		assetLibrary: AssetLibrary | null;
 		failedFiles: string[];
 		successFiles: string[];
 	}) => {
@@ -139,12 +139,10 @@ export default function ImportTranslationModalContent({
 			</ClayModal.Header>
 
 			<MultipleFileUploader
-				assetLibraries={[]}
 				buttonLabel={Liferay.Language.get('import')}
 				description={Liferay.Language.get(
 					'please-upload-your-translation-files'
 				)}
-				groupId={groupId}
 				messages={IMPORT_MESSAGES}
 				onModalClose={onModalClose}
 				onUploadComplete={onUploadComplete}
