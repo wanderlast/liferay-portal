@@ -232,6 +232,14 @@ public class SiteResourceTest extends BaseSiteResourceTestCase {
 	}
 
 	@Override
+	@Test
+	public void testPutSiteSiteInitializer() throws Exception {
+		super.testPutSiteSiteInitializer();
+
+		_testPutSiteSiteInitializerPreservesFriendlyURL();
+	}
+
+	@Override
 	protected void assertValid(Site site, Map<String, File> multipartFiles)
 		throws Exception {
 	}
@@ -1299,6 +1307,31 @@ public class SiteResourceTest extends BaseSiteResourceTestCase {
 			TestPropsValues.getCompanyId());
 
 		Assert.assertEquals(parentGroup.getGroupId(), group.getParentGroupId());
+	}
+
+	private void _testPutSiteSiteInitializerPreservesFriendlyURL()
+		throws Exception {
+
+		Site postSite = testPutSiteSiteInitializer_addSite();
+
+		String originalFriendlyUrlPath = postSite.getFriendlyUrlPath();
+
+		Site randomSite = randomSite();
+
+		randomSite.setFriendlyUrlPath((String)null);
+
+		Site putSite = siteResource.putSiteSiteInitializer(
+			postSite.getExternalReferenceCode(), randomSite,
+			getMultipartFiles());
+
+		Assert.assertEquals(
+			originalFriendlyUrlPath, putSite.getFriendlyUrlPath());
+
+		Site getSite = siteResource.getSite(
+			postSite.getExternalReferenceCode());
+
+		Assert.assertEquals(
+			originalFriendlyUrlPath, getSite.getFriendlyUrlPath());
 	}
 
 	private void _testPutSiteWithExcludedTypeSettings() throws Exception {
