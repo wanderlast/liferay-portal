@@ -462,8 +462,8 @@ public class SiteResourceImpl extends BaseSiteResourceImpl {
 			_getTypeSettings(site, null),
 			_isManualMembership(site.getManualMembership()),
 			_getMembershipRestriction(site.getMembershipRestriction()),
-			_getFriendlyUrlPath(site), true, false, _isActive(site.getActive()),
-			serviceContext);
+			_getFriendlyUrlPath(null, site), true, false,
+			_isActive(site.getActive()), serviceContext);
 
 		LiveUsers.joinGroup(
 			contextCompany.getCompanyId(), group.getGroupId(),
@@ -506,8 +506,12 @@ public class SiteResourceImpl extends BaseSiteResourceImpl {
 		).build();
 	}
 
-	private String _getFriendlyUrlPath(Site site) {
+	private String _getFriendlyUrlPath(Group group, Site site) {
 		String friendlyUrlPath = site.getFriendlyUrlPath();
+
+		if (Validator.isNull(friendlyUrlPath) && (group != null)) {
+			friendlyUrlPath = group.getFriendlyURL();
+		}
 
 		if (Validator.isNotNull(friendlyUrlPath) &&
 			!friendlyUrlPath.startsWith(StringPool.SLASH)) {
@@ -1015,8 +1019,8 @@ public class SiteResourceImpl extends BaseSiteResourceImpl {
 				_getTypeSettings(site, group.getTypeSettingsProperties()),
 				_isManualMembership(site.getManualMembership()),
 				_getMembershipRestriction(site.getMembershipRestriction()),
-				_getFriendlyUrlPath(site), false, _isActive(site.getActive()),
-				_getServiceContext());
+				_getFriendlyUrlPath(group, site), false,
+				_isActive(site.getActive()), _getServiceContext());
 
 			LiveUsers.joinGroup(
 				contextCompany.getCompanyId(), updatedGroup.getGroupId(),
