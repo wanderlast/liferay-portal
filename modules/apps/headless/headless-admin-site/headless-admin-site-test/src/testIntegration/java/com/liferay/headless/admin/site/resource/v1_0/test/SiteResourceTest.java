@@ -236,7 +236,7 @@ public class SiteResourceTest extends BaseSiteResourceTestCase {
 	public void testPutSiteSiteInitializer() throws Exception {
 		super.testPutSiteSiteInitializer();
 
-		_testPutSiteSiteInitializerPreservesFriendlyURL();
+		_testPutSiteSiteInitializerPreservesFriendlyUrlPath();
 	}
 
 	@Override
@@ -1309,7 +1309,7 @@ public class SiteResourceTest extends BaseSiteResourceTestCase {
 		Assert.assertEquals(parentGroup.getGroupId(), group.getParentGroupId());
 	}
 
-	private void _testPutSiteSiteInitializerPreservesFriendlyURL()
+	private void _testPutSiteSiteInitializerPreservesFriendlyUrlPath()
 		throws Exception {
 
 		Site postSite = testPutSiteSiteInitializer_addSite();
