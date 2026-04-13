@@ -53,8 +53,7 @@ public class SegmentsEntryRetrieverImpl implements SegmentsEntryRetriever {
 		return ArrayUtil.toLongArray(
 			SetUtil.fromArray(
 				ArrayUtil.append(
-					_getSegmentEntryIds(
-						groupId, userId, context, segmentEntryIds),
+					_getSegmentEntryIds(groupId, userId, context),
 					SegmentsEntryConstants.ID_DEFAULT)));
 	}
 
@@ -73,7 +72,7 @@ public class SegmentsEntryRetrieverImpl implements SegmentsEntryRetriever {
 	}
 
 	private long[] _getSegmentEntryIds(
-		long groupId, long userId, Context context, long[] segmentEntryIds) {
+		long groupId, long userId, Context context) {
 
 		long segmentsEntryId = _getSegmentsEntryId();
 
@@ -84,7 +83,7 @@ public class SegmentsEntryRetrieverImpl implements SegmentsEntryRetriever {
 		try {
 			return _segmentsEntryProviderRegistry.getSegmentsEntryIds(
 				groupId, User.class.getName(), userId, context,
-				segmentEntryIds);
+				new long[0]);
 		}
 		catch (PortalException portalException) {
 			if (_log.isWarnEnabled()) {

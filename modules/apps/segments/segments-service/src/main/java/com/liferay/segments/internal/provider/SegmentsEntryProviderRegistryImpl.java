@@ -134,7 +134,7 @@ public class SegmentsEntryProviderRegistryImpl
 			finalSegmentsEntryIds = ArrayUtil.append(
 				finalSegmentsEntryIds,
 				segmentsEntryProvider.getSegmentsEntryIds(
-					groupId, className, classPK, context, segmentEntryIds,
+					groupId, className, classPK, context, new long[0],
 					finalSegmentsEntryIds));
 		}
 
