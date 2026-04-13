@@ -157,8 +157,6 @@ public class ObjectEntryInfoItemValuesProviderUtil {
 				continue;
 			}
 
-			Map<String, Object> properties = new HashMap<>();
-
 			ObjectRelationship objectRelationship =
 				objectRelationshipLocalService.
 					fetchObjectRelationshipByObjectFieldId2(
@@ -175,8 +173,13 @@ public class ObjectEntryInfoItemValuesProviderUtil {
 					GetterUtil.getLong(values.get(objectField.getName()))),
 				themeDisplay);
 
+			Map<String, Object> properties = new HashMap<>();
+			String relatedObjectEntryDefaultLanguageId = defaultLanguageId;
+
 			if (objectEntry != null) {
 				properties = objectEntry.getProperties();
+				relatedObjectEntryDefaultLanguageId =
+					objectEntry.getDefaultLanguageId();
 			}
 
 			for (ObjectField relatedObjectField :
@@ -199,8 +202,8 @@ public class ObjectEntryInfoItemValuesProviderUtil {
 				}
 
 				_addInfoFieldValue(
-					defaultLanguageId, dlAppLocalService, dlURLHelper,
-					infoFieldValues, listTypeEntryLocalService,
+					relatedObjectEntryDefaultLanguageId, dlAppLocalService,
+					dlURLHelper, infoFieldValues, listTypeEntryLocalService,
 					objectEntryLocalService, relatedObjectField,
 					objectFieldInfoFieldConverter, namespace,
 					objectRelationshipLocalService, themeDisplay, value);
