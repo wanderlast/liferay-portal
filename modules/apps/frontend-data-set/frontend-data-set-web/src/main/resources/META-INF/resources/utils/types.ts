@@ -111,8 +111,7 @@ export interface IBulkActionItem {
 	data?: {
 		highlighted?: boolean;
 		id?: string;
-		modalSize?: string;
-		visibilityFilters?: IActionsDataFilter;
+		size?: string;
 	};
 	href?: string;
 	icon?: string;
@@ -192,10 +191,10 @@ export interface IItemActionsData {
 	status?: ModalStatus;
 	successMessage?: string;
 	title?: string;
-	visibilityFilters?: IActionsDataFilter;
+	visibilityFilters?: IItemActionsDataFilter;
 }
 
-export interface IActionsDataFilter {
+export interface IItemActionsDataFilter {
 	[key: string]: boolean | number | string;
 }
 
