@@ -8,6 +8,7 @@ import ClayButton from '@clayui/button';
 import ClayIcon from '@clayui/icon';
 import ClayPopover, {ALIGN_POSITIONS} from '@clayui/popover';
 import {ClayTooltipProvider} from '@clayui/tooltip';
+import classNames from 'classnames';
 import React, {useState} from 'react';
 
 import useId from '../hooks/useId';
@@ -79,6 +80,8 @@ export default function FeatureIndicator({
 		tooltipTitle = Liferay.Language.get('open-maintenance-mode-definition');
 	}
 
+	const showLabel = type !== 'maintenance';
+
 	return (
 		<LearnResourcesContext.Provider value={learnResourceContext}>
 			{interactive ? (
@@ -104,12 +107,18 @@ export default function FeatureIndicator({
 								title={tooltipTitle}
 								translucent
 							>
-								<span className="inline-item text-uppercase">
-									{label}
-								</span>
+								{showLabel && (
+									<span className="inline-item text-uppercase">
+										{label}
+									</span>
+								)}
 
 								{symbol && (
-									<span className="inline-item inline-item-after ml-2">
+									<span
+										className={classNames('inline-item', {
+											'inline-item-after ml-2': showLabel,
+										})}
+									>
 										<ClayIcon symbol={symbol} />
 									</span>
 								)}
