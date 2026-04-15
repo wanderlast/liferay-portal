@@ -294,7 +294,7 @@
 				"scope": 1
 			},
 			{
-				"actionId": "MANAGE_INVENTORY",
+				"actionId": "VIEW_INVENTORIES",
 				"resource": "com.liferay.commerce.inventory",
 				"scope": 1
 			},
@@ -306,6 +306,11 @@
 			{
 				"actionId": "VIEW",
 				"resource": "com.liferay.commerce.model.CommerceOrder",
+				"scope": 1
+			},
+			{
+				"actionId": "VIEW",
+				"resource": "com.liferay.commerce.model.CommerceShipment",
 				"scope": 1
 			},
 			{
@@ -329,8 +334,13 @@
 				"scope": 1
 			},
 			{
-				"actionId": "MANAGE_COMMERCE_PRODUCT_MEASUREMENT_UNITS",
+				"actionId": "VIEW_COMMERCE_PRODUCT_MEASUREMENT_UNITS",
 				"resource": "com.liferay.commerce.product",
+				"scope": 1
+			},
+			{
+				"actionId": "ADD_COMMERCE_SHIPMENT",
+				"resource": "com.liferay.commerce.shipment",
 				"scope": 1
 			},
 			{
@@ -339,7 +349,7 @@
 				"scope": 1
 			},
 			{
-				"actionId": "MANAGE_COMMERCE_SHIPMENTS",
+				"actionId": "VIEW_COMMERCE_SHIPMENTS",
 				"resource": "com.liferay.commerce.shipment",
 				"scope": 1
 			},
