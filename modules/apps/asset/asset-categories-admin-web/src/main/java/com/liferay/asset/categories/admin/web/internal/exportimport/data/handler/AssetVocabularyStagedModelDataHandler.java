@@ -237,8 +237,6 @@ public class AssetVocabularyStagedModelDataHandler
 				null, portletDataContext.getScopeGroupId(),
 				vocabulary.getName(), 2);
 
-			serviceContext.setUuid(vocabulary.getUuid());
-
 			importedVocabulary = _assetVocabularyLocalService.addVocabulary(
 				vocabulary.getExternalReferenceCode(), userId,
 				portletDataContext.getScopeGroupId(), name,
@@ -263,6 +261,7 @@ public class AssetVocabularyStagedModelDataHandler
 		}
 
 		importedVocabulary.setModifiedDate(vocabulary.getModifiedDate());
+		importedVocabulary.setUuid(vocabulary.getUuid());
 
 		importedVocabulary = _assetVocabularyLocalService.updateAssetVocabulary(
 			importedVocabulary);

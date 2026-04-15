@@ -259,8 +259,6 @@ public class AssetCategoryStagedModelDataHandler
 				null, portletDataContext.getScopeGroupId(), parentCategoryId,
 				category.getName(), vocabularyId, 2);
 
-			serviceContext.setUuid(category.getUuid());
-
 			importedCategory = _assetCategoryLocalService.addCategory(
 				category.getExternalReferenceCode(), userId,
 				portletDataContext.getScopeGroupId(), parentCategoryId,
@@ -285,6 +283,7 @@ public class AssetCategoryStagedModelDataHandler
 		}
 
 		importedCategory.setModifiedDate(category.getModifiedDate());
+		importedCategory.setUuid(category.getUuid());
 
 		importedCategory = _assetCategoryLocalService.updateAssetCategory(
 			importedCategory);
