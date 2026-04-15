@@ -115,7 +115,17 @@ export interface IBulkActionItem {
 	};
 	href?: string;
 	icon?: string;
-	isVisible?: (selectedItems: Array<any>) => boolean;
+	isVisible?: ({
+		activeFilters,
+		activeSearch,
+		allItemsSelectedActive,
+		selectedItems,
+	}: {
+		activeFilters?: Array<IBaseFilterState>;
+		activeSearch?: ISearch;
+		allItemsSelectedActive?: boolean;
+		selectedItems?: Array<any>;
+	}) => boolean;
 	label?: string;
 	method?: string;
 	target?: 'modal' | 'sidePanel';
@@ -502,7 +512,7 @@ export type VisibleFieldNames = {
 	[fieldName: string]: boolean;
 };
 
-interface ISearch {
+export interface ISearch {
 	query: string;
 }
 
