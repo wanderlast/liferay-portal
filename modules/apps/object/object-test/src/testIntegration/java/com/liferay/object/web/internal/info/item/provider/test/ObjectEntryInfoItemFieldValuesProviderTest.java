@@ -352,8 +352,6 @@ public class ObjectEntryInfoItemFieldValuesProviderTest {
 				infoItemFieldValues.getInfoFieldValue(
 					objectField.getObjectFieldId() + "#downloadURL");
 
-			Assert.assertNotNull(downloadURLInfoFieldValue);
-
 			Assert.assertNotNull(
 				downloadURLInfoFieldValue.getValue(LocaleUtil.US));
 		}
