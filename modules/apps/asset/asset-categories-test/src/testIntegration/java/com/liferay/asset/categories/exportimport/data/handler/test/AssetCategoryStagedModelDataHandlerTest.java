@@ -13,8 +13,10 @@ import com.liferay.asset.kernel.model.AssetVocabularyConstants;
 import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
 import com.liferay.asset.kernel.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.asset.test.util.AssetTestUtil;
+import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.test.util.lar.BaseStagedModelDataHandlerTestCase;
 import com.liferay.petra.string.StringPool;
+import com.liferay.petra.lang.SafeCloseable;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.StagedModel;
@@ -95,6 +97,59 @@ public class AssetCategoryStagedModelDataHandlerTest
 					externalReferenceCode, liveGroup.getGroupId());
 
 		Assert.assertEquals(name, importedCategory.getName());
+	}
+
+	@Test
+	public void testImportWithExistingExternalReferenceCode() throws Exception {
+		initExport();
+
+		AssetVocabulary assetVocabulary = AssetTestUtil.addVocabulary(
+			stagingGroup.getGroupId());
+
+		AssetCategory assetCategory = AssetTestUtil.addCategory(
+			stagingGroup.getGroupId(), assetVocabulary.getVocabularyId());
+
+		StagedModelDataHandlerUtil.exportStagedModel(
+			portletDataContext, assetCategory);
+
+		AssetVocabulary existingAssetVocabulary = AssetTestUtil.addVocabulary(
+			liveGroup.getGroupId());
+
+		existingAssetVocabulary.setExternalReferenceCode(
+			assetVocabulary.getExternalReferenceCode());
+
+		existingAssetVocabulary =
+			AssetVocabularyLocalServiceUtil.updateAssetVocabulary(
+				existingAssetVocabulary);
+
+		AssetCategory existingCategory = AssetTestUtil.addCategory(
+			liveGroup.getGroupId(), existingAssetVocabulary.getVocabularyId());
+
+		existingCategory.setExternalReferenceCode(
+			assetCategory.getExternalReferenceCode());
+
+		existingCategory = AssetCategoryLocalServiceUtil.updateAssetCategory(
+			existingCategory);
+
+		try (SafeCloseable safeCloseable = initImportWithSafeCloseable()) {
+			AssetCategory exportedCategory =
+				(AssetCategory)readExportedStagedModel(assetCategory);
+
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, exportedCategory);
+
+			AssetCategory importedCategory =
+				AssetCategoryLocalServiceUtil.
+					fetchAssetCategoryByExternalReferenceCode(
+						assetCategory.getExternalReferenceCode(),
+						liveGroup.getGroupId());
+
+			Assert.assertEquals(
+				existingCategory.getCategoryId(),
+				importedCategory.getCategoryId());
+			Assert.assertEquals(
+				assetCategory.getUuid(), importedCategory.getUuid());
+		}
 	}
 
 	@Override
