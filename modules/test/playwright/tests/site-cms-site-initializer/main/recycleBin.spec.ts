@@ -13,7 +13,7 @@ import {checkAccessibility} from '../../../utils/checkAccessibility';
 import getRandomString from '../../../utils/getRandomString';
 import performLoginViaApi, {
 	performUserSwitch,
-	userData,
+    userData,
 } from '../../../utils/performLogin';
 import {waitForAlert} from '../../../utils/waitForAlert';
 import {cmsPagesTest} from './fixtures/cmsPagesTest';
