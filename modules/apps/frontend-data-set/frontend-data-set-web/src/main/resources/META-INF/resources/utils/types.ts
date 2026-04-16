@@ -128,6 +128,7 @@ export interface IBulkActionItem {
 	}) => boolean;
 	label?: string;
 	method?: string;
+	slug?: string;
 	target?: 'modal' | 'sidePanel';
 }
 export interface ICreationActionItem {
@@ -390,7 +391,7 @@ export interface IInfoPanelComponent {
 }
 
 export interface IManagementBarProps {
-	bulkActions?: Array<IBulkActionItem>;
+	bulkActions: Array<IBulkActionItem>;
 	creationMenu?: {
 		primaryItems: Array<ICreationActionItem>;
 		secondaryItems?: any[];
@@ -523,6 +524,7 @@ export interface IBaseFilterState {
 	id: string;
 	label: string;
 	moduleURL?: string;
+	multiple?: boolean;
 	odataFilterString?: string;
 	preloadedData: Record<string, unknown>;
 	selectedData?: Record<string, unknown>;
