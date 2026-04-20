@@ -201,6 +201,11 @@ public class ViewAllSectionDisplayContext extends BaseSectionDisplayContext {
 			"ViewAllSectionSystemFDSEntry must calculate this");
 	}
 
+	@Override
+	protected boolean isFolderSearchEnabled() {
+		return true;
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		ViewAllSectionDisplayContext.class);
 

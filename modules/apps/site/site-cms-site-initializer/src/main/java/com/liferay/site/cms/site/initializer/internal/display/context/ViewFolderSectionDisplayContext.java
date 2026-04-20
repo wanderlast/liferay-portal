@@ -81,8 +81,6 @@ public class ViewFolderSectionDisplayContext extends BaseSectionDisplayContext {
 		return new HashMapBuilder<>().putAll(
 			super.getAdditionalProps()
 		).put(
-			"additionalAPIURLParameters", getAdditionalAPIURLParameters()
-		).put(
 			"breadcrumbProps", getBreadcrumbProps()
 		).put(
 			"galleryViewEnabled", !contentsFolder
@@ -90,10 +88,6 @@ public class ViewFolderSectionDisplayContext extends BaseSectionDisplayContext {
 			"rootObjectEntryFolderExternalReferenceCode",
 			getRootObjectEntryFolderExternalReferenceCode()
 		).build();
-	}
-
-	public String getAPIURL() {
-		return "/o/search/v1.0/search";
 	}
 
 	public Map<String, Object> getBreadcrumbProps() {
@@ -393,6 +387,11 @@ public class ViewFolderSectionDisplayContext extends BaseSectionDisplayContext {
 	@Override
 	protected String getCMSSectionFilterString() {
 		return null;
+	}
+
+	@Override
+	protected boolean isFolderSearchEnabled() {
+		return true;
 	}
 
 	private final HttpServletRequest _httpServletRequest;
