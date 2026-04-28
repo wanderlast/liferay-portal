@@ -12022,9 +12022,8 @@ public class DefaultObjectEntryManagerImplTest
 			String.valueOf(groupId));
 
 		_testCopyObjectEntryWithAttachmentObjectField(
-			(originalFileEntryId, copiedFileEntryId) ->
-				Assert.assertNotEquals(
-					(long)originalFileEntryId, (long)copiedFileEntryId),
+			(originalFileEntryId, copiedFileEntryId) -> Assert.assertNotEquals(
+				(long)originalFileEntryId, (long)copiedFileEntryId),
 			groupId, objectDefinition, objectEntryFolder,
 			"attachmentObjectFieldName1");
 		_testCopyObjectEntryWithAttachmentObjectField(
@@ -12078,10 +12077,9 @@ public class DefaultObjectEntryManagerImplTest
 				null, adminUser.getUserId(),
 				parentObjectDefinition.getObjectDefinitionId(),
 				childObjectDefinition.getObjectDefinitionId(), 0,
-				ObjectRelationshipConstants.DELETION_TYPE_DISASSOCIATE,
-				false, RandomTestUtil.randomLocaleStringMap(),
-				StringUtil.randomId(), false,
-				ObjectRelationshipConstants.TYPE_MANY_TO_MANY, null);
+				ObjectRelationshipConstants.DELETION_TYPE_DISASSOCIATE, false,
+				RandomTestUtil.randomLocaleStringMap(), StringUtil.randomId(),
+				false, ObjectRelationshipConstants.TYPE_MANY_TO_MANY, null);
 
 		ObjectEntry parentObjectEntry =
 			_defaultObjectEntryManager.addObjectEntry(
@@ -12091,8 +12089,7 @@ public class DefaultObjectEntryManagerImplTest
 						objectEntryFolderId =
 							objectEntryFolder.getObjectEntryFolderId();
 						properties = HashMapBuilder.<String, Object>put(
-							"textObjectFieldName",
-							RandomTestUtil.randomString()
+							"textObjectFieldName", RandomTestUtil.randomString()
 						).build();
 					}
 				},
@@ -12106,8 +12103,7 @@ public class DefaultObjectEntryManagerImplTest
 						objectEntryFolderId =
 							objectEntryFolder.getObjectEntryFolderId();
 						properties = HashMapBuilder.<String, Object>put(
-							"textObjectFieldName",
-							RandomTestUtil.randomString()
+							"textObjectFieldName", RandomTestUtil.randomString()
 						).build();
 					}
 				},
@@ -12120,8 +12116,7 @@ public class DefaultObjectEntryManagerImplTest
 						objectEntryFolderId =
 							objectEntryFolder.getObjectEntryFolderId();
 						properties = HashMapBuilder.<String, Object>put(
-							"textObjectFieldName",
-							RandomTestUtil.randomString()
+							"textObjectFieldName", RandomTestUtil.randomString()
 						).build();
 					}
 				},
@@ -12146,8 +12141,7 @@ public class DefaultObjectEntryManagerImplTest
 
 		Collection<ObjectEntry> objectEntries = page.getItems();
 
-		Assert.assertEquals(
-			objectEntries.toString(), 2, objectEntries.size());
+		Assert.assertEquals(objectEntries.toString(), 2, objectEntries.size());
 
 		page = _defaultObjectEntryManager.getRelatedObjectEntries(
 			_simpleDTOConverterContext, parentObjectEntry.getId(),
@@ -12155,8 +12149,7 @@ public class DefaultObjectEntryManagerImplTest
 
 		objectEntries = page.getItems();
 
-		Assert.assertEquals(
-			objectEntries.toString(), 2, objectEntries.size());
+		Assert.assertEquals(objectEntries.toString(), 2, objectEntries.size());
 
 		// One to many relationship with inheritance
 
@@ -12166,9 +12159,8 @@ public class DefaultObjectEntryManagerImplTest
 				parentObjectDefinition.getObjectDefinitionId(),
 				childObjectDefinition.getObjectDefinitionId(), 0,
 				ObjectRelationshipConstants.DELETION_TYPE_CASCADE, true,
-				RandomTestUtil.randomLocaleStringMap(),
-				StringUtil.randomId(), false,
-				ObjectRelationshipConstants.TYPE_ONE_TO_MANY, null);
+				RandomTestUtil.randomLocaleStringMap(), StringUtil.randomId(),
+				false, ObjectRelationshipConstants.TYPE_ONE_TO_MANY, null);
 
 		parentObjectEntry = _defaultObjectEntryManager.addObjectEntry(
 			_simpleDTOConverterContext, parentObjectDefinition,
@@ -12210,10 +12202,9 @@ public class DefaultObjectEntryManagerImplTest
 			},
 			oneToManyObjectRelationship, String.valueOf(groupId));
 
-		copiedParentObjectEntry =
-			_defaultObjectEntryManager.copyObjectEntry(
-				_simpleDTOConverterContext, parentObjectEntry.getId(),
-				objectEntryFolder.getObjectEntryFolderId(), false);
+		copiedParentObjectEntry = _defaultObjectEntryManager.copyObjectEntry(
+			_simpleDTOConverterContext, parentObjectEntry.getId(),
+			objectEntryFolder.getObjectEntryFolderId(), false);
 
 		page = _defaultObjectEntryManager.getRelatedObjectEntries(
 			_simpleDTOConverterContext, copiedParentObjectEntry.getId(),
@@ -12221,8 +12212,7 @@ public class DefaultObjectEntryManagerImplTest
 
 		objectEntries = page.getItems();
 
-		Assert.assertEquals(
-			objectEntries.toString(), 2, objectEntries.size());
+		Assert.assertEquals(objectEntries.toString(), 2, objectEntries.size());
 
 		for (ObjectEntry copiedChildObjectEntry : page.getItems()) {
 			Status status = copiedChildObjectEntry.getStatus();
@@ -12237,8 +12227,7 @@ public class DefaultObjectEntryManagerImplTest
 
 		objectEntries = page.getItems();
 
-		Assert.assertEquals(
-			objectEntries.toString(), 2, objectEntries.size());
+		Assert.assertEquals(objectEntries.toString(), 2, objectEntries.size());
 
 		// One to many relationship without inheritance
 
@@ -12249,10 +12238,9 @@ public class DefaultObjectEntryManagerImplTest
 				oneToManyObjectRelationship.getDeletionType(), false,
 				oneToManyObjectRelationship.getLabelMap(), null);
 
-		copiedParentObjectEntry =
-			_defaultObjectEntryManager.copyObjectEntry(
-				_simpleDTOConverterContext, parentObjectEntry.getId(),
-				objectEntryFolder.getObjectEntryFolderId(), false);
+		copiedParentObjectEntry = _defaultObjectEntryManager.copyObjectEntry(
+			_simpleDTOConverterContext, parentObjectEntry.getId(),
+			objectEntryFolder.getObjectEntryFolderId(), false);
 
 		page = _defaultObjectEntryManager.getRelatedObjectEntries(
 			_simpleDTOConverterContext, copiedParentObjectEntry.getId(),
@@ -12260,8 +12248,7 @@ public class DefaultObjectEntryManagerImplTest
 
 		objectEntries = page.getItems();
 
-		Assert.assertEquals(
-			objectEntries.toString(), 0, objectEntries.size());
+		Assert.assertEquals(objectEntries.toString(), 0, objectEntries.size());
 
 		objectDefinitionLocalService.deleteObjectDefinition(
 			childObjectDefinition.getObjectDefinitionId());
