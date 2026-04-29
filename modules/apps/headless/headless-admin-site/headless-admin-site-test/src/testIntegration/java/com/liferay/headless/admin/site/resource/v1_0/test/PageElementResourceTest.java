@@ -2545,9 +2545,7 @@ public class PageElementResourceTest extends BasePageElementResourceTestCase {
 				testGroup.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
 				_layout.getPlid());
 
-		String undeployedPortletName =
-			"com_liferay_test_UndeployedPortlet_" +
-				RandomTestUtil.randomString();
+		String undeployedPortletName = RandomTestUtil.randomString();
 
 		pageElement =
 			pageElementResource.
@@ -4327,9 +4325,7 @@ public class PageElementResourceTest extends BasePageElementResourceTestCase {
 				testGroup.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
 				_layout.getPlid());
 
-		String undeployedPortletName =
-			"com_liferay_test_UndeployedPortlet_" +
-				RandomTestUtil.randomString();
+		String undeployedPortletName = RandomTestUtil.randomString();
 
 		PageElement pageElement =
 			pageElementResource.
