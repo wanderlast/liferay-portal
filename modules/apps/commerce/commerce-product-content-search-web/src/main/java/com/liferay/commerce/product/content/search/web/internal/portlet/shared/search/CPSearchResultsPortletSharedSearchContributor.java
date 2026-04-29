@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.search.searcher.SearchRequestBuilder;
+import com.liferay.portal.search.web.internal.display.context.Keywords;
 import com.liferay.portal.search.web.portlet.shared.search.PortletSharedSearchContributor;
 import com.liferay.portal.search.web.portlet.shared.search.PortletSharedSearchSettings;
 
@@ -89,9 +90,14 @@ public class CPSearchResultsPortletSharedSearchContributor
 		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		portletSharedSearchSettings.setKeywords(
-			GetterUtil.getString(
-				portletSharedSearchSettings.getParameter("q")));
+		String parameterValue = GetterUtil.getString(
+			portletSharedSearchSettings.getParameter("q"));
+
+		if (parameterValue != null) {
+			Keywords keywords = new Keywords(parameterValue);
+
+			portletSharedSearchSettings.setKeywords(keywords.toString());
+		}
 
 		portletSharedSearchSettings.addCondition(
 			new BooleanClauseImpl<Query>(
