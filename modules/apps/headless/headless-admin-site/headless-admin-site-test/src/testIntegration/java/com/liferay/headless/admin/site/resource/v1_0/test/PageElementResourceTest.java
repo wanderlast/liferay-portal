@@ -140,6 +140,7 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.test.TestInfo;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
@@ -354,6 +355,7 @@ public class PageElementResourceTest extends BasePageElementResourceTestCase {
 
 	@Override
 	@Test
+	@TestInfo("LPD-85565")
 	public void testPostSitePageSpecificationPageExperiencePageElement()
 		throws Exception {
 
@@ -367,6 +369,7 @@ public class PageElementResourceTest extends BasePageElementResourceTestCase {
 
 	@Override
 	@Test
+	@TestInfo("LPD-85565")
 	public void testPutSitePageSpecificationPageExperiencePageElement()
 		throws Exception {
 
