@@ -753,6 +753,14 @@ public class PortalUpgradeProcessRegistryImpl
 
 		upgradeVersionTreeMap.put(
 			new Version(38, 2, 3), new DummyUpgradeProcess());
+
+		upgradeVersionTreeMap.put(
+			new Version(38, 3, 0),
+			UpgradeProcessFactory.addColumns("UserGroup", "status INTEGER"),
+			UpgradeProcessFactory.runSQL("update UserGroup set status = 0"));
+
+		upgradeVersionTreeMap.put(
+			new Version(38, 3, 1), new UpgradeAssetEntryPublishDate());
 	}
 
 }
