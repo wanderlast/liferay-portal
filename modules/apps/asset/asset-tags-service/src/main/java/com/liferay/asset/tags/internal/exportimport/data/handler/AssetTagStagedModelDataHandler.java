@@ -204,6 +204,11 @@ public class AssetTagStagedModelDataHandler
 			}
 		}
 
+		importedAssetTag.setModifiedDate(assetTag.getModifiedDate());
+
+		importedAssetTag = _assetTagLocalService.updateAssetTag(
+			importedAssetTag);
+
 		Group group = _groupLocalService.fetchGroup(
 			portletDataContext.getScopeGroupId());
 

@@ -284,6 +284,11 @@ public class AssetCategoryStagedModelDataHandler
 				serviceContext);
 		}
 
+		importedCategory.setModifiedDate(category.getModifiedDate());
+
+		importedCategory = _assetCategoryLocalService.updateAssetCategory(
+			importedCategory);
+
 		categoryIds.put(
 			category.getCategoryId(), importedCategory.getCategoryId());
 

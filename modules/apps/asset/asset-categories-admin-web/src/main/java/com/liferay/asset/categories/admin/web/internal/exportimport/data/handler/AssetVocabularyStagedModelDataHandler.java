@@ -262,6 +262,11 @@ public class AssetVocabularyStagedModelDataHandler
 				vocabulary.getVisibilityType(), serviceContext);
 		}
 
+		importedVocabulary.setModifiedDate(vocabulary.getModifiedDate());
+
+		importedVocabulary = _assetVocabularyLocalService.updateAssetVocabulary(
+			importedVocabulary);
+
 		Group group = _groupLocalService.getGroup(
 			portletDataContext.getScopeGroupId());
 
