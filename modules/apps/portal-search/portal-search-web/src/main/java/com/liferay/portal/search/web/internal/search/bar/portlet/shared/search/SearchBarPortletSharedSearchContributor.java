@@ -9,9 +9,11 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.constants.SearchContextAttributes;
 import com.liferay.portal.search.searcher.SearchRequestBuilder;
 import com.liferay.portal.search.web.constants.SearchBarPortletKeys;
@@ -225,7 +227,9 @@ public class SearchBarPortletSharedSearchContributor
 		String parameterValue = portletSharedSearchSettings.getParameter(
 			parameterName);
 
-		if (parameterValue != null) {
+		SearchContext searchContext = portletSharedSearchSettings.getSearchContext();
+
+		if (parameterValue != null && Validator.isNull(searchContext.getKeywords())) {
 			Keywords keywords = new Keywords(parameterValue);
 
 			searchRequestBuilder.queryString(keywords.getKeywords());

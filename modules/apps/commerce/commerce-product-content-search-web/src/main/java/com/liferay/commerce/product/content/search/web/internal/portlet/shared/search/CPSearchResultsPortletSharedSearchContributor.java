@@ -15,6 +15,7 @@ import com.liferay.commerce.product.content.search.web.internal.configuration.CP
 import com.liferay.commerce.product.model.CPDefinition;
 import com.liferay.commerce.product.model.CommerceChannel;
 import com.liferay.commerce.product.service.CommerceChannelLocalService;
+import com.liferay.petra.string.CharPool;
 import com.liferay.portal.configuration.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.dao.search.SearchPaginationUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -29,7 +30,9 @@ import com.liferay.portal.kernel.search.generic.TermQueryImpl;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.search.constants.SearchContextAttributes;
 import com.liferay.portal.search.searcher.SearchRequestBuilder;
 import com.liferay.portal.search.web.portlet.shared.search.PortletSharedSearchContributor;
 import com.liferay.portal.search.web.portlet.shared.search.PortletSharedSearchSettings;
@@ -57,7 +60,10 @@ public class CPSearchResultsPortletSharedSearchContributor
 		PortletSharedSearchSettings portletSharedSearchSettings) {
 
 		try {
-			_contribute(portletSharedSearchSettings);
+			SearchRequestBuilder searchRequestBuilder =
+				portletSharedSearchSettings.getSearchRequestBuilder();
+
+			_contribute(portletSharedSearchSettings, searchRequestBuilder);
 
 			String paginationStartParameterName =
 				portletSharedSearchSettings.getPaginationStartParameterName();
@@ -68,9 +74,6 @@ public class CPSearchResultsPortletSharedSearchContributor
 						portletSharedSearchSettings.getPortletId());
 			}
 
-			SearchRequestBuilder searchRequestBuilder =
-				portletSharedSearchSettings.getSearchRequestBuilder();
-
 			searchRequestBuilder.paginationStartParameterName(
 				paginationStartParameterName);
 		}
@@ -80,7 +83,8 @@ public class CPSearchResultsPortletSharedSearchContributor
 	}
 
 	private void _contribute(
-			PortletSharedSearchSettings portletSharedSearchSettings)
+			PortletSharedSearchSettings portletSharedSearchSettings,
+			SearchRequestBuilder searchRequestBuilder)
 		throws PortalException {
 
 		RenderRequest renderRequest =
@@ -89,9 +93,21 @@ public class CPSearchResultsPortletSharedSearchContributor
 		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		portletSharedSearchSettings.setKeywords(
-			GetterUtil.getString(
-				portletSharedSearchSettings.getParameter("q")));
+		String keywords = GetterUtil.getString(
+			portletSharedSearchSettings.getParameter("q"));
+
+		portletSharedSearchSettings.setKeywords(keywords);
+
+		if (Validator.isNotNull(keywords)) {
+			searchRequestBuilder.queryString(keywords);
+
+			if ((keywords.length() > 1) && (keywords.charAt(0) == CharPool.STAR)) {
+				searchRequestBuilder.withSearchContext(
+					searchContext -> searchContext.setAttribute(
+						SearchContextAttributes.ATTRIBUTE_KEY_LUCENE_SYNTAX,
+						Boolean.TRUE));
+			}
+		}
 
 		portletSharedSearchSettings.addCondition(
 			new BooleanClauseImpl<Query>(
