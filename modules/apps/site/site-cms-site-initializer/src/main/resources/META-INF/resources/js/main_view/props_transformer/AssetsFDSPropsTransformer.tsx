@@ -20,7 +20,10 @@ import {
 	IBreadcrumbItem,
 	ISearchAssetObjectEntry,
 } from '../../common/types/AssetType';
-import {CMSSiteInitializerFDSNames, OBJECT_ENTRY_FOLDER_CLASS_NAME} from '../../common/utils/constants';
+import {
+	CMSSiteInitializerFDSNames,
+	OBJECT_ENTRY_FOLDER_CLASS_NAME,
+} from '../../common/utils/constants';
 import {getFormattedLabel} from '../../common/utils/getFormattedText';
 import {getScopeExternalReferenceCode} from '../../common/utils/getScopeExternalReferenceCode';
 import {openCMSModal} from '../../common/utils/openCMSModal';
@@ -161,14 +164,16 @@ export default function AssetsFDSPropsTransformer({
 	apiURL?: string;
 	bulkActions?: Array<IBulkActionItem>;
 	creationMenu: any;
+	hideManagementBarInEmptyState?: boolean;
 	id?: string;
 	itemsActions?: any[];
-	hideManagementBarInEmptyState?: boolean;
 	views: IView[];
 }) {
 	let mergedViews = views;
 
-	const isAllSectionView = otherProps?.id?.endsWith('-allSection') || false;
+	const isAllSectionView =
+		otherProps?.id?.endsWith('-allSection') ||
+		false;
 
 	if (additionalProps.galleryViewEnabled) {
 		const galleryViewRenderer: IView = {
@@ -312,7 +317,9 @@ export default function AssetsFDSPropsTransformer({
 				} as IInternalRenderer,
 			],
 		},
-		hideManagementBarInEmptyState: isAllSectionView ? otherProps?.hideManagementBarInEmptyState : true,
+		hideManagementBarInEmptyState: isAllSectionView
+			? otherProps?.hideManagementBarInEmptyState
+			: true,
 		infoPanelComponent: (items: {items: ISearchAssetObjectEntry[]}) => (
 			<AssetTypeInfoPanel
 				additionalProps={additionalProps as any}
