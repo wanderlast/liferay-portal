@@ -113,7 +113,7 @@ public class DLValidatorImplTest {
 
 		Mockito.when(
 			_dlSizeLimitConfigurationHelper.getGroupMimeTypeSizeLimit(
-				Mockito.anyLong(), Mockito.anyLong())
+				Mockito.anyLong())
 		).thenReturn(
 			Map.of("image/png", 15L)
 		);
@@ -148,7 +148,7 @@ public class DLValidatorImplTest {
 
 		Mockito.when(
 			_dlSizeLimitConfigurationHelper.getGroupMimeTypeSizeLimit(
-				Mockito.anyLong(), Mockito.anyLong(), Mockito.anyString())
+				Mockito.anyLong(), Mockito.anyString())
 		).thenReturn(
 			5L
 		);
@@ -165,7 +165,7 @@ public class DLValidatorImplTest {
 
 		Mockito.when(
 			_dlSizeLimitConfigurationHelper.getGroupMimeTypeSizeLimit(
-				Mockito.anyLong(), Mockito.anyLong(), Mockito.anyString())
+				Mockito.anyLong(), Mockito.anyString())
 		).thenReturn(
 			5L
 		);
@@ -216,7 +216,7 @@ public class DLValidatorImplTest {
 	public void testMaxAllowableSizeGroupMimeTypeSizeLimit() throws Exception {
 		Mockito.when(
 			_dlSizeLimitConfigurationHelper.getGroupMimeTypeSizeLimit(
-				Mockito.anyLong(), Mockito.anyLong(), Mockito.anyString())
+				Mockito.anyLong(), Mockito.anyString())
 		).thenReturn(
 			5L
 		);
@@ -306,7 +306,7 @@ public class DLValidatorImplTest {
 
 		Mockito.when(
 			_dlSizeLimitConfigurationHelper.getGroupFileMaxSize(
-				Mockito.anyLong(), Mockito.anyLong())
+				Mockito.anyLong())
 		).thenReturn(
 			15L
 		);
@@ -336,7 +336,7 @@ public class DLValidatorImplTest {
 
 		Mockito.when(
 			_dlSizeLimitConfigurationHelper.getGroupMimeTypeSizeLimit(
-				Mockito.anyLong(), Mockito.anyLong(), Mockito.anyString())
+				Mockito.anyLong(), Mockito.anyString())
 		).thenReturn(
 			15L
 		);
@@ -360,7 +360,7 @@ public class DLValidatorImplTest {
 
 		Mockito.when(
 			_dlSizeLimitConfigurationHelper.getGroupMimeTypeSizeLimit(
-				Mockito.anyLong(), Mockito.anyLong(), Mockito.anyString())
+				Mockito.anyLong(), Mockito.anyString())
 		).thenReturn(
 			10L
 		);
