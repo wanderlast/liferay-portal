@@ -10057,7 +10057,11 @@ alter database lportal set allow_snapshot_isolation on;
 
 go
 
-alter database lportal set read_committed_snapshot on;
+alter database lportal set read_committed_snapshot on with rollback immediate;
+
+go
+
+dbcc traceon (1222, -1);
 
 go]]></replacevalue>
 								</replacefilter>
@@ -10075,7 +10079,7 @@ alter database lportal${databases.size} set allow_snapshot_isolation on;
 
 go
 
-alter database lportal${databases.size} set read_committed_snapshot on;
+alter database lportal${databases.size} set read_committed_snapshot on with rollback immediate;
 
 go</echo>
 								</then>
@@ -10299,7 +10303,11 @@ alter database lportal set allow_snapshot_isolation on;
 
 go
 
-alter database lportal set read_committed_snapshot on;
+alter database lportal set read_committed_snapshot on with rollback immediate;
+
+go
+
+dbcc traceon (1222, -1);
 
 go]]></replacevalue>
 								</replacefilter>
@@ -10317,7 +10325,7 @@ alter database lportal${databases.size} set allow_snapshot_isolation on;
 
 go
 
-alter database lportal${databases.size} set read_committed_snapshot on;
+alter database lportal${databases.size} set read_committed_snapshot on with rollback immediate;
 
 go</echo>
 								</then>
