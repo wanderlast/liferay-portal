@@ -7294,7 +7294,7 @@ public class DefaultObjectEntryManagerImplTest
 	@Test
 	public void testGetVersionedObjectEntriesWithCopyAction() throws Exception {
 
-		// Company scope no folder
+		// Company scope using the default object entry folder
 
 		_enableObjectEntryVersioning();
 
@@ -7331,7 +7331,7 @@ public class DefaultObjectEntryManagerImplTest
 		_assertVersionedObjectEntriesCopyAction(
 			dtoConverterContext, _objectDefinition1, objectEntry, null, false);
 
-		// Depot scope in folder
+		// Depot scope using a custom object entry folder
 
 		PrincipalThreadLocal.setName(adminUser.getUserId());
 		PermissionThreadLocal.setPermissionChecker(
@@ -7384,7 +7384,7 @@ public class DefaultObjectEntryManagerImplTest
 			dtoConverterContext, _objectDefinition6, objectEntry,
 			String.valueOf(_depotEntry.getGroupId()), false);
 
-		// Depot scope no folder
+		// Depot scope using the default object entry folder
 
 		PrincipalThreadLocal.setName(adminUser.getUserId());
 		PermissionThreadLocal.setPermissionChecker(
