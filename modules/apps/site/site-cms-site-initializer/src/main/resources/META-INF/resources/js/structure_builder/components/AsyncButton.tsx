@@ -35,6 +35,7 @@ export default function AsyncButton({
 				'align-items-center c-gap-2 d-flex',
 				className
 			)}
+			data-canonical-name={label}
 			disabled={disabled || status === 'loading'}
 			displayType={displayType}
 			onClick={onClick}
