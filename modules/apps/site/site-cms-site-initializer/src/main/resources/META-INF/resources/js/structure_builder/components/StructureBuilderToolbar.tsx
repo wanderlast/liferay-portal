@@ -97,6 +97,7 @@ function CustomizeEditorButton() {
 			aria-label={`${Liferay.Language.get('customize-editor')} ${Liferay.Language.get('opens-new-window')}`}
 			borderless
 			className="font-weight-semi-bold mr-md-2"
+			data-canonical-name={Liferay.Language.get('customize-editor')}
 			displayType="primary"
 			onClick={() => {
 				if (
@@ -209,6 +210,7 @@ function SaveButton() {
 
 			<ClayButtonWithIcon
 				className="d-md-none"
+				data-canonical-name={Liferay.Language.get('save')}
 				displayType="secondary"
 				onClick={onSave}
 				size="sm"
