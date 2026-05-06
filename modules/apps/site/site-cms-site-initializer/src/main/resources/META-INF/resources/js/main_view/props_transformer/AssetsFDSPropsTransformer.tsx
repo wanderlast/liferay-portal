@@ -171,9 +171,13 @@ export default function AssetsFDSPropsTransformer({
 }) {
 	let mergedViews = views;
 
-	const isAllSectionView =
-		otherProps?.id?.endsWith('-allSection') ||
-		false;
+	const isAllSectionView = otherProps?.id?.endsWith(
+		'-allSection'
+	);
+
+	const hideManagementBarInEmptyState = isAllSectionView
+		? otherProps?.hideManagementBarInEmptyState
+		: true;
 
 	if (additionalProps.galleryViewEnabled) {
 		const galleryViewRenderer: IView = {
@@ -317,9 +321,7 @@ export default function AssetsFDSPropsTransformer({
 				} as IInternalRenderer,
 			],
 		},
-		hideManagementBarInEmptyState: isAllSectionView
-			? otherProps?.hideManagementBarInEmptyState
-			: true,
+		hideManagementBarInEmptyState,
 		infoPanelComponent: (items: {items: ISearchAssetObjectEntry[]}) => (
 			<AssetTypeInfoPanel
 				additionalProps={additionalProps as any}
