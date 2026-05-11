@@ -266,7 +266,7 @@ public class OfflineOpenIdConnectSessionManager {
 				oAuthClientEntry.getTokenRequestParametersJSON());
 
 			_updateOpenIdConnectSessionIdToken(
-				openIdConnectSession, oidcTokens.getIDTokenString());
+				oidcTokens.getIDTokenString(), openIdConnectSession);
 
 			_updateOpenIdConnectSession(
 				oidcTokens.getAccessToken(), openIdConnectSession,
@@ -362,14 +362,14 @@ public class OfflineOpenIdConnectSessionManager {
 		openIdConnectSession.setAuthServerWellKnownURI(authServerWellKnownURI);
 		openIdConnectSession.setClientId(clientId);
 
-		_updateOpenIdConnectSessionIdToken(openIdConnectSession, idTokenString);
+		_updateOpenIdConnectSessionIdToken(idTokenString, openIdConnectSession);
 
 		_updateOpenIdConnectSession(
 			accessToken, openIdConnectSession, refreshToken);
 	}
 
 	private void _updateOpenIdConnectSessionIdToken(
-		OpenIdConnectSession openIdConnectSession, String idTokenString) {
+		String idTokenString, OpenIdConnectSession openIdConnectSession) {
 
 		if (idTokenString == null) {
 			return;
