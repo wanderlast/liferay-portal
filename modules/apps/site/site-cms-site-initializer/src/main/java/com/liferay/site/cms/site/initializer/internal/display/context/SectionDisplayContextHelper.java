@@ -725,7 +725,7 @@ public class SectionDisplayContextHelper {
 			).setMethod(
 				"post"
 			).setPermissionKey(
-				"edit-categories"
+				"update"
 			).build(
 				"edit-categories"
 			));
@@ -737,7 +737,7 @@ public class SectionDisplayContextHelper {
 			).setMethod(
 				"post"
 			).setPermissionKey(
-				"edit-tags"
+				"update"
 			).build(
 				"edit-tags"
 			));
