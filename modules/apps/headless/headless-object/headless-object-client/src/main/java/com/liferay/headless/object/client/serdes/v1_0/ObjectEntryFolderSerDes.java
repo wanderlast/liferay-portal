@@ -319,6 +319,16 @@ public class ObjectEntryFolderSerDes {
 			sb.append(String.valueOf(objectEntryFolder.getStatus()));
 		}
 
+		if (objectEntryFolder.getSystemProperties() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"systemProperties\": ");
+
+			sb.append(String.valueOf(objectEntryFolder.getSystemProperties()));
+		}
+
 		if (objectEntryFolder.getTitle() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -552,6 +562,15 @@ public class ObjectEntryFolderSerDes {
 			map.put("status", String.valueOf(objectEntryFolder.getStatus()));
 		}
 
+		if (objectEntryFolder.getSystemProperties() == null) {
+			map.put("systemProperties", null);
+		}
+		else {
+			map.put(
+				"systemProperties",
+				String.valueOf(objectEntryFolder.getSystemProperties()));
+		}
+
 		if (objectEntryFolder.getTitle() == null) {
 			map.put("title", null);
 		}
@@ -660,6 +679,9 @@ public class ObjectEntryFolderSerDes {
 				return false;
 			}
 			else if (Objects.equals(jsonParserFieldName, "status")) {
+				return false;
+			}
+			else if (Objects.equals(jsonParserFieldName, "systemProperties")) {
 				return false;
 			}
 			else if (Objects.equals(jsonParserFieldName, "title")) {
@@ -829,6 +851,13 @@ public class ObjectEntryFolderSerDes {
 				if (jsonParserFieldValue != null) {
 					objectEntryFolder.setStatus(
 						StatusSerDes.toDTO((String)jsonParserFieldValue));
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "systemProperties")) {
+				if (jsonParserFieldValue != null) {
+					objectEntryFolder.setSystemProperties(
+						SystemPropertiesSerDes.toDTO(
+							(String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "title")) {
