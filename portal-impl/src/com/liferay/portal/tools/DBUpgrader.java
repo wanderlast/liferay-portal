@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.service.ClassNameLocalServiceUtil;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceComponentLocalServiceUtil;
 import com.liferay.portal.kernel.service.configuration.ServiceComponentConfiguration;
+import com.liferay.portal.kernel.upgrade.util.UpgradeProcessUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -138,11 +139,11 @@ public class DBUpgrader {
 	}
 
 	public static boolean isUpgradeClient() {
-		return _upgradeClient;
+		return UpgradeProcessUtil.isUpgradeClient();
 	}
 
 	public static boolean isUpgradeDatabaseAutoRunEnabled() {
-		if (_upgradeClient) {
+		if (isUpgradeClient()) {
 			return true;
 		}
 
@@ -171,7 +172,7 @@ public class DBUpgrader {
 	public static void main(String[] args) {
 		String result = "Completed";
 
-		_upgradeClient = true;
+		UpgradeProcessUtil.setUpgradeClient(true);
 
 		try {
 			PortalClassPathUtil.initializeClassPaths(null);
@@ -330,14 +331,14 @@ public class DBUpgrader {
 		_registerModuleServiceLifecycle(
 			moduleServiceLifecyclePortalInitialized);
 
-		if (_upgradeClient) {
+		if (isUpgradeClient()) {
 			DependencyManagerSyncUtil.sync();
 		}
 
 		PortalCacheHelperUtil.clearPortalCaches(
 			PortalCacheManagerNames.MULTI_VM);
 
-		if (_upgradeClient || StartupHelperUtil.isNewRelease()) {
+		if (isUpgradeClient() || StartupHelperUtil.isNewRelease()) {
 			IndexUpdaterUtil.updateAllIndexes();
 		}
 
@@ -645,7 +646,6 @@ public class DBUpgrader {
 	private static volatile Appender _appender;
 	private static volatile ServiceRegistration<?> _serviceRegistration;
 	private static volatile StopWatch _stopWatch;
-	private static volatile boolean _upgradeClient;
 	private static Boolean _upgradeDatabaseAutoRun;
 
 }

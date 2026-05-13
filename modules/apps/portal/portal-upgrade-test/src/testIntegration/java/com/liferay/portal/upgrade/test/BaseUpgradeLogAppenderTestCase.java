@@ -41,6 +41,7 @@ import com.liferay.portal.kernel.upgrade.UpgradeProcessFactory;
 import com.liferay.portal.kernel.upgrade.data.cleanup.DataCleanupPreupgradeProcess;
 import com.liferay.portal.kernel.upgrade.data.cleanup.util.OrphanReferencesDataCleanupUtil;
 import com.liferay.portal.kernel.upgrade.recorder.UpgradeSQLRecorder;
+import com.liferay.portal.kernel.upgrade.util.UpgradeProcessUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -56,7 +57,6 @@ import com.liferay.portal.test.log.LogCapture;
 import com.liferay.portal.test.log.LoggerTestUtil;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.portal.tools.DBUpgrader;
 import com.liferay.portal.upgrade.PortalUpgradeProcess;
 
 import java.io.File;
@@ -123,8 +123,7 @@ public abstract class BaseUpgradeLogAppenderTestCase {
 				_db.runSQL("DROP_TABLE_IF_EXISTS(UpgradeReportTable2)");
 			});
 
-		ReflectionTestUtil.setFieldValue(
-			DBUpgrader.class, "_upgradeClient", _originalUpgradeClient);
+		UpgradeProcessUtil.setUpgradeClient(_originalUpgradeClient);
 		ReflectionTestUtil.setFieldValue(
 			PropsValues.class, "UPGRADE_LOG_CONTEXT_ENABLED",
 			_originalUpgradeLogContextEnabled);
@@ -1089,8 +1088,9 @@ public abstract class BaseUpgradeLogAppenderTestCase {
 		_originalNewRelease = ReflectionTestUtil.getFieldValue(
 			StartupHelperUtil.class, "_newRelease");
 
-		_originalUpgradeClient = ReflectionTestUtil.getAndSetFieldValue(
-			DBUpgrader.class, "_upgradeClient", upgradeClient);
+		_originalUpgradeClient = UpgradeProcessUtil.isUpgradeClient();
+
+		UpgradeProcessUtil.setUpgradeClient(upgradeClient);
 
 		_originalUpgradeLogContextEnabled =
 			ReflectionTestUtil.getAndSetFieldValue(
