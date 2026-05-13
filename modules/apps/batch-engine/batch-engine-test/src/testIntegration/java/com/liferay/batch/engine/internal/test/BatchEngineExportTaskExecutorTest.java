@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.test.AssertUtils;
 import com.liferay.portal.kernel.test.TestInfo;
 import com.liferay.portal.kernel.test.rule.DataGuard;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.TransactionConfig;
@@ -175,7 +176,7 @@ public class BatchEngineExportTaskExecutorTest
 
 	@Test
 	@TestInfo("LPD-85261")
-	public void testExportBlogPostingsToJSONFileWithDateCreated()
+	public void testExportBlogPostingsToJSONFileWithDateCreatedFieldName()
 		throws Exception {
 
 		BlogsEntry blogsEntry = blogsEntryLocalService.addEntry(
