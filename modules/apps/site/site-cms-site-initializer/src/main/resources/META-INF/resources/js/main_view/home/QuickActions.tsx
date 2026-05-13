@@ -62,8 +62,7 @@ export default function QuickActions({
 				{quickActions.map((quickAction: any) => (
 					<div className="col d-flex pb-2" key={quickAction.href}>
 						<ClayButton
-							aria-label={quickAction.title}
-							className="flex-fill mr-2 pb-3 pl-4 pr-4 pt-3 quick-action text-left w-100"
+							className="flex-fill mr-2 pb-3 pl-4 pr-4 pt-3 quick-action text-dark text-left w-100"
 							data-canonical-name={sub(
 								Liferay.Language.get('quick-action-x'),
 								quickAction.title
@@ -72,8 +71,6 @@ export default function QuickActions({
 							onClick={(event) =>
 								handleActionClick(event, quickAction)
 							}
-							size="regular"
-							title={quickAction.title}
 						>
 							<span className="inline-item inline-item-before">
 								<ClayIcon symbol={quickAction.icon} />
