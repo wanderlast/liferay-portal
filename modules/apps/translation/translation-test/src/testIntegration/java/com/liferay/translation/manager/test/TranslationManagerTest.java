@@ -143,6 +143,27 @@ public class TranslationManagerTest {
 			new String[] {_INVALID_LANGUAGE_ID});
 	}
 
+	@Test(expected = XLIFFFileException.MustHaveValidParameter.class)
+	@TestInfo("LPD-85963")
+	public void testGetXLIFFZipFileFailsWithNullClassPKs() throws Exception {
+		_translationManager.getXLIFFZipFile(
+			JournalArticle.class.getName(), null, _MIMETYPE_XLIFF_1_2,
+			LocaleUtil.US, LocaleUtil.toLanguageId(LocaleUtil.US),
+			_TARGET_LANGUAGE_IDS);
+	}
+
+	@Test(expected = XLIFFFileException.MustHaveValidParameter.class)
+	@TestInfo("LPD-85963")
+	public void testGetXLIFFZipFileFailsWithNullTargetLanguageIds()
+		throws Exception {
+
+		_translationManager.getXLIFFZipFile(
+			JournalArticle.class.getName(),
+			new long[] {_journalArticle.getResourcePrimKey()},
+			_MIMETYPE_XLIFF_1_2, LocaleUtil.US,
+			LocaleUtil.toLanguageId(LocaleUtil.US), null);
+	}
+
 	@Test
 	public void testProcessXLIFFTranslation() throws Exception {
 		File xliffFile = _translationManager.getXLIFFFile(
