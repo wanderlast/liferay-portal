@@ -11,6 +11,7 @@ import {apiHelpersTest} from '../../../fixtures/apiHelpersTest';
 import {featureFlagsTest} from '../../../fixtures/featureFlagsTest';
 import {isolatedSiteTest} from '../../../fixtures/isolatedSiteTest';
 import {loginTest} from '../../../fixtures/loginTest';
+import {liferayConfig} from '../../../liferay.config';
 import getRandomString from '../../../utils/getRandomString';
 import {blogsPagesTest} from './fixtures/blogsPagesTest';
 import {blogsCategorizedFriendlyUrlSetup} from './utils/blogsCategorizedFriendlyUrlSetup';
@@ -498,5 +499,86 @@ test(
 		const links = await page.locator('a[href]');
 
 		await expect(links).toHaveCount(0);
+	}
+);
+
+test(
+	'Prevents attribute injection via coverImageCaption',
+	{
+		tag: '@LPD-86554',
+	},
+	async ({page}) => {
+		const payload = `" onmouseover=alert(1) x="`;
+
+		await page.goto(
+			`${liferayConfig.environment.baseUrl}/o/blogs-web/blogs/entry_cover_image_caption.jsp?coverImageCaption=${encodeURIComponent(payload)}&coverImageURL=https://example.com/image.png`
+		);
+
+		await expect(page.locator('.cover-image')).not.toHaveAttribute('onmouseover', /.+/);
+		await expect(page.locator('.cover-image')).toHaveAttribute('aria-label', /onmouseover=alert\(1\)/);
+	}
+);
+
+test(
+	'Prevents HTML injection via coverImageCaption',
+	{
+		tag: '@LPD-86554',
+	},
+	async ({page}) => {
+		const payload = `"><img src=x onerror=alert(1)>`;
+
+		await page.goto(
+			`${liferayConfig.environment.baseUrl}/o/blogs-web/blogs/entry_cover_image_caption.jsp?coverImageCaption=${encodeURIComponent(payload)}&coverImageURL=https://example.com/image.png`
+		);
+
+		await expect(page.locator('img')).toHaveCount(0);
+	}
+);
+
+test(
+	'Does not allow javascript URL in coverImageURL',
+	{
+		tag: '@LPD-86554',
+	},
+	async ({page}) => {
+		const payload = `javascript:alert(1)`;
+
+		await page.goto(
+			`${liferayConfig.environment.baseUrl}/o/blogs-web/blogs/entry_cover_image_caption.jsp?coverImageCaption=safe&coverImageURL=${encodeURIComponent(payload)}`
+		);
+
+		await expect(page.locator('.cover-image')).toHaveCount(0);
+	}
+);
+
+test(
+	'Only valid URLs are applied to background-image',
+	{
+		tag: '@LPD-86554',
+	},
+	async ({page}) => {
+		const validUrl = 'https://example.com/image.png';
+
+		await page.goto(
+			`${liferayConfig.environment.baseUrl}/o/blogs-web/blogs/entry_cover_image_caption.jsp?coverImageCaption=safe&coverImageURL=${encodeURIComponent(validUrl)}`
+		);
+
+		await expect(page.locator('.cover-image')).toHaveAttribute('style', new RegExp(validUrl));
+	}
+);
+
+test(
+	'Invalid URL prevents background-image rendering',
+	{
+		tag: '@LPD-86554',
+	},
+	async ({page}) => {
+		const invalidUrl = `not-a-valid-url`;
+
+		await page.goto(
+			`${liferayConfig.environment.baseUrl}/o/blogs-web/blogs/entry_cover_image_caption.jsp?coverImageCaption=safe&coverImageURL=${encodeURIComponent(invalidUrl)}`
+		);
+
+		await expect(page.locator('.cover-image')).toHaveCount(0);
 	}
 );
