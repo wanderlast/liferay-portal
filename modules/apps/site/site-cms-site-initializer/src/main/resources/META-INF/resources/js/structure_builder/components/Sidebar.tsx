@@ -134,7 +134,12 @@ function Toolbar({
 					variant="white"
 				/>
 
-				<AddChildDropdown />
+				<AddChildDropdown
+					triggerProps={{
+						'data-canonical-name':
+							Liferay.Language.get('Add Field'),
+					}}
+				/>
 			</div>
 		);
 	}
