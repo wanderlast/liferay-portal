@@ -211,7 +211,7 @@ function SaveButton() {
 
 			<ClayButtonWithIcon
 				className="d-md-none"
-				data-canonical-name={Liferay.Language.get('save')}
+				data-canonical-name={Liferay.Language.get('save-mobile')}
 				displayType="secondary"
 				onClick={onSave}
 				size="sm"
