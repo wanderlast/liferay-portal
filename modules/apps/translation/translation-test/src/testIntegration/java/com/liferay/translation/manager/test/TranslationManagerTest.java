@@ -33,6 +33,8 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -163,6 +165,114 @@ public class TranslationManagerTest {
 			new long[] {_journalArticle.getResourcePrimKey()},
 			_MIMETYPE_XLIFF_1_2, LocaleUtil.US,
 			LocaleUtil.toLanguageId(LocaleUtil.US), null);
+	}
+
+	@Test
+	@TestInfo("LPD-90056")
+	public void testGetXLIFFZipFileForObjectEntry() throws Exception {
+		ObjectDefinition objectDefinition =
+			ObjectDefinitionTestUtil.publishObjectDefinition(
+				Collections.singletonList(
+					new TextObjectFieldBuilder(
+					).labelMap(
+						Collections.singletonMap(
+							LocaleUtil.getDefault(), "Title")
+					).localized(
+						true
+					).name(
+						"title"
+					).build()),
+				ObjectDefinitionConstants.SCOPE_SITE);
+
+		String englishTitle = RandomTestUtil.randomString();
+		String spanishTitle = RandomTestUtil.randomString();
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
+
+		ObjectEntry objectEntry = _objectEntryLocalService.addObjectEntry(
+			_group.getGroupId(), TestPropsValues.getUserId(),
+			objectDefinition.getObjectDefinitionId(),
+			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
+			"en_US",
+			HashMapBuilder.put(
+				"title_i18n",
+				(Serializable)HashMapBuilder.put(
+					"en_US", englishTitle
+				).put(
+					"es_ES", spanishTitle
+				).build()
+			).build(),
+			serviceContext);
+
+		ServiceContextThreadLocal.pushServiceContext(serviceContext);
+
+		try {
+			File xliffZipFile = _translationManager.getXLIFFZipFile(
+				objectDefinition.getClassName(),
+				new long[] {objectEntry.getObjectEntryId()},
+				_MIMETYPE_XLIFF_1_2, LocaleUtil.US, "en_US",
+				_TARGET_LANGUAGE_IDS);
+
+			try (ZipFile zipFile = new ZipFile(xliffZipFile)) {
+				Enumeration<? extends ZipEntry> zipEntriesEnumeration =
+					zipFile.entries();
+
+				ZipEntry zipEntry = zipEntriesEnumeration.nextElement();
+
+				Assert.assertNotNull(zipEntry);
+
+				String xliffContent = StringUtil.read(
+					zipFile.getInputStream(zipEntry));
+
+				Assert.assertTrue(
+					xliffContent.contains("<![CDATA[" + englishTitle + "]]>"));
+				Assert.assertTrue(
+					xliffContent.contains("<![CDATA[" + spanishTitle + "]]>"));
+			}
+		}
+		finally {
+			ServiceContextThreadLocal.popServiceContext();
+		}
+	}
+
+	@Test
+	@TestInfo("LPD-85323")
+	public void testObjectEntryGetTitle() throws Exception {
+		ObjectDefinition objectDefinition =
+			ObjectDefinitionTestUtil.publishObjectDefinition(
+				Collections.singletonList(
+					new TextObjectFieldBuilder(
+					).labelMap(
+						Collections.singletonMap(
+							LocaleUtil.getDefault(), "Title")
+					).localized(
+						true
+					).name(
+						"title"
+					).build()),
+				ObjectDefinitionConstants.SCOPE_SITE);
+
+		String spanishTitle = RandomTestUtil.randomString();
+
+		Map<String, String> titles = HashMapBuilder.put(
+			"es_ES", spanishTitle
+		).build();
+
+		_testObjectEntryGetTitle(
+			"es_ES", spanishTitle, LocaleUtil.US, objectDefinition, titles);
+		_testObjectEntryGetTitle(
+			"es_ES", spanishTitle, LocaleUtil.SPAIN, objectDefinition, titles);
+
+		String englishTitle = RandomTestUtil.randomString();
+
+		titles.put("en_US", englishTitle);
+
+		_testObjectEntryGetTitle(
+			"es_ES", englishTitle, LocaleUtil.US, objectDefinition, titles);
+
+		_testObjectEntryGetTitle(
+			"es_ES", spanishTitle, LocaleUtil.SPAIN, objectDefinition, titles);
 	}
 
 	@Test
