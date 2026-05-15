@@ -239,10 +239,10 @@ public class BackgroundTaskLocalServiceImpl
 	@Clusterable(onMaster = true)
 	@Override
 	public void cleanUpBackgroundTasks() {
+		List<BackgroundTask> staleBackgroundTasks = new ArrayList<>();
+
 		List<BackgroundTask> backgroundTasks =
 			backgroundTaskPersistence.findByCompleted(false);
-
-		List<BackgroundTask> staleBackgroundTasks = new ArrayList<>();
 
 		for (BackgroundTask backgroundTask : backgroundTasks) {
 			if ((backgroundTask.getStatus() ==
