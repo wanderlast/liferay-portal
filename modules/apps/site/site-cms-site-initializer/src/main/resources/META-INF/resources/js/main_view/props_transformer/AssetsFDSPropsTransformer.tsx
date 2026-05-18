@@ -20,10 +20,7 @@ import {
 	IBreadcrumbItem,
 	ISearchAssetObjectEntry,
 } from '../../common/types/AssetType';
-import {
-	CMSSiteInitializerFDSNames,
-	OBJECT_ENTRY_FOLDER_CLASS_NAME,
-} from '../../common/utils/constants';
+import {OBJECT_ENTRY_FOLDER_CLASS_NAME} from '../../common/utils/constants';
 import {getFormattedLabel} from '../../common/utils/getFormattedText';
 import {getScopeExternalReferenceCode} from '../../common/utils/getScopeExternalReferenceCode';
 import {openCMSModal} from '../../common/utils/openCMSModal';
@@ -171,9 +168,7 @@ export default function AssetsFDSPropsTransformer({
 }) {
 	let mergedViews = views;
 
-	const isAllSectionView = otherProps?.id?.endsWith(
-		'-allSection'
-	);
+	const isAllSectionView = otherProps?.id?.endsWith('-allSection');
 
 	const hideManagementBarInEmptyState = isAllSectionView
 		? otherProps?.hideManagementBarInEmptyState
