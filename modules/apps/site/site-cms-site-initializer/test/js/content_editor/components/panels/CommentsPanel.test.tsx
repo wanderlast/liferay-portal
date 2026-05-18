@@ -26,7 +26,7 @@ jest.mock('@ckeditor/ckeditor5-react', () => ({
 	},
 }));
 
-const initialComments = [
+const initialComments: Comment[] = [
 	{
 		author: {
 			fullName: 'Test User 1',
@@ -47,6 +47,8 @@ const initialComments = [
 				commentId: '2',
 				dateDescription: '55 Seconds Ago',
 				edited: false,
+				hasDeletePermission: true,
+				hasUpdatePermission: true,
 				negativeVotes: 0,
 				positiveVotes: 0,
 				rootComment: true,
@@ -56,11 +58,13 @@ const initialComments = [
 		commentId: '1',
 		dateDescription: '18 Seconds Ago',
 		edited: false,
+		hasDeletePermission: true,
+		hasUpdatePermission: true,
 		negativeVotes: 0,
 		positiveVotes: 0,
 		rootComment: true,
 	},
-] as Comment[];
+];
 
 const renderComponent = () => {
 	return render(
@@ -200,5 +204,85 @@ describe('CommentsPanel', () => {
 			body: expect.objectContaining({score: 0}),
 			method: 'POST',
 		});
+	});
+
+	it('Adds a new comment and fires the messagePosted event', async () => {
+		const addCommentSpy = jest
+			.spyOn(CommentService, 'addComment')
+			.mockResolvedValue({
+				data: {
+					author: {
+						fullName: 'Test User',
+						portraitURL: '',
+						userId: '1',
+					},
+					body: 'mocked data',
+					children: [],
+					className: 'com.liferay.portal.kernel.model.Comment',
+					commentId: '345',
+					dateDescription: 'Just now',
+					edited: false,
+					hasDeletePermission: true,
+					hasUpdatePermission: true,
+					negativeVotes: 0,
+					positiveVotes: 0,
+					rootComment: true,
+				},
+				error: null,
+			});
+		const addCommentURL = 'http://addCommentURL?classPK=123';
+		const liferayFireSpy = jest.spyOn(Liferay, 'fire');
+
+		renderComponent(addCommentURL);
+
+		await userEvent.type(
+			screen.getByLabelText('Mocked CKEditor'),
+			'Test comment'
+		);
+
+		await userEvent.click(screen.getByRole('button', {name: /save/i}));
+
+		await waitFor(() => {
+			expect(addCommentSpy).toBeCalledWith(
+				expect.objectContaining({
+					content: 'mocked data',
+					url: addCommentURL,
+				})
+			);
+
+			expect(liferayFireSpy).toHaveBeenCalledWith(
+				'messagePosted',
+				expect.objectContaining({
+					classPK: '123',
+					commentId: 345,
+					text: 'mocked data',
+				})
+			);
+		});
+	});
+
+	it('fetches comments if they are not provided as props', async () => {
+		(CommentService.getComments as jest.Mock).mockResolvedValue({
+			data: initialComments,
+		});
+
+		render(
+			<CommentsPanel
+				addCommentURL="addCommentURL"
+				deleteCommentURL="deleteCommentURL"
+				editCommentURL="editCommentURL"
+				editorConfig={{}}
+				getCommentsURL="getCommentsURL"
+			/>
+		);
+
+		await waitFor(() => {
+			expect(CommentService.getComments).toHaveBeenCalledWith({
+				url: 'getCommentsURL',
+			});
+		});
+
+		expect(screen.getByText('Parent comment')).toBeInTheDocument();
+		expect(screen.getByText('Child comment')).toBeInTheDocument();
 	});
 });
