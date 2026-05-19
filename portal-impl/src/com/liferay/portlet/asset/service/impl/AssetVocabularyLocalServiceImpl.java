@@ -23,7 +23,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.model.GroupConstants;
 import com.liferay.portal.kernel.model.ModelHintsUtil;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.SystemEventConstants;
@@ -247,7 +246,7 @@ public class AssetVocabularyLocalServiceImpl
 			if ((group != null) && group.isCMS()) {
 				_assetVocabularyGroupRelLocalService.
 					setAssetVocabularyGroupRels(
-						vocabularyId, new long[] {GroupConstants.GROUP_ID_ALL});
+						vocabularyId, new long[] {_GROUP_ID_ALL});
 			}
 		}
 
@@ -737,6 +736,8 @@ public class AssetVocabularyLocalServiceImpl
 			throw new VocabularyVisibilityTypeException();
 		}
 	}
+
+	private static final long _GROUP_ID_ALL = -1L;
 
 	private static final int[] _VISIBILITY_TYPES = {
 		AssetVocabularyConstants.VISIBILITY_TYPE_EMPTY,

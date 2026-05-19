@@ -26,7 +26,6 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lazy.referencing.LazyReferencingThreadLocal;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.model.GroupConstants;
 import com.liferay.portal.kernel.model.ModelHintsUtil;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.ResourcePermission;
@@ -215,7 +214,7 @@ public class AssetVocabularyServiceTest {
 			assetVocabularyGroupRels.get(0);
 
 		Assert.assertEquals(
-			assetVocabularyGroupRels.toString(), GroupConstants.GROUP_ID_ALL,
+			assetVocabularyGroupRels.toString(), _GROUP_ID_ALL,
 			assetVocabularyGroupRel.getGroupId());
 	}
 
@@ -751,6 +750,8 @@ public class AssetVocabularyServiceTest {
 
 		Assert.assertTrue(resourcePermission.hasActionId(ActionKeys.VIEW));
 	}
+
+	private static final long _GROUP_ID_ALL = -1L;
 
 	@Inject
 	private AssetCategoryLocalService _assetCategoryLocalService;
