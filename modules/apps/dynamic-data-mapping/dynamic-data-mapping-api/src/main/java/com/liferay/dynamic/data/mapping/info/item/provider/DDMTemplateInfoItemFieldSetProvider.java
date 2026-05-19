@@ -17,6 +17,17 @@ import com.liferay.info.field.InfoFieldSet;
 @ProviderType
 public interface DDMTemplateInfoItemFieldSetProvider {
 
+	/**
+	 * @deprecated As of Cavanaugh (7.4.x), replaced by {@link
+	 *             #getInfoItemFieldSet(long, long)}
+	 */
+	@Deprecated
+	public default InfoFieldSet getInfoItemFieldSet(long ddmStructureId)
+		throws NoSuchStructureException {
+
+		throw new UnsupportedOperationException();
+	}
+
 	public InfoFieldSet getInfoItemFieldSet(long ddmStructureId, long groupId)
 		throws NoSuchStructureException;
 
