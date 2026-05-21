@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {Role} from '../../common/types/Role';
 import {Space} from '../../common/types/Space';
 import {UserAccount, UserGroup} from '../../common/types/UserAccount';
 import ApiHelper from './ApiHelper';
@@ -59,6 +60,64 @@ async function getSpaceWithCache(
 	spaceCache.set(cacheKey, fetchPromise);
 
 	return fetchPromise;
+}
+
+async function getSpaceRoles({
+	externalReferenceCode,
+	fields,
+	nestedFields,
+	page,
+	pageSize,
+	restrictFields,
+}: {
+	externalReferenceCode: string;
+	fields?: string;
+	nestedFields?: string;
+	page?: number;
+	pageSize?: number;
+	restrictFields?: string;
+}): Promise<{
+	items: Role[];
+	lastPage: number;
+	page: number;
+	totalCount: number;
+}> {
+	const urlParams = new URLSearchParams();
+
+	if (fields) {
+		urlParams.set('fields', fields);
+	}
+
+	if (nestedFields) {
+		urlParams.set('nestedFields', nestedFields);
+	}
+
+	if (page) {
+		urlParams.set('page', String(page));
+	}
+
+	if (pageSize) {
+		urlParams.set('pageSize', String(pageSize));
+	}
+
+	if (restrictFields) {
+		urlParams.set('restrictFields', restrictFields);
+	}
+
+	const {data, error} = await ApiHelper.get<{
+		items: Role[];
+		lastPage: number;
+		page: number;
+		totalCount: number;
+	}>(
+		`/o/headless-asset-library/v1.0/asset-libraries/${externalReferenceCode}/roles?${urlParams.toString()}`
+	);
+
+	if (data) {
+		return data;
+	}
+
+	throw new Error(error);
 }
 
 async function getSpaceUserGroups({
@@ -261,6 +320,7 @@ async function updateUserGroupRoles(payload: {
 export default {
 	addSpace,
 	getSpace,
+	getSpaceRoles,
 	getSpaceUserGroups,
 	getSpaceUsers,
 	getSpaceWithCache,
