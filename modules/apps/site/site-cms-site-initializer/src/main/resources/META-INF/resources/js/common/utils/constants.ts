@@ -10,4 +10,6 @@ export const OBJECT_ENTRY_FOLDER_CLASS_NAME =
 
 export const ENTERPRISE_URL = 'https://www.liferay.com/en/contact-sales';
 
+export const ERC_MAX_LENGTH = 75;
+
 export const FDS_EVENT_UPDATE_DISPLAY = 'fds-update-display';
