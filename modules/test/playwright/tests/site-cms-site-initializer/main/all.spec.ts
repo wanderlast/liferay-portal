@@ -469,7 +469,7 @@ test(
 			type: 'Space',
 		});
 
-		await test.step('Create an user and add to the Space', async () => {
+		await test.step('Create an user and add to the Space as Space Administrator', async () => {
 			user = await apiHelpers.headlessAdminUser.postUserAccount();
 
 			userData[user.alternateName] = {
@@ -480,6 +480,10 @@ test(
 
 			await spaceSummaryPage.goto(spaceName);
 			await spaceSummaryPage.addUserOrUserGroup(user.name, 'users');
+			await spaceSummaryPage.addRoleToSpaceMember(
+				'Space Administrator',
+				user.name
+			);
 		});
 
 		const addComment = async ({
@@ -543,7 +547,7 @@ test(
 				spaceName
 			);
 
-			await test.step('Login as Space Member, go to All Assets, check the Details tab and open the Info Panel Comments', async () => {
+			await test.step('Login as Space Administrator, go to All Assets, check the Details tab and open the Info Panel Comments', async () => {
 				await performLogout(page);
 				await performLoginViaApi({
 					page,
@@ -567,7 +571,8 @@ test(
 						.getByText('Location')
 				).toBeVisible();
 
-				await infoPanelPage.selectTab('Comments').click();
+				await infoPanelPage.selectTab('More').click();
+				await infoPanelPage.dropdownTab('Comments').click();
 			});
 
 			await test.step('Add, edit and delete comments in the info Panel Comments', async () => {
@@ -659,10 +664,12 @@ test(
 			await performLogout(page);
 			await performLoginViaApi({page, screenName: 'test'});
 
-			await apiHelpers.objectEntry.deleteObjectEntry(
-				applicationName,
-				String(objectEntry1.id)
-			);
+			if (objectEntry1) {
+				await apiHelpers.objectEntry.deleteObjectEntry(
+					applicationName,
+					String(objectEntry1.id)
+				);
+			}
 		}
 	}
 );
