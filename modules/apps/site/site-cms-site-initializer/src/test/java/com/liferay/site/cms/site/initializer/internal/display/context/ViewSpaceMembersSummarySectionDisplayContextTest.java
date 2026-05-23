@@ -41,13 +41,13 @@ public class ViewSpaceMembersSummarySectionDisplayContextTest {
 	@Test
 	@TestInfo("LPD-89584")
 	public void testGetCreationMenu() throws Exception {
-		CreationMenu creationMenu = _getCreationMenu(false);
+		CreationMenu creationMenu1 = _getCreationMenu(false);
 
-		Assert.assertTrue(creationMenu.isEmpty());
+		Assert.assertTrue(creationMenu1.isEmpty());
 
-		CreationMenu creationMenu = _getCreationMenu(true);
+		CreationMenu creationMenu2 = _getCreationMenu(true);
 
-		Assert.assertFalse(creationMenu.isEmpty());
+		Assert.assertFalse(creationMenu2.isEmpty());
 	}
 
 	private CreationMenu _getCreationMenu(boolean hasAssignMembersPermission)

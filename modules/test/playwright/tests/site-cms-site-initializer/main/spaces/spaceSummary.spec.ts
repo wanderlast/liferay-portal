@@ -10,9 +10,11 @@ import {featureFlagsTest} from '../../../../fixtures/featureFlagsTest';
 import {loginTest} from '../../../../fixtures/loginTest';
 import {getRandomInt} from '../../../../utils/getRandomInt';
 import getRandomString from '../../../../utils/getRandomString';
-import {performUserSwitchViaApi} from '../../../../utils/performLogin';
+import {
+	performUserSwitchViaApi,
+	userData,
+} from '../../../../utils/performLogin';
 import {cmsPagesTest} from '../fixtures/cmsPagesTest';
-import {registerUserCredentials} from './helpers/roleMembership';
 
 const test = mergeTests(
 	cmsPagesTest,
@@ -331,7 +333,7 @@ test(
 	'Space member without assign-members permission cannot see the Add Members button',
 	{tag: '@LPD-89584'},
 	async ({apiHelpers, spaceSummaryPage}) => {
-		const spaceName = getRandomString();
+		const spaceName = `Space ${getRandomString()}`;
 
 		await apiHelpers.headlessAssetLibrary.createAssetLibrary({
 			name: spaceName,
@@ -342,7 +344,11 @@ test(
 		const user = await apiHelpers.headlessAdminUser.postUserAccount();
 		const userFullName = `${user.givenName} ${user.familyName}`;
 
-		registerUserCredentials(user);
+		userData[user.alternateName] = {
+			name: user.givenName,
+			password: 'test',
+			surname: user.familyName,
+		};
 
 		await spaceSummaryPage.goto(spaceName);
 
