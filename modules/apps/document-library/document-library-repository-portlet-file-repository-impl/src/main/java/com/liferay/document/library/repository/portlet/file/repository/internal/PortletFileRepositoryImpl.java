@@ -146,11 +146,7 @@ public class PortletFileRepositoryImpl implements PortletFileRepository {
 
 		serviceContext.setIndexingEnabled(indexingEnabled);
 
-		if (Validator.isNull(mimeType) ||
-			mimeType.equals(ContentTypes.APPLICATION_OCTET_STREAM)) {
-
-			mimeType = MimeTypesUtil.getContentType(file, fileName);
-		}
+		mimeType = _getMimeType(file, fileName, mimeType);
 
 		boolean dlAppHelperEnabled = DLAppHelperThreadLocal.isEnabled();
 
@@ -796,14 +792,6 @@ public class PortletFileRepositoryImpl implements PortletFileRepository {
 
 		FileEntry fileEntry = getPortletFileEntry(fileEntryId);
 
-		if (Validator.isNull(mimeType) ||
-			mimeType.equals(ContentTypes.APPLICATION_OCTET_STREAM)) {
-
-			mimeType = MimeTypesUtil.getContentType(file, fileName);
-		}
-
-		String finalMimeType = mimeType;
-
 		return _run(
 			() -> {
 				LocalRepository localRepository =
@@ -811,7 +799,8 @@ public class PortletFileRepositoryImpl implements PortletFileRepository {
 						fileEntry.getRepositoryId());
 
 				return localRepository.updateFileEntry(
-					userId, fileEntryId, fileName, finalMimeType,
+					userId, fileEntryId, fileName,
+					_getMimeType(file, fileName, mimeType),
 					fileEntry.getTitle(), null, fileEntry.getDescription(),
 					null, DLVersionNumberIncrease.NONE, file, null, null, null,
 					serviceContext);
@@ -843,6 +832,16 @@ public class PortletFileRepositoryImpl implements PortletFileRepository {
 		finally {
 			FileUtil.delete(file);
 		}
+	}
+
+	private String _getMimeType(File file, String fileName, String mimeType) {
+		if (Validator.isNull(mimeType) ||
+			mimeType.equals(ContentTypes.APPLICATION_OCTET_STREAM)) {
+
+			return MimeTypesUtil.getContentType(file, fileName);
+		}
+
+		return mimeType;
 	}
 
 	private boolean _isAttachment(FileEntry fileEntry) {
