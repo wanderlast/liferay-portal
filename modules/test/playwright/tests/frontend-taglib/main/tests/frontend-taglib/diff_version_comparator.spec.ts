@@ -157,8 +157,10 @@ test(
 			await page.getByRole('menuitem', {name: 'Edit'}).click();
 
 			await page
-				.getByRole('group', {name: 'Fields'})
-				.getByLabel('Rich Text Editor. Editing')
+				.getByLabel('Basic Web Content')
+				.getByRole('textbox', {
+					name: 'Rich Text Editor. Editing area: main',
+				})
 				.fill('test');
 
 			await page
