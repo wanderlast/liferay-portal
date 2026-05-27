@@ -1180,7 +1180,7 @@ public class LayoutSetPrototypePropagationTest
 		MergeLayoutPrototypesThreadLocal.clearMergeComplete();
 
 		_layoutSetPrototypeLayout = LayoutTestUtil.addTypePortletLayout(
-			_layoutSetPrototypeGroup, true, layoutPrototype,
+			_layoutSetPrototypeGroup, true, globalGroupId, layoutPrototype,
 			layoutSetLayoutLinkEnabled);
 
 		propagateChanges(group);
