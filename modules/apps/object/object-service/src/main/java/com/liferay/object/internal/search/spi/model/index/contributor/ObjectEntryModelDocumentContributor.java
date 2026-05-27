@@ -409,7 +409,7 @@ public class ObjectEntryModelDocumentContributor
 			document.addDate(Field.DISPLAY_DATE, objectEntry.getDisplayDate());
 			document.addDate(
 				Field.EXPIRATION_DATE, objectEntry.getExpirationDate());
-			document.addDate(Field.REVIEW_DATE, objectEntry.getReviewDate());
+			document.addDate("reviewDate", objectEntry.getReviewDate());
 
 			_contributeObjectEntryFolder(
 				document, objectEntry.getObjectEntryFolderId());

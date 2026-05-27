@@ -143,8 +143,6 @@ public class Field implements Serializable {
 
 	public static final String REMOVED_DATE = "removedDate";
 
-	public static final String REVIEW_DATE = "reviewDate";
-
 	public static final String ROLE_ID = "roleId";
 
 	public static final String ROLE_IDS = "roleIds";
