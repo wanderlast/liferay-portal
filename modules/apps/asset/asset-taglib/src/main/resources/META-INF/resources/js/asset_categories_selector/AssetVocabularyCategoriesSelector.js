@@ -225,6 +225,7 @@ function AssetVocabulariesCategoriesSelector({
 				<ClayInput.Group>
 					<ClayInput.GroupItem>
 						<ClayMultiSelect
+							allowsCustomLabel={false}
 							clearAllTitle={Liferay.Language.get('clear-all')}
 							id={inputName + '_MultiSelect'}
 							inputName={inputName}
