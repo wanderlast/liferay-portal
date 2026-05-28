@@ -86,12 +86,6 @@ public class AssetVocabularyGroupRelLocalServiceImpl
 	}
 
 	@Override
-	public int getAssetVocabularyGroupRelsCount(long vocabularyId) {
-		return assetVocabularyGroupRelPersistence.countByVocabularyId(
-			vocabularyId);
-	}
-
-	@Override
 	public void setAssetVocabularyGroupRels(long vocabularyId, long[] groupIds)
 		throws PortalException {
 
