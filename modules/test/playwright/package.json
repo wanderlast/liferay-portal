@@ -1,6 +1,7 @@
 {
 	"author": "",
 	"dependencies": {
+		"@jsonurl/jsonurl": "^1.1.6",
 		"form-data": "^4.0.0",
 		"moment": "2.29.4",
 		"uuid": "9.0.0",
