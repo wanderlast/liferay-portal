@@ -11,7 +11,7 @@ import {SRC_PATH} from '../../../util/locations.mjs';
 const REGEXP = /Liferay\.Language\.get\(([^)]+)\)/g;
 
 /**
- * This plugin detects usages of `Liferay.Language.get` and injects a static import for
+ * This plugin detects usages of `Liferay.Language.get` and injects a dynamic import for
  * `@liferay/language/...` when necessary.
  *
  * This technique is only used for liferay-portal internal code (ie: it is not applied to external
@@ -74,9 +74,10 @@ export default function getLiferayLanguageGetPlugin(
 
 					if (keys.length) {
 						contents =
-							"import '@liferay/language" +
+							'await import(`@liferay/language/' +
+							'${Liferay.ThemeDisplay.getLanguageId()}' +
 							projectWebContextPath +
-							"/all.js';\n" +
+							'/all.js`);\n' +
 							contents;
 
 						languageJSON.keys.push(...keys);
