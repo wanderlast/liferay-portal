@@ -3531,8 +3531,6 @@ test(
 		}
 	}
 );
-	}
-);
 
 test(
 	'All section can be filtered by Space',
