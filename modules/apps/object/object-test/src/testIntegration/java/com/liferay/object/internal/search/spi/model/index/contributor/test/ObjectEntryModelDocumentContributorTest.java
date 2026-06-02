@@ -9,6 +9,7 @@ import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.object.constants.ObjectDefinitionConstants;
 import com.liferay.object.constants.ObjectEntrySearchConstants;
 import com.liferay.object.constants.ObjectFieldConstants;
+import com.liferay.object.field.builder.AssigneeObjectFieldBuilder;
 import com.liferay.object.field.util.ObjectFieldUtil;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.model.ObjectEntry;
@@ -18,12 +19,18 @@ import com.liferay.object.service.ObjectDefinitionLocalService;
 import com.liferay.object.service.ObjectFieldLocalService;
 import com.liferay.object.test.util.ObjectDefinitionTestUtil;
 import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.kernel.model.Role;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.role.RoleConstants;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.kernel.test.util.RoleTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -174,6 +181,113 @@ public class ObjectEntryModelDocumentContributorTest {
 					ObjectEntrySearchConstants.OBJECT_ENTRY_CONTENT)));
 	}
 
+	@FeatureFlag("LPD-17564")
+	@Test
+	public void testContributeWithAssigneeObjectField() throws Exception {
+		String objectFieldName = "a" + RandomTestUtil.randomString();
+
+		ObjectDefinition objectDefinition =
+			ObjectDefinitionTestUtil.publishObjectDefinition();
+
+		ObjectFieldUtil.addCustomObjectField(
+			new AssigneeObjectFieldBuilder(
+			).indexed(
+				true
+			).labelMap(
+				RandomTestUtil.randomLocaleStringMap()
+			).name(
+				objectFieldName
+			).objectDefinitionId(
+				objectDefinition.getObjectDefinitionId()
+			).userId(
+				TestPropsValues.getUserId()
+			).build());
+
+		objectDefinition = _objectDefinitionLocalService.getObjectDefinition(
+			objectDefinition.getObjectDefinitionId());
+
+		ModelDocumentContributor<ObjectEntry>
+			objectEntryModelDocumentContributor =
+				_getObjectEntryModelDocumentContributor(objectDefinition);
+
+		Role role = RoleTestUtil.addRole(RoleConstants.TYPE_REGULAR);
+
+		long roleClassNameId = _classNameLocalService.getClassNameId(
+			Role.class.getName());
+		long roleClassPK = role.getRoleId();
+
+		ObjectEntry roleObjectEntry = ObjectEntryTestUtil.addObjectEntry(
+			objectDefinition,
+			HashMapBuilder.<String, Serializable>put(
+				objectFieldName,
+				HashMapBuilder.put(
+					"classNameId", roleClassNameId
+				).put(
+					"classPK", roleClassPK
+				).build()
+			).build());
+
+		Document roleDocument = new DocumentImpl();
+
+		objectEntryModelDocumentContributor.contribute(
+			roleDocument, roleObjectEntry);
+
+		Field roleField = roleDocument.getField("objectEntryContent");
+
+		Assert.assertNotNull(roleField);
+
+		String roleValue = roleField.getValue();
+
+		Assert.assertTrue(
+			roleValue,
+			roleValue.contains(
+				StringBundler.concat(
+					objectFieldName, ": ", roleClassNameId, "_", roleClassPK)));
+		Assert.assertTrue(
+			roleValue,
+			roleValue.contains(
+				StringBundler.concat(objectFieldName, ": ", role.getName())));
+
+		User user = UserTestUtil.addUser();
+
+		long userClassNameId = _classNameLocalService.getClassNameId(
+			User.class.getName());
+		long userClassPK = user.getUserId();
+
+		ObjectEntry userObjectEntry = ObjectEntryTestUtil.addObjectEntry(
+			objectDefinition,
+			HashMapBuilder.<String, Serializable>put(
+				objectFieldName,
+				HashMapBuilder.put(
+					"classNameId", userClassNameId
+				).put(
+					"classPK", userClassPK
+				).build()
+			).build());
+
+		Document userDocument = new DocumentImpl();
+
+		objectEntryModelDocumentContributor.contribute(
+			userDocument, userObjectEntry);
+
+		Field userField = userDocument.getField("objectEntryContent");
+
+		Assert.assertNotNull(userField);
+
+		String value = userField.getValue();
+
+		Assert.assertTrue(
+			value,
+			value.contains(
+				StringBundler.concat(
+					objectFieldName, ": ", userClassNameId, "_", userClassPK)));
+		Assert.assertTrue(
+			value,
+			value.contains(
+				StringBundler.concat(
+					objectFieldName, ": ", user.getFullName())));
+	}
+
 	private ObjectDefinition _addModifiableSystemObjectDefinition(
 			boolean localized, String objectFieldName)
 		throws Exception {
@@ -233,6 +347,9 @@ public class ObjectEntryModelDocumentContributorTest {
 
 		return bundleContext.getService(serviceReferences.get(0));
 	}
+
+	@Inject
+	private ClassNameLocalService _classNameLocalService;
 
 	@Inject
 	private ObjectDefinitionLocalService _objectDefinitionLocalService;
