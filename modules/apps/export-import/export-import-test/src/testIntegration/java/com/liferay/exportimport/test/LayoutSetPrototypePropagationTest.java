@@ -1188,6 +1188,11 @@ public class LayoutSetPrototypePropagationTest
 		}
 	}
 
+	@Override
+	protected boolean useColumnCustomizable() {
+		return false;
+	}
+
 	private Layout _addLayout(long groupId) throws Exception {
 		Layout layout = _layoutLocalService.addLayout(
 			null, TestPropsValues.getUserId(), groupId, true,
