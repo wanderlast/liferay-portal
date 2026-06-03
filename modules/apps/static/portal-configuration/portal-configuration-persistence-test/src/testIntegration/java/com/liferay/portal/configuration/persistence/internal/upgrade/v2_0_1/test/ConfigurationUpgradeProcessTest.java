@@ -13,7 +13,6 @@ import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
-import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayOutputStream;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.GroupConstants;
@@ -27,6 +26,8 @@ import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.upgrade.UpgradeStep;
 import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
 import com.liferay.portal.kernel.util.PropsValues;
+import com.liferay.portal.test.log.LogCapture;
+import com.liferay.portal.test.log.LoggerTestUtil;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.upgrade.registry.UpgradeStepRegistrator;
@@ -41,8 +42,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
+import org.apache.felix.cm.PersistenceManager;
 import org.apache.felix.cm.file.ConfigurationHandler;
 
 import org.junit.After;
@@ -139,39 +143,58 @@ public class ConfigurationUpgradeProcessTest {
 		}
 
 		Assert.assertEquals(1, count);
+
+		String configurationId = _configurationIds.get(companyId);
+
+		Dictionary<?, ?> dictionary = _persistenceManager.load(configurationId);
+
+		Assert.assertEquals(
+			companyId,
+			dictionary.get(
+				ExtendedObjectClassDefinition.Scope.COMPANY.getPropertyKey()));
 	}
 
 	private void _createConfiguration() throws Exception {
+		long companyId = CompanyThreadLocal.getCompanyId();
+
 		Group group = _groupLocalService.getGroup(
-			CompanyThreadLocal.getCompanyId(), GroupConstants.GUEST);
+			companyId, GroupConstants.GUEST);
 
-		try (Connection connection = DataAccess.getConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(
-				"insert into Configuration_ (configurationId, dictionary) " +
-					"values(?, ?)")) {
+		String factoryPid = _CONFIGURATION_ID + ".scoped";
 
-			String factoryPid =
-				_CONFIGURATION_ID + "~" + RandomTestUtil.randomString();
+		String configurationId =
+			factoryPid + "~" + RandomTestUtil.randomString();
 
-			preparedStatement.setString(1, factoryPid);
-			preparedStatement.setString(
-				2,
-				_toString(
-					HashMapDictionaryBuilder.<String, Object>put(
-						"groupId", group.getGroupId()
-					).put(
-						"key", "value"
-					).put(
-						"service.factoryPid", factoryPid
-					).put(
-						"service.pid", _CONFIGURATION_ID + ".scoped"
-					).build()));
+		try (LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
+				"com.liferay.configuration.admin.web.internal.configuration." +
+					"persistence.listener." +
+						"ConfigurationImportGlobalConfigurationModelListener",
+				LoggerTestUtil.ERROR)) {
 
-			preparedStatement.execute();
+			_persistenceManager.store(
+				configurationId,
+				HashMapDictionaryBuilder.<String, Object>put(
+					"groupId", group.getGroupId()
+				).put(
+					"key", "value"
+				).put(
+					"service.factoryPid", factoryPid
+				).put(
+					"service.pid", configurationId
+				).build());
 		}
+
+		_configurationIds.put(companyId, configurationId);
 	}
 
 	private void _deleteConfiguration() throws IOException, SQLException {
+		String configurationId = _configurationIds.remove(
+			CompanyThreadLocal.getCompanyId());
+
+		if (configurationId != null) {
+			_persistenceManager.delete(configurationId);
+		}
+
 		DB db = DBManagerUtil.getDB();
 
 		db.runSQL(
@@ -215,18 +238,6 @@ public class ConfigurationUpgradeProcessTest {
 		return ConfigurationHandler.read(unsyncByteArrayInputStream);
 	}
 
-	private String _toString(Dictionary<String, Object> dictionary)
-		throws IOException {
-
-		UnsyncByteArrayOutputStream unsyncByteArrayOutputStream =
-			new UnsyncByteArrayOutputStream();
-
-		ConfigurationHandler.write(unsyncByteArrayOutputStream, dictionary);
-
-		return new String(
-			unsyncByteArrayOutputStream.toByteArray(), StandardCharsets.UTF_8);
-	}
-
 	private static final String _CLASS_NAME =
 		"com.liferay.portal.configuration.persistence.internal.upgrade." +
 			"v2_0_1.ConfigurationUpgradeProcess";
@@ -247,7 +258,12 @@ public class ConfigurationUpgradeProcessTest {
 	@Inject
 	private CompanyLocalService _companyLocalService;
 
+	private final Map<Long, String> _configurationIds = new HashMap<>();
+
 	@Inject
 	private GroupLocalService _groupLocalService;
+
+	@Inject
+	private PersistenceManager _persistenceManager;
 
 }
