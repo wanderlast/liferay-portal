@@ -12,8 +12,13 @@ import com.liferay.object.model.ObjectEntryFolder;
 import com.liferay.object.service.ObjectDefinitionService;
 import com.liferay.object.service.ObjectDefinitionSettingLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
@@ -55,6 +60,22 @@ public class ViewHomeRecentAssetsSectionDisplayContext
 	}
 
 	@Override
+	public Map<String, Object> getAdditionalProps() {
+		Map<String, Object> additionalProps = super.getAdditionalProps();
+
+		try {
+			additionalProps.put("breadcrumbProps", getBreadcrumbProps());
+		}
+		catch (PortalException portalException) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(portalException);
+			}
+		}
+
+		return additionalProps;
+	}
+
+	@Override
 	public String getAPIURL() {
 		return HttpComponentsUtil.addParameters(
 			super.getAPIURL(), "sort", "dateModified:desc");
@@ -65,6 +86,24 @@ public class ViewHomeRecentAssetsSectionDisplayContext
 			LayoutLocalServiceUtil.getLayoutByFriendlyURL(
 				themeDisplay.getScopeGroupId(), false, "/all"),
 			themeDisplay);
+	}
+
+	@Override
+	public Map<String, Object> getBreadcrumbProps() throws PortalException {
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		Layout layout = LayoutLocalServiceUtil.getLayoutByFriendlyURL(
+			themeDisplay.getScopeGroupId(), false, "/all");
+
+		addBreadcrumbItem(
+			jsonArray, false, null,
+			layout.getName(themeDisplay.getLocale(), true));
+
+		return HashMapBuilder.<String, Object>put(
+			"breadcrumbItems", jsonArray
+		).put(
+			"hideSpace", true
+		).build();
 	}
 
 	@Override
@@ -100,5 +139,8 @@ public class ViewHomeRecentAssetsSectionDisplayContext
 				"cmsKind eq 'object' and (cmsSection eq 'contents' or " +
 					"cmsSection eq 'files')"));
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		ViewHomeRecentAssetsSectionDisplayContext.class);
 
 }
