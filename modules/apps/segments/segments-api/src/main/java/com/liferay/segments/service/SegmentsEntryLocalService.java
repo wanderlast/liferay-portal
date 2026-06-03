@@ -307,6 +307,10 @@ public interface SegmentsEntryLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<SegmentsEntry> getSegmentsEntries(
+		long[] groupIds, boolean active, String[] sources);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<SegmentsEntry> getSegmentsEntries(
 		long[] segmentsEntryIds, int start, int end);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

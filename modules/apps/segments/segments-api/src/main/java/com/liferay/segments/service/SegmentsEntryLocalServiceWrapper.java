@@ -402,6 +402,14 @@ public class SegmentsEntryLocalServiceWrapper
 
 	@Override
 	public java.util.List<SegmentsEntry> getSegmentsEntries(
+		long[] groupIds, boolean active, String[] sources) {
+
+		return _segmentsEntryLocalService.getSegmentsEntries(
+			groupIds, active, sources);
+	}
+
+	@Override
+	public java.util.List<SegmentsEntry> getSegmentsEntries(
 		long[] segmentsEntryIds, int start, int end) {
 
 		return _segmentsEntryLocalService.getSegmentsEntries(

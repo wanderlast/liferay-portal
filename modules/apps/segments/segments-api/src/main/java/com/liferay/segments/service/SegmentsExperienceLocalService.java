@@ -407,6 +407,10 @@ public interface SegmentsExperienceLocalService
 		long plid, boolean active, int start, int end,
 		OrderByComparator<SegmentsExperience> orderByComparator);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<SegmentsExperience> getSegmentsExperiences(
+		long[] groupIds, boolean active);
+
 	/**
 	 * Returns all the segments experiences matching the UUID and company.
 	 *

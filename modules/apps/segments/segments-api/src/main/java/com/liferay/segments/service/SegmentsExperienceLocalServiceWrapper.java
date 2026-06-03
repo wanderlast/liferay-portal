@@ -593,6 +593,14 @@ public class SegmentsExperienceLocalServiceWrapper
 			start, end, orderByComparator);
 	}
 
+	@Override
+	public java.util.List<SegmentsExperience> getSegmentsExperiences(
+		long[] groupIds, boolean active) {
+
+		return _segmentsExperienceLocalService.getSegmentsExperiences(
+			groupIds, active);
+	}
+
 	/**
 	 * Returns all the segments experiences matching the UUID and company.
 	 *

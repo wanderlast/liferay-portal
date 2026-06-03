@@ -519,6 +519,12 @@ public class SegmentsExperienceLocalServiceUtil {
 			start, end, orderByComparator);
 	}
 
+	public static List<SegmentsExperience> getSegmentsExperiences(
+		long[] groupIds, boolean active) {
+
+		return getService().getSegmentsExperiences(groupIds, active);
+	}
+
 	/**
 	 * Returns all the segments experiences matching the UUID and company.
 	 *
