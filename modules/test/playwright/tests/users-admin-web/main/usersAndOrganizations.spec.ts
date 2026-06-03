@@ -1992,6 +1992,8 @@ test(
 
 		await usersAndOrganizationsPage.goToUsers();
 
+		await usersAndOrganizationsPage.usersDataTable.changeView('table');
+
 		await (
 			await usersAndOrganizationsPage.usersTableRowLink('test')
 		).click();
