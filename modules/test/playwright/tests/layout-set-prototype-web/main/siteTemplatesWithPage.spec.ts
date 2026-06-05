@@ -5,7 +5,6 @@
 
 import {expect, mergeTests} from '@playwright/test';
 
-import {applicationsMenuPageTest} from '../../../fixtures/applicationsMenuPageTest';
 import {dataApiHelpersTest} from '../../../fixtures/dataApiHelpersTest';
 import {loginTest} from '../../../fixtures/loginTest';
 import {pageEditorPagesTest} from '../../../fixtures/pageEditorPagesTest';
@@ -15,15 +14,16 @@ import {sitesPageTest} from '../../../fixtures/sitesPageTest';
 import {uiElementsPageTest} from '../../../fixtures/uiElementsTest';
 import getRandomString from '../../../utils/getRandomString';
 import {reloadUntilVisible} from '../../../utils/reloadUntilVisible';
+import {sitesAdminPagesTest} from '../../site-admin-web/main/fixtures/sitesAdminPagesTest';
 import createSiteTemplate from './utils/createSiteTemplate';
 
 export const test = mergeTests(
-	applicationsMenuPageTest,
 	dataApiHelpersTest,
 	loginTest(),
 	pageEditorPagesTest,
 	pagesAdminPagesTest,
 	productMenuPageTest,
+	sitesAdminPagesTest,
 	sitesPageTest,
 	uiElementsPageTest
 );
@@ -33,11 +33,11 @@ test(
 	{tag: ['@LPD-49053', '@LPS-131903', '@LPS-132256']},
 	async ({
 		apiHelpers,
-		applicationsMenuPage,
 		page,
 		pageEditorPage,
 		pagesAdminPage,
 		productMenuPage,
+		sitesAdminPage,
 		sitesPage,
 		uiElementsPage,
 	}) => {
@@ -73,7 +73,7 @@ test(
 
 		// Create a site using the site template
 
-		await applicationsMenuPage.goToSites();
+		await sitesAdminPage.goto();
 
 		const siteName: string = 'Site-' + getRandomString();
 
@@ -158,10 +158,10 @@ test(
 	{tag: '@LPD-70284'},
 	async ({
 		apiHelpers,
-		applicationsMenuPage,
 		page,
 		pagesAdminPage,
 		productMenuPage,
+		sitesAdminPage,
 		sitesPage,
 		uiElementsPage,
 	}) => {
@@ -196,7 +196,7 @@ test(
 
 		// Create site based on that template
 
-		await applicationsMenuPage.goToSites();
+		await sitesAdminPage.goto();
 
 		const siteName = 'Site-' + getRandomString();
 
