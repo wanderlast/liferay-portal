@@ -368,12 +368,13 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 					_FIELD_NAME, Boolean.FALSE
 				).build()));
 
-		BooleanQuery query = new BooleanQueryImpl();
+		BooleanQuery booleanQuery = new BooleanQuery();
 
-		query.addExactTerm(_FIELD_NAME, true);
+		booleanQuery.addExactTerm(_FIELD_NAME, true);
 
 		DeleteByQueryDocumentRequest deleteByQueryDocumentRequest =
-			new DeleteByQueryDocumentRequest(query, new String[] {_INDEX_NAME});
+			new DeleteByQueryDocumentRequest(
+				booleanQuery, new String[] {_INDEX_NAME});
 
 		DeleteByQueryDocumentResponse deleteByQueryDocumentResponse =
 			_searchEngineAdapter.execute(deleteByQueryDocumentRequest);
@@ -481,13 +482,13 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 					_FIELD_NAME, Boolean.TRUE
 				).build()));
 
-		BooleanQuery query = new BooleanQueryImpl();
+		BooleanQuery booleanQuery = new BooleanQuery();
 
-		query.addExactTerm(_FIELD_NAME, true);
+		booleanQuery.addExactTerm(_FIELD_NAME, true);
 
 		UpdateByQueryDocumentRequest updateByQueryDocumentRequest =
 			new UpdateByQueryDocumentRequest(
-				query, null, new String[] {_INDEX_NAME});
+				booleanQuery, null, new String[] {_INDEX_NAME});
 
 		UpdateByQueryDocumentResponse updateByQueryDocumentResponse =
 			_searchEngineAdapter.execute(updateByQueryDocumentRequest);
@@ -744,20 +745,6 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 		}
 	}
 
-	private void _updateByQueryProceedOnConflicts() {
-		BooleanQuery booleanQuery = new BooleanQuery();
-
-		booleanQuery.addExactTerm(_FIELD_NAME, true);
-
-		UpdateByQueryDocumentRequest updateByQueryDocumentRequest =
-			new UpdateByQueryDocumentRequest(
-				booleanQuery, null, new String[] {_INDEX_NAME});
-
-		updateByQueryDocumentRequest.setProceedOnConflicts(true);
-
-		_searchEngineAdapter.execute(updateByQueryDocumentRequest);
-	}
-
 	private GetResponse _getDocument(String id) {
 		try {
 			return _elasticsearchClient.get(
@@ -817,6 +804,20 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 			IndexMappingsConstants.LIFERAY_DOCUMENT_TYPE);
 
 		return _searchEngineAdapter.execute(indexDocumentRequest);
+	}
+
+	private void _updateByQueryProceedOnConflicts() {
+		BooleanQuery booleanQuery = new BooleanQuery();
+
+		booleanQuery.addExactTerm(_FIELD_NAME, true);
+
+		UpdateByQueryDocumentRequest updateByQueryDocumentRequest =
+			new UpdateByQueryDocumentRequest(
+				booleanQuery, null, new String[] {_INDEX_NAME});
+
+		updateByQueryDocumentRequest.setProceedOnConflicts(true);
+
+		_searchEngineAdapter.execute(updateByQueryDocumentRequest);
 	}
 
 	private UpdateDocumentResponse _updateDocumentWithAdapter(
