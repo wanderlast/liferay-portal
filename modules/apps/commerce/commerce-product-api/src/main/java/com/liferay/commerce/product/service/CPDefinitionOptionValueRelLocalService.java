@@ -275,6 +275,11 @@ public interface CPDefinitionOptionValueRelLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<CPDefinitionOptionValueRel>
+		getApprovedCPInstanceCPDefinitionOptionValueRels(
+			long cpDefinitionOptionRelId);
+
 	/**
 	 * Returns the cp definition option value rel with the primary key.
 	 *

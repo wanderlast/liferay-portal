@@ -311,6 +311,14 @@ public class CPDefinitionOptionValueRelLocalServiceUtil {
 		return getService().getActionableDynamicQuery();
 	}
 
+	public static List<CPDefinitionOptionValueRel>
+		getApprovedCPInstanceCPDefinitionOptionValueRels(
+			long cpDefinitionOptionRelId) {
+
+		return getService().getApprovedCPInstanceCPDefinitionOptionValueRels(
+			cpDefinitionOptionRelId);
+	}
+
 	/**
 	 * Returns the cp definition option value rel with the primary key.
 	 *
