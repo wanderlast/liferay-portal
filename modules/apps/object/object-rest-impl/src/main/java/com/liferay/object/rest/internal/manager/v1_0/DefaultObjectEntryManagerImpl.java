@@ -880,6 +880,7 @@ public class DefaultObjectEntryManagerImpl
 
 				searchContext.setCompanyId(companyId);
 				searchContext.setGroupIds(new long[] {groupId});
+				searchContext.setLocale(dtoConverterContext.getLocale());
 
 				SearchRequestBuilder searchRequestBuilder =
 					_searchRequestBuilderFactory.builder(searchContext);
