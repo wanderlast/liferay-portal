@@ -145,8 +145,9 @@ public class CommerceShipmentServiceWrapper
 
 	@Override
 	public java.util.List<com.liferay.commerce.model.CommerceShipment>
-		getCommerceShipmentsByOrderId(
-			long commerceOrderId, int start, int end) {
+			getCommerceShipmentsByOrderId(
+				long commerceOrderId, int start, int end)
+		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _commerceShipmentService.getCommerceShipmentsByOrderId(
 			commerceOrderId, start, end);
@@ -188,7 +189,9 @@ public class CommerceShipmentServiceWrapper
 	}
 
 	@Override
-	public int getCommerceShipmentsCountByOrderId(long commerceOrderId) {
+	public int getCommerceShipmentsCountByOrderId(long commerceOrderId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
 		return _commerceShipmentService.getCommerceShipmentsCountByOrderId(
 			commerceOrderId);
 	}

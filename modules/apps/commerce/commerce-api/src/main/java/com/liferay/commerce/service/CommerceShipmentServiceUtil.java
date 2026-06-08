@@ -124,7 +124,8 @@ public class CommerceShipmentServiceUtil {
 	}
 
 	public static List<CommerceShipment> getCommerceShipmentsByOrderId(
-		long commerceOrderId, int start, int end) {
+			long commerceOrderId, int start, int end)
+		throws PortalException {
 
 		return getService().getCommerceShipmentsByOrderId(
 			commerceOrderId, start, end);
@@ -161,7 +162,9 @@ public class CommerceShipmentServiceUtil {
 			excludeShipmentStatus);
 	}
 
-	public static int getCommerceShipmentsCountByOrderId(long commerceOrderId) {
+	public static int getCommerceShipmentsCountByOrderId(long commerceOrderId)
+		throws PortalException {
+
 		return getService().getCommerceShipmentsCountByOrderId(commerceOrderId);
 	}
 

@@ -671,6 +671,122 @@ public class CommerceShipmentUtil {
 	}
 
 	/**
+	 * Returns all the commerce shipments that the user has permission to view where groupId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @return the matching commerce shipments that the user has permission to view
+	 */
+	public static List<CommerceShipment> filterFindByGroupId(long groupId) {
+		return getPersistence().filterFindByGroupId(groupId);
+	}
+
+	/**
+	 * Returns a range of all the commerce shipments that the user has permission to view where groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CommerceShipmentModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of commerce shipments
+	 * @param end the upper bound of the range of commerce shipments (not inclusive)
+	 * @return the range of matching commerce shipments that the user has permission to view
+	 */
+	public static List<CommerceShipment> filterFindByGroupId(
+		long groupId, int start, int end) {
+
+		return getPersistence().filterFindByGroupId(groupId, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the commerce shipments that the user has permissions to view where groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CommerceShipmentModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of commerce shipments
+	 * @param end the upper bound of the range of commerce shipments (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching commerce shipments that the user has permission to view
+	 */
+	public static List<CommerceShipment> filterFindByGroupId(
+		long groupId, int start, int end,
+		OrderByComparator<CommerceShipment> orderByComparator) {
+
+		return getPersistence().filterFindByGroupId(
+			groupId, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns the commerce shipments before and after the current commerce shipment in the ordered set of commerce shipments that the user has permission to view where groupId = &#63;.
+	 *
+	 * @param commerceShipmentId the primary key of the current commerce shipment
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next commerce shipment
+	 * @throws NoSuchShipmentException if a commerce shipment with the primary key could not be found
+	 */
+	public static CommerceShipment[] filterFindByGroupId_PrevAndNext(
+			long commerceShipmentId, long groupId,
+			OrderByComparator<CommerceShipment> orderByComparator)
+		throws com.liferay.commerce.exception.NoSuchShipmentException {
+
+		return getPersistence().filterFindByGroupId_PrevAndNext(
+			commerceShipmentId, groupId, orderByComparator);
+	}
+
+	/**
+	 * Returns all the commerce shipments that the user has permission to view where groupId = any &#63;.
+	 *
+	 * @param groupIds the group IDs
+	 * @return the matching commerce shipments that the user has permission to view
+	 */
+	public static List<CommerceShipment> filterFindByGroupId(long[] groupIds) {
+		return getPersistence().filterFindByGroupId(groupIds);
+	}
+
+	/**
+	 * Returns a range of all the commerce shipments that the user has permission to view where groupId = any &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CommerceShipmentModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupIds the group IDs
+	 * @param start the lower bound of the range of commerce shipments
+	 * @param end the upper bound of the range of commerce shipments (not inclusive)
+	 * @return the range of matching commerce shipments that the user has permission to view
+	 */
+	public static List<CommerceShipment> filterFindByGroupId(
+		long[] groupIds, int start, int end) {
+
+		return getPersistence().filterFindByGroupId(groupIds, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the commerce shipments that the user has permission to view where groupId = any &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CommerceShipmentModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupIds the group IDs
+	 * @param start the lower bound of the range of commerce shipments
+	 * @param end the upper bound of the range of commerce shipments (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching commerce shipments that the user has permission to view
+	 */
+	public static List<CommerceShipment> filterFindByGroupId(
+		long[] groupIds, int start, int end,
+		OrderByComparator<CommerceShipment> orderByComparator) {
+
+		return getPersistence().filterFindByGroupId(
+			groupIds, start, end, orderByComparator);
+	}
+
+	/**
 	 * Returns all the commerce shipments where groupId = any &#63;.
 	 *
 	 * <p>
@@ -773,6 +889,26 @@ public class CommerceShipmentUtil {
 	 */
 	public static int countByGroupId(long[] groupIds) {
 		return getPersistence().countByGroupId(groupIds);
+	}
+
+	/**
+	 * Returns the number of commerce shipments that the user has permission to view where groupId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @return the number of matching commerce shipments that the user has permission to view
+	 */
+	public static int filterCountByGroupId(long groupId) {
+		return getPersistence().filterCountByGroupId(groupId);
+	}
+
+	/**
+	 * Returns the number of commerce shipments that the user has permission to view where groupId = any &#63;.
+	 *
+	 * @param groupIds the group IDs
+	 * @return the number of matching commerce shipments that the user has permission to view
+	 */
+	public static int filterCountByGroupId(long[] groupIds) {
+		return getPersistence().filterCountByGroupId(groupIds);
 	}
 
 	/**
@@ -943,6 +1079,135 @@ public class CommerceShipmentUtil {
 	}
 
 	/**
+	 * Returns all the commerce shipments that the user has permission to view where groupId = &#63; and commerceAddressId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param commerceAddressId the commerce address ID
+	 * @return the matching commerce shipments that the user has permission to view
+	 */
+	public static List<CommerceShipment> filterFindByG_C(
+		long groupId, long commerceAddressId) {
+
+		return getPersistence().filterFindByG_C(groupId, commerceAddressId);
+	}
+
+	/**
+	 * Returns a range of all the commerce shipments that the user has permission to view where groupId = &#63; and commerceAddressId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CommerceShipmentModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param commerceAddressId the commerce address ID
+	 * @param start the lower bound of the range of commerce shipments
+	 * @param end the upper bound of the range of commerce shipments (not inclusive)
+	 * @return the range of matching commerce shipments that the user has permission to view
+	 */
+	public static List<CommerceShipment> filterFindByG_C(
+		long groupId, long commerceAddressId, int start, int end) {
+
+		return getPersistence().filterFindByG_C(
+			groupId, commerceAddressId, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the commerce shipments that the user has permissions to view where groupId = &#63; and commerceAddressId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CommerceShipmentModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param commerceAddressId the commerce address ID
+	 * @param start the lower bound of the range of commerce shipments
+	 * @param end the upper bound of the range of commerce shipments (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching commerce shipments that the user has permission to view
+	 */
+	public static List<CommerceShipment> filterFindByG_C(
+		long groupId, long commerceAddressId, int start, int end,
+		OrderByComparator<CommerceShipment> orderByComparator) {
+
+		return getPersistence().filterFindByG_C(
+			groupId, commerceAddressId, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns the commerce shipments before and after the current commerce shipment in the ordered set of commerce shipments that the user has permission to view where groupId = &#63; and commerceAddressId = &#63;.
+	 *
+	 * @param commerceShipmentId the primary key of the current commerce shipment
+	 * @param groupId the group ID
+	 * @param commerceAddressId the commerce address ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next commerce shipment
+	 * @throws NoSuchShipmentException if a commerce shipment with the primary key could not be found
+	 */
+	public static CommerceShipment[] filterFindByG_C_PrevAndNext(
+			long commerceShipmentId, long groupId, long commerceAddressId,
+			OrderByComparator<CommerceShipment> orderByComparator)
+		throws com.liferay.commerce.exception.NoSuchShipmentException {
+
+		return getPersistence().filterFindByG_C_PrevAndNext(
+			commerceShipmentId, groupId, commerceAddressId, orderByComparator);
+	}
+
+	/**
+	 * Returns all the commerce shipments that the user has permission to view where groupId = any &#63; and commerceAddressId = &#63;.
+	 *
+	 * @param groupIds the group IDs
+	 * @param commerceAddressId the commerce address ID
+	 * @return the matching commerce shipments that the user has permission to view
+	 */
+	public static List<CommerceShipment> filterFindByG_C(
+		long[] groupIds, long commerceAddressId) {
+
+		return getPersistence().filterFindByG_C(groupIds, commerceAddressId);
+	}
+
+	/**
+	 * Returns a range of all the commerce shipments that the user has permission to view where groupId = any &#63; and commerceAddressId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CommerceShipmentModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupIds the group IDs
+	 * @param commerceAddressId the commerce address ID
+	 * @param start the lower bound of the range of commerce shipments
+	 * @param end the upper bound of the range of commerce shipments (not inclusive)
+	 * @return the range of matching commerce shipments that the user has permission to view
+	 */
+	public static List<CommerceShipment> filterFindByG_C(
+		long[] groupIds, long commerceAddressId, int start, int end) {
+
+		return getPersistence().filterFindByG_C(
+			groupIds, commerceAddressId, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the commerce shipments that the user has permission to view where groupId = any &#63; and commerceAddressId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CommerceShipmentModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupIds the group IDs
+	 * @param commerceAddressId the commerce address ID
+	 * @param start the lower bound of the range of commerce shipments
+	 * @param end the upper bound of the range of commerce shipments (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching commerce shipments that the user has permission to view
+	 */
+	public static List<CommerceShipment> filterFindByG_C(
+		long[] groupIds, long commerceAddressId, int start, int end,
+		OrderByComparator<CommerceShipment> orderByComparator) {
+
+		return getPersistence().filterFindByG_C(
+			groupIds, commerceAddressId, start, end, orderByComparator);
+	}
+
+	/**
 	 * Returns all the commerce shipments where groupId = any &#63; and commerceAddressId = &#63;.
 	 *
 	 * <p>
@@ -1056,6 +1321,30 @@ public class CommerceShipmentUtil {
 	 */
 	public static int countByG_C(long[] groupIds, long commerceAddressId) {
 		return getPersistence().countByG_C(groupIds, commerceAddressId);
+	}
+
+	/**
+	 * Returns the number of commerce shipments that the user has permission to view where groupId = &#63; and commerceAddressId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param commerceAddressId the commerce address ID
+	 * @return the number of matching commerce shipments that the user has permission to view
+	 */
+	public static int filterCountByG_C(long groupId, long commerceAddressId) {
+		return getPersistence().filterCountByG_C(groupId, commerceAddressId);
+	}
+
+	/**
+	 * Returns the number of commerce shipments that the user has permission to view where groupId = any &#63; and commerceAddressId = &#63;.
+	 *
+	 * @param groupIds the group IDs
+	 * @param commerceAddressId the commerce address ID
+	 * @return the number of matching commerce shipments that the user has permission to view
+	 */
+	public static int filterCountByG_C(
+		long[] groupIds, long commerceAddressId) {
+
+		return getPersistence().filterCountByG_C(groupIds, commerceAddressId);
 	}
 
 	/**
@@ -1222,6 +1511,133 @@ public class CommerceShipmentUtil {
 	}
 
 	/**
+	 * Returns all the commerce shipments that the user has permission to view where groupId = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param status the status
+	 * @return the matching commerce shipments that the user has permission to view
+	 */
+	public static List<CommerceShipment> filterFindByG_S(
+		long groupId, int status) {
+
+		return getPersistence().filterFindByG_S(groupId, status);
+	}
+
+	/**
+	 * Returns a range of all the commerce shipments that the user has permission to view where groupId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CommerceShipmentModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param status the status
+	 * @param start the lower bound of the range of commerce shipments
+	 * @param end the upper bound of the range of commerce shipments (not inclusive)
+	 * @return the range of matching commerce shipments that the user has permission to view
+	 */
+	public static List<CommerceShipment> filterFindByG_S(
+		long groupId, int status, int start, int end) {
+
+		return getPersistence().filterFindByG_S(groupId, status, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the commerce shipments that the user has permissions to view where groupId = &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CommerceShipmentModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param status the status
+	 * @param start the lower bound of the range of commerce shipments
+	 * @param end the upper bound of the range of commerce shipments (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching commerce shipments that the user has permission to view
+	 */
+	public static List<CommerceShipment> filterFindByG_S(
+		long groupId, int status, int start, int end,
+		OrderByComparator<CommerceShipment> orderByComparator) {
+
+		return getPersistence().filterFindByG_S(
+			groupId, status, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns the commerce shipments before and after the current commerce shipment in the ordered set of commerce shipments that the user has permission to view where groupId = &#63; and status = &#63;.
+	 *
+	 * @param commerceShipmentId the primary key of the current commerce shipment
+	 * @param groupId the group ID
+	 * @param status the status
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next commerce shipment
+	 * @throws NoSuchShipmentException if a commerce shipment with the primary key could not be found
+	 */
+	public static CommerceShipment[] filterFindByG_S_PrevAndNext(
+			long commerceShipmentId, long groupId, int status,
+			OrderByComparator<CommerceShipment> orderByComparator)
+		throws com.liferay.commerce.exception.NoSuchShipmentException {
+
+		return getPersistence().filterFindByG_S_PrevAndNext(
+			commerceShipmentId, groupId, status, orderByComparator);
+	}
+
+	/**
+	 * Returns all the commerce shipments that the user has permission to view where groupId = any &#63; and status = &#63;.
+	 *
+	 * @param groupIds the group IDs
+	 * @param status the status
+	 * @return the matching commerce shipments that the user has permission to view
+	 */
+	public static List<CommerceShipment> filterFindByG_S(
+		long[] groupIds, int status) {
+
+		return getPersistence().filterFindByG_S(groupIds, status);
+	}
+
+	/**
+	 * Returns a range of all the commerce shipments that the user has permission to view where groupId = any &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CommerceShipmentModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupIds the group IDs
+	 * @param status the status
+	 * @param start the lower bound of the range of commerce shipments
+	 * @param end the upper bound of the range of commerce shipments (not inclusive)
+	 * @return the range of matching commerce shipments that the user has permission to view
+	 */
+	public static List<CommerceShipment> filterFindByG_S(
+		long[] groupIds, int status, int start, int end) {
+
+		return getPersistence().filterFindByG_S(groupIds, status, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the commerce shipments that the user has permission to view where groupId = any &#63; and status = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>CommerceShipmentModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupIds the group IDs
+	 * @param status the status
+	 * @param start the lower bound of the range of commerce shipments
+	 * @param end the upper bound of the range of commerce shipments (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching commerce shipments that the user has permission to view
+	 */
+	public static List<CommerceShipment> filterFindByG_S(
+		long[] groupIds, int status, int start, int end,
+		OrderByComparator<CommerceShipment> orderByComparator) {
+
+		return getPersistence().filterFindByG_S(
+			groupIds, status, start, end, orderByComparator);
+	}
+
+	/**
 	 * Returns all the commerce shipments where groupId = any &#63; and status = &#63;.
 	 *
 	 * <p>
@@ -1333,6 +1749,28 @@ public class CommerceShipmentUtil {
 	 */
 	public static int countByG_S(long[] groupIds, int status) {
 		return getPersistence().countByG_S(groupIds, status);
+	}
+
+	/**
+	 * Returns the number of commerce shipments that the user has permission to view where groupId = &#63; and status = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param status the status
+	 * @return the number of matching commerce shipments that the user has permission to view
+	 */
+	public static int filterCountByG_S(long groupId, int status) {
+		return getPersistence().filterCountByG_S(groupId, status);
+	}
+
+	/**
+	 * Returns the number of commerce shipments that the user has permission to view where groupId = any &#63; and status = &#63;.
+	 *
+	 * @param groupIds the group IDs
+	 * @param status the status
+	 * @return the number of matching commerce shipments that the user has permission to view
+	 */
+	public static int filterCountByG_S(long[] groupIds, int status) {
+		return getPersistence().filterCountByG_S(groupIds, status);
 	}
 
 	/**
