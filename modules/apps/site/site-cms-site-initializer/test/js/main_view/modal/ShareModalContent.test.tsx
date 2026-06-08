@@ -207,6 +207,16 @@ describe('ShareModalContent', () => {
 		).toBeInTheDocument();
 	});
 
+	it('renders the permission as read-only text when the user cannot manage collaborators', () => {
+		const {getByText, queryByLabelText} = renderComponent({
+			...DEFAULT_PROPS,
+			canManageCollaborators: false,
+		});
+
+		expect(queryByLabelText('edit-permissions')).not.toBeInTheDocument();
+		expect(getByText('view-and-download')).toBeInTheDocument();
+	});
+
 	it('shows objectEntryFolder-specific permissions when entryClassName is ObjectEntryFolder', () => {
 		const folderProps = {
 			...DEFAULT_PROPS,
