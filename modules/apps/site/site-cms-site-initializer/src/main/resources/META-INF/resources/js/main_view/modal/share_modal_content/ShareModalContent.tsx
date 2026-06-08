@@ -114,6 +114,7 @@ function CollaboratorListItem({
 							actionIds={actionIds}
 							entryClassName={entryClassName}
 							onChange={handleChangeUserProperties}
+							readOnly={!canManageCollaborators}
 						/>
 					</div>
 				</div>

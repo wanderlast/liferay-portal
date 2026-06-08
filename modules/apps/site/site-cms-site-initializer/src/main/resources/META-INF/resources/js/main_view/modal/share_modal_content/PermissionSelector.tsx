@@ -39,20 +39,31 @@ export default function PermissionSelector({
 	actionIds,
 	entryClassName,
 	onChange,
+	readOnly = false,
 }: {
 	actionIds?: string;
 	entryClassName: string;
 	onChange: (value: object) => void;
+	readOnly?: boolean;
 }) {
+	const items =
+		entryClassName === OBJECT_ENTRY_FOLDER_CLASS_NAME
+			? FOLDER_PERMISSION_OPTIONS
+			: PERMISSION_OPTIONS;
+
+	if (readOnly) {
+		return (
+			<span className="permissions-picker text-2 text-secondary text-weight-semi-bold">
+				{items.find((item) => item.value === actionIds)?.label}
+			</span>
+		);
+	}
+
 	return (
 		<Picker
 			aria-label={Liferay.Language.get('edit-permissions')}
 			className="border-0 c-py-0 permissions-picker text-2 text-secondary text-weight-semi-bold"
-			items={
-				entryClassName === OBJECT_ENTRY_FOLDER_CLASS_NAME
-					? FOLDER_PERMISSION_OPTIONS
-					: PERMISSION_OPTIONS
-			}
+			items={items}
 			messages={{
 				itemDescribedby: Liferay.Language.get(
 					'you-are-currently-on-a-text-element,-inside-of-a-list-box'
