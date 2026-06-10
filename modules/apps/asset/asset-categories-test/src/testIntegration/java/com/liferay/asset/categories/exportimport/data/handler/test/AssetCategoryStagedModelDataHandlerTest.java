@@ -9,10 +9,12 @@ import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetCategoryConstants;
 import com.liferay.asset.kernel.model.AssetVocabulary;
+import com.liferay.asset.kernel.model.AssetVocabularyConstants;
 import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
 import com.liferay.asset.kernel.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.asset.test.util.AssetTestUtil;
 import com.liferay.exportimport.test.util.lar.BaseStagedModelDataHandlerTestCase;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.StagedModel;
@@ -60,7 +62,7 @@ public class AssetCategoryStagedModelDataHandlerTest
 
 		String vocabularyExternalReferenceCode = RandomTestUtil.randomString();
 
-		AssetVocabulary stagingVocabulary = AssetTestUtil.addVocabulary(
+		AssetVocabulary stagingVocabulary = _addVocabulary(
 			vocabularyExternalReferenceCode, stagingGroup.getGroupId());
 
 		AssetCategory stagingCategory =
@@ -75,7 +77,7 @@ public class AssetCategoryStagedModelDataHandlerTest
 
 		exportStagedModel(stagingCategory);
 
-		AssetVocabulary liveVocabulary = AssetTestUtil.addVocabulary(
+		AssetVocabulary liveVocabulary = _addVocabulary(
 			vocabularyExternalReferenceCode, liveGroup.getGroupId());
 
 		AssetCategoryLocalServiceUtil.addCategory(
@@ -204,6 +206,21 @@ public class AssetCategoryStagedModelDataHandlerTest
 		Assert.assertEquals(category.getTitle(), importedCategory.getTitle());
 		Assert.assertEquals(
 			category.getDescription(), importedCategory.getDescription());
+	}
+
+	private AssetVocabulary _addVocabulary(
+			String externalReferenceCode, long groupId)
+		throws Exception {
+
+		String name = RandomTestUtil.randomString();
+
+		return AssetVocabularyLocalServiceUtil.addVocabulary(
+			externalReferenceCode, TestPropsValues.getUserId(), groupId, name,
+			name, Collections.singletonMap(LocaleUtil.getDefault(), name),
+			Collections.emptyMap(), StringPool.BLANK,
+			AssetVocabularyConstants.VISIBILITY_TYPE_PUBLIC,
+			ServiceContextTestUtil.getServiceContext(
+				groupId, TestPropsValues.getUserId()));
 	}
 
 }
