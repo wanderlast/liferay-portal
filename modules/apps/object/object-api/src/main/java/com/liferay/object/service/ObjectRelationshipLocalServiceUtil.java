@@ -466,6 +466,13 @@ public class ObjectRelationshipLocalServiceUtil {
 	}
 
 	public static List<ObjectRelationship> getObjectRelationships(
+		long objectDefinitionId1, boolean reverse, String type) {
+
+		return getService().getObjectRelationships(
+			objectDefinitionId1, reverse, type);
+	}
+
+	public static List<ObjectRelationship> getObjectRelationships(
 		long objectDefinitionId1, int start, int end) {
 
 		return getService().getObjectRelationships(
