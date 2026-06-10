@@ -50,12 +50,10 @@ public class BatchEngineExportTaskServiceTest
 
 	@Test
 	public void testAddBatchEngineExportTask() throws Exception {
-		UserTestUtil.setUser(user);
-
 		AssertUtils.assertFailure(
 			PrincipalException.class, null,
 			() -> _batchEngineExportTaskService.addBatchEngineExportTask(
-				null, defaultCompany.getCompanyId(), user.getUserId(), null,
+				null, company.getCompanyId(), omniadminUser.getUserId(), null,
 				BlogPosting.class.getName(), "JSON",
 				BatchEngineTaskExecuteStatus.INITIAL.name(),
 				Collections.emptyList(),
@@ -64,10 +62,12 @@ public class BatchEngineExportTaskServiceTest
 				).build(),
 				null));
 
+		UserTestUtil.setUser(user);
+
 		AssertUtils.assertFailure(
 			PrincipalException.class, null,
 			() -> _batchEngineExportTaskService.addBatchEngineExportTask(
-				null, company.getCompanyId(), omniadminUser.getUserId(), null,
+				null, defaultCompany.getCompanyId(), user.getUserId(), null,
 				BlogPosting.class.getName(), "JSON",
 				BatchEngineTaskExecuteStatus.INITIAL.name(),
 				Collections.emptyList(),
