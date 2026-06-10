@@ -7,3 +7,4 @@
 <div class="select-input">
 	Countries: ${countries}
 </div>
+User: ${restClient.get("/headless-admin-user/v1.0/my-user-account").alternateName!"GUEST"}.

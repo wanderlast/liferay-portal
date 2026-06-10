@@ -6,12 +6,16 @@
 package com.liferay.portal.vulcan.internal.template.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.configuration.test.util.CompanyConfigurationTemporarySwapper;
 import com.liferay.portal.kernel.json.JSONUtil;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.util.HTTPTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.test.util.ZipFileTestUtil;
+import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.zip.ZipWriterFactory;
 import com.liferay.portal.test.rule.Inject;
@@ -55,7 +59,7 @@ public class RESTClientTemplateContextContributorTest {
 		bundle.start();
 
 		try {
-			JSONObject jsonObject = HTTPTestUtil.invokeToJSONObject(
+			String friendlyUrlPath = HTTPTestUtil.invokeToJSONObject(
 				JSONUtil.put(
 					"name", RandomTestUtil.randomString()
 				).put(
@@ -64,22 +68,59 @@ public class RESTClientTemplateContextContributorTest {
 				).put(
 					"templateType", "site-initializer"
 				).toString(),
-				"headless-site/v1.0/sites", Http.Method.POST);
+				"headless-site/v1.0/sites", Http.Method.POST
+			).getString(
+				"friendlyUrlPath"
+			);
 
 			HTTPTestUtil.customize(
 			).withoutModulePath(
 			).apply(
-				() -> Assert.assertThat(
-					HTTPTestUtil.invokeToString(
-						null,
-						"web" + jsonObject.getString("friendlyUrlPath") +
-							"/portal-vulcan-test",
-						Http.Method.GET),
-					CoreMatchers.containsString("Countries: spain"))
+				() -> _test(friendlyUrlPath, TestPropsValues.getUser())
+			);
+
+			HTTPTestUtil.customize(
+			).withoutModulePath(
+			).apply(
+				() -> HTTPTestUtil.invokeToString(
+					null, "c/portal/logout", Http.Method.GET)
+			);
+
+			HTTPTestUtil.customize(
+			).withoutModulePath(
+			).withGuest(
+			).apply(
+				() -> _test(
+					friendlyUrlPath,
+					_userLocalService.getGuestUser(
+						TestPropsValues.getCompanyId()))
 			);
 		}
 		finally {
 			bundle.uninstall();
+		}
+	}
+
+	private void _test(String friendlyUrlPath, User user) throws Exception {
+		try (CompanyConfigurationTemporarySwapper
+				companyConfigurationTemporarySwapper =
+					new CompanyConfigurationTemporarySwapper(
+						TestPropsValues.getCompanyId(),
+						"com.liferay.portal.security.auto.login.basic.auth." +
+							"header",
+						HashMapDictionaryBuilder.<String, Object>put(
+							"enabled", true
+						).build())) {
+
+			Assert.assertThat(
+				HTTPTestUtil.invokeToString(
+					null,
+					"web" + friendlyUrlPath + "/portal-vulcan-test",
+					Http.Method.GET),
+				CoreMatchers.allOf(
+					CoreMatchers.containsString("Countries: spain"),
+					CoreMatchers.containsString(
+						"User: " + user.getScreenName() + ".")));
 		}
 	}
 
@@ -94,6 +135,9 @@ public class RESTClientTemplateContextContributorTest {
 				RESTClientTemplateContextContributorTest.class),
 			_zipWriterFactory.getZipWriter());
 	}
+
+	@Inject
+	private UserLocalService _userLocalService;
 
 	@Inject
 	private ZipWriterFactory _zipWriterFactory;
