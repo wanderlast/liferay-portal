@@ -75,6 +75,16 @@ export class HeadlessAssetLibraryApiHelper {
 		);
 	}
 
+	async patchAssetLibrary(
+		externalReferenceCode: string,
+		body: Record<string, any>
+	) {
+		return this.apiHelpers.patch(
+			`${this.apiHelpers.baseUrl}${this.basePath}/asset-libraries/${externalReferenceCode}`,
+			body
+		);
+	}
+
 	async putAssetLibraryUserAccount(
 		assetLibraryExternalReferenceCode: string,
 		userAccountExternalReferenceCode: string
