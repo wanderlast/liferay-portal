@@ -190,6 +190,7 @@ export default function AssetsFDSPropsTransformer({
 		additionalAPIURLParameters,
 		additionalAPIURLParametersTransformer,
 		additionalProps: remainingAdditionalProps,
+		bulkActions: transformFDSBulkActions(bulkActions),
 		creationMenu: {
 			...creationMenu,
 			primaryItems: addOnClickToCreationMenuItems(
