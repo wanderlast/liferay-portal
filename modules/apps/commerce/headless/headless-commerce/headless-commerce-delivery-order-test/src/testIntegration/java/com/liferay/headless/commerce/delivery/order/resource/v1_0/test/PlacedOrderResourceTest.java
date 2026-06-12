@@ -209,8 +209,8 @@ public class PlacedOrderResourceTest extends BasePlacedOrderResourceTestCase {
 	@Override
 	@Test
 	public void testGetPlacedOrderPaymentURL() throws Exception {
-		_testGetPlacedOrderPaymentURLWithBusinessAccount();
-		_testGetPlacedOrderPaymentURLWithGuestAccount();
+		_testGetPlacedOrderPaymentURLWithBusinessAccountEntry();
+		_testGetPlacedOrderPaymentURLWithGuestAccountEntry();
 	}
 
 	@Override
@@ -678,7 +678,7 @@ public class PlacedOrderResourceTest extends BasePlacedOrderResourceTestCase {
 		Assert.assertEquals(1, page.getTotalCount());
 	}
 
-	private void _testGetPlacedOrderPaymentURLWithBusinessAccount()
+	private void _testGetPlacedOrderPaymentURLWithBusinessAccountEntry()
 		throws Exception {
 
 		PlacedOrder placedOrder = _addCommerceOrder(randomPlacedOrder());
@@ -695,7 +695,7 @@ public class PlacedOrderResourceTest extends BasePlacedOrderResourceTestCase {
 				placedOrder.getId(), callbackURL));
 	}
 
-	private void _testGetPlacedOrderPaymentURLWithGuestAccount()
+	private void _testGetPlacedOrderPaymentURLWithGuestAccountEntry()
 		throws Exception {
 
 		AccountEntry accountEntry =
