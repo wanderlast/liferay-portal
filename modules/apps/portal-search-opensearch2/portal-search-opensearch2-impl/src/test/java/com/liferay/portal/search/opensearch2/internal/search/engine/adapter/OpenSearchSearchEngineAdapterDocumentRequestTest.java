@@ -323,7 +323,7 @@ public class OpenSearchSearchEngineAdapterDocumentRequestTest
 					_FIELD_NAME, Boolean.FALSE
 				).build()));
 
-		BooleanQuery booleanQuery = new BooleanQuery();
+		BooleanQuery booleanQuery = new BooleanQueryImpl();
 
 		booleanQuery.addExactTerm(_FIELD_NAME, true);
 
@@ -434,7 +434,7 @@ public class OpenSearchSearchEngineAdapterDocumentRequestTest
 					_FIELD_NAME, Boolean.TRUE
 				).build()));
 
-		BooleanQuery booleanQuery = new BooleanQuery();
+		BooleanQuery booleanQuery = new BooleanQueryImpl();
 
 		booleanQuery.addExactTerm(_FIELD_NAME, true);
 
@@ -758,7 +758,7 @@ public class OpenSearchSearchEngineAdapterDocumentRequestTest
 	}
 
 	private void _updateByQueryProceedOnConflicts() {
-		BooleanQuery booleanQuery = new BooleanQuery();
+		BooleanQuery booleanQuery = new BooleanQueryImpl();
 
 		booleanQuery.addExactTerm(_FIELD_NAME, true);
 

@@ -368,7 +368,7 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 					_FIELD_NAME, Boolean.FALSE
 				).build()));
 
-		BooleanQuery booleanQuery = new BooleanQuery();
+		BooleanQuery booleanQuery = new BooleanQueryImpl();
 
 		booleanQuery.addExactTerm(_FIELD_NAME, true);
 
@@ -482,7 +482,7 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 					_FIELD_NAME, Boolean.TRUE
 				).build()));
 
-		BooleanQuery booleanQuery = new BooleanQuery();
+		BooleanQuery booleanQuery = new BooleanQueryImpl();
 
 		booleanQuery.addExactTerm(_FIELD_NAME, true);
 
@@ -806,7 +806,7 @@ public class ElasticsearchSearchEngineAdapterDocumentRequestTest {
 	}
 
 	private void _updateByQueryProceedOnConflicts() {
-		BooleanQuery booleanQuery = new BooleanQuery();
+		BooleanQuery booleanQuery = new BooleanQueryImpl();
 
 		booleanQuery.addExactTerm(_FIELD_NAME, true);
 
