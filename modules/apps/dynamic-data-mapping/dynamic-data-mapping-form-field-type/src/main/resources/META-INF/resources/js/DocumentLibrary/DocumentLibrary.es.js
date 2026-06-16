@@ -82,6 +82,7 @@ const DocumentLibrary = ({
 	onSelectButtonClicked,
 	placeholder,
 	readOnly,
+	strings,
 	value,
 }) => {
 	const [transformedFileEntryTitle] = useMemo(
@@ -104,7 +105,10 @@ const DocumentLibrary = ({
 				<ClayInput.Group>
 					<ClayInput.GroupItem prepend>
 						<ClayInput
-							aria-label={Liferay.Language.get('file')}
+							aria-label={
+								strings?.fileLabel ??
+								Liferay.Language.get('file')
+							}
 							className="bg-light field"
 							dir={Liferay.Language.direction[editingLanguageId]}
 							disabled={readOnly}
@@ -127,7 +131,8 @@ const DocumentLibrary = ({
 							onClick={onSelectButtonClicked}
 						>
 							<span className="lfr-btn-label">
-								{Liferay.Language.get('select')}
+								{strings?.selectLabel ??
+									Liferay.Language.get('select')}
 							</span>
 						</ClayButton>
 					</ClayInput.GroupItem>
@@ -135,14 +140,16 @@ const DocumentLibrary = ({
 					{transformedFileEntryTitle && (
 						<ClayInput.GroupItem shrink>
 							<ClayButton
-								aria-label={Liferay.Language.get(
-									'unselect-file'
-								)}
+								aria-label={
+									strings?.unselectFileLabel ??
+									Liferay.Language.get('unselect-file')
+								}
 								displayType="secondary"
 								onClick={onClearButtonClicked}
 								type="button"
 							>
-								{Liferay.Language.get('clear')}
+								{strings?.clearLabel ??
+									Liferay.Language.get('clear')}
 							</ClayButton>
 						</ClayInput.GroupItem>
 					)}
@@ -172,6 +179,7 @@ const GuestUploadFile = ({
 	placeholder,
 	progress,
 	readOnly,
+	strings,
 	value,
 }) => {
 	const [transformedFileEntryTitle] = useMemo(
@@ -208,7 +216,7 @@ const GuestUploadFile = ({
 						}
 						htmlFor={`${name}inputFileGuestUpload`}
 					>
-						{Liferay.Language.get('select')}
+						{strings?.selectLabel ?? Liferay.Language.get('select')}
 					</label>
 
 					<input
@@ -223,12 +231,16 @@ const GuestUploadFile = ({
 				{transformedFileEntryTitle && (
 					<ClayInput.GroupItem shrink>
 						<ClayButton
-							aria-label={Liferay.Language.get('unselect-file')}
+							aria-label={
+								strings?.unselectFileLabel ??
+								Liferay.Language.get('unselect-file')
+							}
 							displayType="secondary"
 							onClick={onClearButtonClicked}
 							type="button"
 						>
-							{Liferay.Language.get('clear')}
+							{strings?.clearLabel ??
+								Liferay.Language.get('clear')}
 						</ClayButton>
 					</ClayInput.GroupItem>
 				)}
@@ -245,11 +257,15 @@ const GuestUploadFile = ({
 			{progress !== 0 && (
 				<ClayProgressBar
 					messages={{
-						ariaLabelAttention: Liferay.Language.get(
-							'attention-value-is-at-x'
-						),
-						ariaLabelComplete: Liferay.Language.get('complete'),
-						ariaLabelInProgress: Liferay.Language.get('progress-x'),
+						ariaLabelAttention:
+							strings?.attentionValueIsAtLabel ??
+							Liferay.Language.get('attention-value-is-at-x'),
+						ariaLabelComplete:
+							strings?.completeLabel ??
+							Liferay.Language.get('complete'),
+						ariaLabelInProgress:
+							strings?.progressLabel ??
+							Liferay.Language.get('progress-x'),
 					}}
 					value={progress}
 				/>
@@ -285,6 +301,7 @@ const Main = ({
 	placeholder,
 	readOnly,
 	showUploadPermissionMessage,
+	strings,
 	valid: initialValid,
 	value = '{}',
 	...otherProps
@@ -313,31 +330,35 @@ const Main = ({
 
 		if (!allowGuestUsers && !isSignedIn) {
 			errorMessages.push(
-				Liferay.Language.get(
-					'you-need-to-be-signed-in-to-edit-this-field'
-				)
+				strings?.signInRequiredErrorMessage ??
+					Liferay.Language.get(
+						'you-need-to-be-signed-in-to-edit-this-field'
+					)
 			);
 		}
 		else if (maximumSubmissionLimitReached) {
 			errorMessages.push(
-				Liferay.Language.get(
-					'the-maximum-number-of-submissions-allowed-for-this-form-has-been-reached'
-				)
+				strings?.maximumSubmissionLimitReachedErrorMessage ??
+					Liferay.Language.get(
+						'the-maximum-number-of-submissions-allowed-for-this-form-has-been-reached'
+					)
 			);
 		}
 		else if (showUploadPermissionMessage) {
 			errorMessages.push(
-				Liferay.Language.get(
-					'you-need-to-be-assigned-to-the-same-site-where-the-form-was-created-to-use-this-field'
-				)
+				strings?.uploadPermissionErrorMessage ??
+					Liferay.Language.get(
+						'you-need-to-be-assigned-to-the-same-site-where-the-form-was-created-to-use-this-field'
+					)
 			);
 		}
 		else if (objectFieldInvalidExtension) {
 			errorMessages.push(
 				Liferay.Util.sub(
-					Liferay.Language.get(
-						'please-enter-a-file-with-a-valid-extension-x'
-					),
+					strings?.invalidExtensionErrorMessage ??
+						Liferay.Language.get(
+							'please-enter-a-file-with-a-valid-extension-x'
+						),
 					objectFieldAcceptedFileExtensions
 				)
 			);
@@ -412,8 +433,8 @@ const Main = ({
 			onSelect: handleFieldChanged,
 			selectEventName: `${portletNamespace}selectDocumentLibrary`,
 			title: sub(
-				Liferay.Language.get('select-x'),
-				Liferay.Language.get('document')
+				strings?.selectXLabel ?? Liferay.Language.get('select-x'),
+				strings?.documentLabel ?? Liferay.Language.get('document')
 			),
 			url: itemSelectorURL,
 		});
@@ -453,9 +474,10 @@ const Main = ({
 		}
 
 		const errorMessage = sub(
-			Liferay.Language.get(
-				'please-enter-a-file-with-a-valid-file-size-no-larger-than-x'
-			),
+			strings?.invalidFileSizeErrorMessage ??
+				Liferay.Language.get(
+					'please-enter-a-file-with-a-valid-file-size-no-larger-than-x'
+				),
 			[formatStorage(uploadRequestSizeLimit)]
 		);
 
@@ -748,6 +770,7 @@ const Main = ({
 					placeholder={placeholder}
 					progress={progress}
 					readOnly={hasCustomError ? true : readOnly}
+					strings={strings}
 					value={currentValue || ''}
 				/>
 			) : (
@@ -779,6 +802,7 @@ const Main = ({
 					}
 					placeholder={placeholder}
 					readOnly={hasCustomError ? true : readOnly}
+					strings={strings}
 					value={currentValue || ''}
 				/>
 			)}
