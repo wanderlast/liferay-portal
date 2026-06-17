@@ -6019,7 +6019,7 @@ public class DefaultObjectEntryManagerImplTest
 
 	@Test
 	@TestInfo("LPD-93952")
-	public void testGetObjectEntriesFilterByUnlinkedRelationshipExternalReferenceCode()
+	public void testGetObjectEntriesFilterByEmptyRelationshipExternalReferenceCode()
 		throws Exception {
 
 		ObjectEntry parentObjectEntry =
