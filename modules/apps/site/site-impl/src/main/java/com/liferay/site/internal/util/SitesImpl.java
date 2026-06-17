@@ -476,7 +476,7 @@ public class SitesImpl implements Sites {
 			if (_log.isWarnEnabled()) {
 				_log.warn(
 					"Merge not performed because layout prototype does not " +
-					"exist for layout PLID " + layout.getPlid());
+						"exist for layout PLID " + layout.getPlid());
 			}
 
 			return;
@@ -502,7 +502,7 @@ public class SitesImpl implements Sites {
 				MERGE_FAIL_COUNT));
 
 		if (mergeFailCount >
-		    PropsValues.LAYOUT_PROTOTYPE_MERGE_FAIL_THRESHOLD) {
+				PropsValues.LAYOUT_PROTOTYPE_MERGE_FAIL_THRESHOLD) {
 
 			if (_log.isWarnEnabled()) {
 				_log.warn(
