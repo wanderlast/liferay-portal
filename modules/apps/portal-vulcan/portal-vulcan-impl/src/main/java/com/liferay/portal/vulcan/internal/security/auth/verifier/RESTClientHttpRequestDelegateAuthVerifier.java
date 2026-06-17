@@ -30,7 +30,9 @@ public class RESTClientHttpRequestDelegateAuthVerifier
 
 	@Override
 	public String getAuthType() {
-		return RESTClientHttpRequestDelegate.class.getName();
+		Class<?> clazz = getClass();
+
+		return clazz.getSimpleName();
 	}
 
 	@Override
