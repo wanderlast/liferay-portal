@@ -16,6 +16,7 @@ import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.LayoutSetPrototype;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
+import com.liferay.portal.kernel.service.LayoutSetLocalService;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalService;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
@@ -239,10 +240,17 @@ public class SiteNavigationMenuPropagationTest {
 	private void _propagateLayout() throws Exception {
 		MergeLayoutPrototypesThreadLocal.clearMergeComplete();
 
-		MergeLayoutPrototypesThreadLocal.setSkipMerge(false);
+		LayoutSet layoutSet = _group.getPublicLayoutSet();
 
-		_sites.mergeLayoutSetPrototypeLayouts(
-			_group, _group.getPublicLayoutSet());
+		UnicodeProperties settingsUnicodeProperties =
+			layoutSet.getSettingsProperties();
+
+		settingsUnicodeProperties.remove(Sites.LAST_MERGE_TIME);
+		settingsUnicodeProperties.remove(Sites.LAST_MERGE_VERSION);
+
+		layoutSet = _layoutSetLocalService.updateLayoutSet(layoutSet);
+
+		_sites.mergeLayoutSetPrototypeLayouts(_group, layoutSet);
 	}
 
 	@Inject
@@ -253,6 +261,9 @@ public class SiteNavigationMenuPropagationTest {
 
 	@Inject
 	private LayoutLocalService _layoutLocalService;
+
+	@Inject
+	private LayoutSetLocalService _layoutSetLocalService;
 
 	private LayoutSetPrototype _layoutSetPrototype;
 	private String _portletId;
