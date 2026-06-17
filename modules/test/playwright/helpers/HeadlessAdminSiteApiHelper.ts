@@ -42,6 +42,12 @@ export class HeadlessAdminSiteApiHelper {
 		);
 	}
 
+	async getSite(siteExternalReferenceCode: string): Promise<any> {
+		return this.apiHelpers.get(
+			`${this.apiHelpers.baseUrl}${this.basePath}/sites/${siteExternalReferenceCode}`
+		);
+	}
+
 	async putPage(
 		siteExternalReferenceCode: string,
 		pageExternalReferenceCode: string,

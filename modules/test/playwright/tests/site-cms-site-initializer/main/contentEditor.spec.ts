@@ -52,6 +52,8 @@ interface IPostedObjectEntry {
 
 const postedObjectEntries: Array<IPostedObjectEntry> = [];
 
+const postedTaxonomyVocabularyIds: Array<number> = [];
+
 test.afterEach(async ({apiHelpers}) => {
 	await test.step('Delete newly created object entries', async () => {
 		for (const postedObjectEntry of postedObjectEntries) {
@@ -61,6 +63,16 @@ test.afterEach(async ({apiHelpers}) => {
 		}
 
 		postedObjectEntries.length = 0;
+	});
+
+	await test.step('Delete newly created taxonomy vocabularies', async () => {
+		for (const vocabularyId of postedTaxonomyVocabularyIds) {
+			await apiHelpers.headlessAdminTaxonomy.deleteTaxonomyVocabulary(
+				vocabularyId
+			);
+		}
+
+		postedTaxonomyVocabularyIds.length = 0;
 	});
 });
 
@@ -1077,19 +1089,24 @@ test.describe('Categorization Panel', () => {
 		async ({apiHelpers, contentsPage, page}) => {
 			const site = await apiHelpers.headlessAdminSite.getSite('L_CMS');
 
-			await apiHelpers.headlessAdminTaxonomy.postSiteTaxonomyVocabulary({
-				assetLibraries: [{id: -1}],
-				assetTypes: [
+			const {id: vocabularyId} =
+				await apiHelpers.headlessAdminTaxonomy.postSiteTaxonomyVocabulary(
 					{
-						required: true,
-						subtype: 'AllAssetSubtypes',
-						type: 'AllAssetTypes',
-					},
-				],
-				name: getRandomString(),
-				siteId: site.id,
-				visibilityType: 'PUBLIC',
-			});
+						assetLibraries: [{id: -1}],
+						assetTypes: [
+							{
+								required: true,
+								subtype: 'AllAssetSubtypes',
+								type: 'AllAssetTypes',
+							},
+						],
+						name: getRandomString(),
+						siteId: site.id,
+						visibilityType: 'PUBLIC',
+					}
+				);
+
+			postedTaxonomyVocabularyIds.push(vocabularyId);
 
 			await contentsPage.goto();
 			await contentsPage.createContent('Basic Web Content');
@@ -1128,6 +1145,12 @@ test.describe('Categorization Panel', () => {
 			).toBeFocused();
 
 			await expect(
+				page.getByText(
+					'Please enter at least one category for all mandatory vocabularies.'
+				)
+			).toBeVisible();
+
+			await expect(
 				page.locator('.label-item', {hasText: tagName})
 			).toBeAttached();
 
@@ -1145,26 +1168,29 @@ test.describe('Categorization Panel', () => {
 
 			const categoryName = getRandomString();
 
+			const {id: vocabularyId} =
+				await apiHelpers.headlessAdminTaxonomy.postSiteTaxonomyVocabulary(
+					{
+						assetLibraries: [{id: -1}],
+						assetTypes: [
+							{
+								required: true,
+								subtype: 'AllAssetSubtypes',
+								type: 'AllAssetTypes',
+							},
+						],
+						name: getRandomString(),
+						siteId: site.id,
+						visibilityType: 'PUBLIC',
+					}
+				);
+
+			postedTaxonomyVocabularyIds.push(vocabularyId);
+
 			await apiHelpers.headlessAdminTaxonomy.postTaxonomyVocabularyTaxonomyCategory(
 				{
 					name: categoryName,
-					vocabularyId: (
-						await apiHelpers.headlessAdminTaxonomy.postSiteTaxonomyVocabulary(
-							{
-								assetLibraries: [{id: -1}],
-								assetTypes: [
-									{
-										required: true,
-										subtype: 'AllAssetSubtypes',
-										type: 'AllAssetTypes',
-									},
-								],
-								name: getRandomString(),
-								siteId: site.id,
-								visibilityType: 'PUBLIC',
-							}
-						)
-					).id,
+					vocabularyId,
 				}
 			);
 
@@ -1199,6 +1225,12 @@ test.describe('Categorization Panel', () => {
 			).toBeAttached();
 
 			await expect(page.locator('.form-group.has-error')).toBeHidden();
+
+			await expect(
+				page.getByText(
+					'Please enter at least one category for all mandatory vocabularies.'
+				)
+			).toBeHidden();
 
 			await contentsPage.publishButton.click();
 
@@ -1421,19 +1453,24 @@ test.describe('Schedule Publication', () => {
 				.getSiteByFriendlyUrlPath('cms')
 				.then((response) => response.id);
 
-			await apiHelpers.headlessAdminTaxonomy.postSiteTaxonomyVocabulary({
-				assetLibraries: [{id: -1}],
-				assetTypes: [
+			const {id: vocabularyId} =
+				await apiHelpers.headlessAdminTaxonomy.postSiteTaxonomyVocabulary(
 					{
-						required: true,
-						subtype: 'AllAssetSubtypes',
-						type: 'AllAssetTypes',
-					},
-				],
-				name: vocabularyName,
-				siteId,
-				visibilityType: 'PUBLIC',
-			});
+						assetLibraries: [{id: -1}],
+						assetTypes: [
+							{
+								required: true,
+								subtype: 'AllAssetSubtypes',
+								type: 'AllAssetTypes',
+							},
+						],
+						name: vocabularyName,
+						siteId,
+						visibilityType: 'PUBLIC',
+					}
+				);
+
+			postedTaxonomyVocabularyIds.push(vocabularyId);
 
 			// Create a content
 
