@@ -412,10 +412,23 @@ public class SitesImpl implements Sites {
 	}
 
 	@Override
-	public boolean isLayoutSetMergeable(Group group, LayoutSet layoutSet) {
-		if (!layoutSet.isLayoutSetPrototypeLinkActive() ||
-			group.isLayoutPrototype() || group.isLayoutSetPrototype()) {
+	public boolean isLayoutSetMergeable(Group group, LayoutSet layoutSet)
+		throws PortalException {
 
+		return isLayoutSetMergeable(layoutSet);
+	}
+
+	@Override
+	public boolean isLayoutSetMergeable(LayoutSet layoutSet)
+		throws PortalException {
+
+		if (!layoutSet.isLayoutSetPrototypeLinkActive()) {
+			return false;
+		}
+
+		Group group = layoutSet.getGroup();
+
+		if (group.isLayoutPrototype() || group.isLayoutSetPrototype()) {
 			return false;
 		}
 
@@ -564,7 +577,7 @@ public class SitesImpl implements Sites {
 	}
 
 	@Override
-	public void mergeLayoutSetPrototypeLayouts(Group group, LayoutSet layoutSet)
+	public void mergeLayoutSetPrototypeLayouts(LayoutSet layoutSet)
 		throws Exception {
 
 		if (ExportImportThreadLocal.isExportInProcess() ||
@@ -579,7 +592,7 @@ public class SitesImpl implements Sites {
 		layoutSet = _layoutSetLocalService.fetchLayoutSet(
 			layoutSet.getLayoutSetId());
 
-		if (!isLayoutSetMergeable(group, layoutSet)) {
+		if (!isLayoutSetMergeable(layoutSet)) {
 			return;
 		}
 
@@ -602,7 +615,7 @@ public class SitesImpl implements Sites {
 				_layoutSetLocalService.getLayoutSetsByLayoutSetPrototypeUuid(
 					layoutSetPrototype.getUuid())) {
 
-			mergeLayoutSetPrototypeLayouts(layoutSet.getGroup(), layoutSet);
+			mergeLayoutSetPrototypeLayouts(layoutSet);
 		}
 	}
 

@@ -98,7 +98,7 @@ public interface Sites {
 
 	public void mergeLayoutPrototypeLayout(Layout layout) throws Exception;
 
-	public void mergeLayoutSetPrototypeLayouts(Group group, LayoutSet layoutSet)
+	public void mergeLayoutSetPrototypeLayouts(LayoutSet layoutSet)
 		throws Exception;
 
 	public void mergeLayoutSetPrototypeLayouts(
