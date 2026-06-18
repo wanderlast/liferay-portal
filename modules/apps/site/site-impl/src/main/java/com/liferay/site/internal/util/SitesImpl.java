@@ -594,6 +594,19 @@ public class SitesImpl implements Sites {
 	}
 
 	@Override
+	public void mergeLayoutSetPrototypeLayouts(
+			LayoutSetPrototype layoutSetPrototype, long userId)
+		throws Exception {
+
+		for (LayoutSet layoutSet :
+				_layoutSetLocalService.getLayoutSetsByLayoutSetPrototypeUuid(
+					layoutSetPrototype.getUuid())) {
+
+			mergeLayoutSetPrototypeLayouts(layoutSet.getGroup(), layoutSet);
+		}
+	}
+
+	@Override
 	public void removeMergeFailFriendlyURLLayouts(LayoutSet layoutSet)
 		throws PortalException {
 
