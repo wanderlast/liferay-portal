@@ -8,6 +8,9 @@ package com.liferay.exportimport.kernel.service;
 import com.liferay.portal.kernel.exception.PortalException;
 
 import java.io.InputStream;
+import java.io.Serializable;
+
+import java.util.Map;
 
 /**
  * Provides the local service utility for ExportImport. This utility wraps
@@ -242,6 +245,17 @@ public class ExportImportLocalServiceUtil {
 
 		return getService().mergeLayoutSetPrototypeInBackground(
 			userId, groupId, exportImportConfiguration);
+	}
+
+	public static long mergeLayoutSetPrototypeInBackground(
+			long userId, long groupId,
+			com.liferay.exportimport.kernel.model.ExportImportConfiguration
+				exportImportConfiguration,
+			Map<String, Serializable> taskContextMap)
+		throws PortalException {
+
+		return getService().mergeLayoutSetPrototypeInBackground(
+			userId, groupId, exportImportConfiguration, taskContextMap);
 	}
 
 	public static com.liferay.exportimport.kernel.lar.MissingReferences

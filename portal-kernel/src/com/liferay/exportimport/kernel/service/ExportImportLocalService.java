@@ -16,6 +16,9 @@ import com.liferay.portal.kernel.transaction.Transactional;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.Serializable;
+
+import java.util.Map;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -166,6 +169,13 @@ public interface ExportImportLocalService extends BaseLocalService {
 	public long mergeLayoutSetPrototypeInBackground(
 			long userId, long groupId,
 			ExportImportConfiguration exportImportConfiguration)
+		throws PortalException;
+
+	@CTAware
+	public long mergeLayoutSetPrototypeInBackground(
+			long userId, long groupId,
+			ExportImportConfiguration exportImportConfiguration,
+			Map<String, Serializable> taskContextMap)
 		throws PortalException;
 
 	@CTAware
