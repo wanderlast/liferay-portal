@@ -253,7 +253,7 @@ public class CPDefinitionOptionValueRelLocalServiceTest {
 		List<CPInstance> cpInstances =
 			_cpInstanceLocalService.getCPDefinitionInstances(
 				cpDefinitionOptionRel.getCPDefinitionId(),
-				WorkflowConstants.STATUS_APPROVED, QueryUtil.ALL_POS,
+				WorkflowConstants.STATUS_ANY, QueryUtil.ALL_POS,
 				QueryUtil.ALL_POS, null);
 
 		for (CPInstance cpInstance : cpInstances) {
@@ -1458,6 +1458,17 @@ public class CPDefinitionOptionValueRelLocalServiceTest {
 
 		_cpInstanceLocalService.buildCPInstances(
 			cpDefinition.getCPDefinitionId(), _serviceContext);
+
+		for (CPInstance cpInstance :
+				_cpInstanceLocalService.getCPDefinitionInstances(
+					cpDefinition.getCPDefinitionId(),
+					WorkflowConstants.STATUS_ANY, QueryUtil.ALL_POS,
+					QueryUtil.ALL_POS, null)) {
+
+			_cpInstanceLocalService.updateStatus(
+				_serviceContext.getUserId(), cpInstance.getCPInstanceId(),
+				WorkflowConstants.STATUS_APPROVED);
+		}
 
 		return cpDefinitionOptionRels.get(0);
 	}
