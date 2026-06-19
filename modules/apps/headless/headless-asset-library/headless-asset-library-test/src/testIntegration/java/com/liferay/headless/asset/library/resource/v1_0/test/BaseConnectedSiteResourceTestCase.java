@@ -728,6 +728,14 @@ public abstract class BaseConnectedSiteResourceTestCase {
 				continue;
 			}
 
+			if (Objects.equals("stagingType", additionalAssertFieldName)) {
+				if (connectedSite.getStagingType() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
 			throw new IllegalArgumentException(
 				"Invalid additional assert field name " +
 					additionalAssertFieldName);
@@ -933,6 +941,17 @@ public abstract class BaseConnectedSiteResourceTestCase {
 				if (!Objects.deepEquals(
 						connectedSite1.getSearchable(),
 						connectedSite2.getSearchable())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("stagingType", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						connectedSite1.getStagingType(),
+						connectedSite2.getStagingType())) {
 
 					return false;
 				}
@@ -1247,6 +1266,11 @@ public abstract class BaseConnectedSiteResourceTestCase {
 		}
 
 		if (entityFieldName.equals("searchable")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
+		}
+
+		if (entityFieldName.equals("stagingType")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
 		}
