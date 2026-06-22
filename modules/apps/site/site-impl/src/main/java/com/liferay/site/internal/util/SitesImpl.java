@@ -630,11 +630,11 @@ public class SitesImpl implements Sites {
 			Layout sourceLayout)
 		throws Exception {
 
-		LayoutTypePortlet sourceLayoutType =
-			(LayoutTypePortlet)sourceLayout.getLayoutType();
-
 		List<String> unreferencedPortletIds = new ArrayList<>(
 			targetLayoutPortletIds);
+
+		LayoutTypePortlet sourceLayoutType =
+			(LayoutTypePortlet)sourceLayout.getLayoutType();
 
 		unreferencedPortletIds.removeAll(sourceLayoutType.getPortletIds());
 
