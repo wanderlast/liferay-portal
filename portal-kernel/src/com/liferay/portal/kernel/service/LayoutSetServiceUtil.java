@@ -47,6 +47,17 @@ public class LayoutSetServiceUtil {
 			groupId, privateLayout, faviconFileEntryId);
 	}
 
+	public static void updateLayoutSetPrototypeLinkEnabled(
+			long groupId, boolean mergeLayoutSetPrototype,
+			boolean privateLayout, boolean layoutSetPrototypeLinkEnabled,
+			String layoutSetPrototypeUuid)
+		throws PortalException {
+
+		getService().updateLayoutSetPrototypeLinkEnabled(
+			groupId, mergeLayoutSetPrototype, privateLayout,
+			layoutSetPrototypeLinkEnabled, layoutSetPrototypeUuid);
+	}
+
 	/**
 	 * Updates the state of the layout set prototype link.
 	 *

@@ -301,6 +301,12 @@ public interface LayoutSetLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public LayoutSet updateLayoutSet(LayoutSet layoutSet);
 
+	public void updateLayoutSetPrototypeLinkEnabled(
+			long groupId, boolean mergeLayoutSetPrototype,
+			boolean privateLayout, boolean layoutSetPrototypeLinkEnabled,
+			String layoutSetPrototypeUuid)
+		throws PortalException;
+
 	/**
 	 * Updates the state of the layout set prototype link.
 	 *

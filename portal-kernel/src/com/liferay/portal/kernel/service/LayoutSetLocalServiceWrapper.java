@@ -378,6 +378,18 @@ public class LayoutSetLocalServiceWrapper
 		return _layoutSetLocalService.updateLayoutSet(layoutSet);
 	}
 
+	@Override
+	public void updateLayoutSetPrototypeLinkEnabled(
+			long groupId, boolean mergeLayoutSetPrototype,
+			boolean privateLayout, boolean layoutSetPrototypeLinkEnabled,
+			String layoutSetPrototypeUuid)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		_layoutSetLocalService.updateLayoutSetPrototypeLinkEnabled(
+			groupId, mergeLayoutSetPrototype, privateLayout,
+			layoutSetPrototypeLinkEnabled, layoutSetPrototypeUuid);
+	}
+
 	/**
 	 * Updates the state of the layout set prototype link.
 	 *
