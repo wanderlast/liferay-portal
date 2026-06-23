@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {FrameLocator, Locator, Page} from '@playwright/test';
+import {FrameLocator, Locator, Page, expect} from '@playwright/test';
 
+import {waitForAlert} from '../../utils/waitForAlert';
 import {DataTablePage} from '../account-admin-web/DataTablePage';
 import {ApplicationsMenuPage} from '../product-navigation-applications-menu/ApplicationsMenuPage';
 
@@ -230,6 +231,32 @@ export class UserGroupsPage {
 
 	async goto(forceReload?: boolean) {
 		await this.applicationsMenuPage.goToUserGroups(forceReload);
+	}
+
+	async linkSiteTemplate(
+		userGroupName: string,
+		siteTemplateName: string,
+		{propagationEnabled = false}: {propagationEnabled?: boolean} = {}
+	) {
+		await expect(async () => {
+			await (await this.userGroupsTableRowActions(userGroupName)).click();
+
+			await expect(this.editUserGroupMenuItem).toBeVisible();
+		}).toPass({timeout: 5000});
+
+		await this.editUserGroupMenuItem.click();
+
+		await this.page
+			.locator('select[name$="publicLayoutSetPrototypeId"]')
+			.selectOption({label: siteTemplateName});
+
+		await this.page
+			.locator('input[name$="publicLayoutSetPrototypeLinkEnabled"]')
+			.setChecked(propagationEnabled, {force: true});
+
+		await this.saveButton.click();
+
+		await waitForAlert(this.page);
 	}
 
 	async goToWithLimitedAccess() {
