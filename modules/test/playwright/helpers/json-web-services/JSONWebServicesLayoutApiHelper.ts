@@ -134,7 +134,7 @@ export class JSONWebServicesLayoutApiHelper {
 	async getLayoutsCount(
 		groupId: number,
 		privateLayout: boolean
-	): Promise<void> {
+	): Promise<number> {
 		const urlSearchParams = new URLSearchParams();
 
 		// @ts-ignore

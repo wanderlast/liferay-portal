@@ -6,6 +6,7 @@
 import {Locator, Page, expect} from '@playwright/test';
 
 import {clickAndExpectToBeVisible} from '../../utils/clickAndExpectToBeVisible';
+import {waitForAlert} from '../../utils/waitForAlert';
 import {UsersAndOrganizationsPage} from './UsersAndOrganizationsPage';
 
 export class EditOrganizationPage {
@@ -74,6 +75,40 @@ export class EditOrganizationPage {
 		this.saveButton = page.getByRole('button', {name: 'Save'});
 		this.typeLabel = page.getByLabel('Type Label');
 		this.usersAndOrganizationsPage = new UsersAndOrganizationsPage(page);
+	}
+
+	async linkSiteTemplate(
+		organizationName: string,
+		siteTemplateName: string,
+		{propagationEnabled = false}: {propagationEnabled?: boolean} = {}
+	) {
+		await expect(async () => {
+			await (
+				await this.usersAndOrganizationsPage.organizationsTable.rowActions(
+					organizationName
+				)
+			).click();
+
+			await expect(this.organizationEditMenuItem).toBeVisible();
+		}).toPass({timeout: 5000});
+
+		await this.organizationEditMenuItem.click();
+
+		await this.organizationSiteLink.click();
+
+		await this.createSiteToggle.setChecked(true, {force: true});
+
+		await this.page
+			.locator('select[name$="publicLayoutSetPrototypeId"]')
+			.selectOption({label: siteTemplateName});
+
+		await this.page
+			.locator('input[name$="publicLayoutSetPrototypeLinkEnabled"]')
+			.setChecked(propagationEnabled, {force: true});
+
+		await this.organizationSiteSaveButton.click();
+
+		await waitForAlert(this.page);
 	}
 
 	async gotoOrganizationEditOpeningHoursTab(organizationName: string) {
