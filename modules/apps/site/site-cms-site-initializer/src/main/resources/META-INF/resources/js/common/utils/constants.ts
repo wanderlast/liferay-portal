@@ -13,3 +13,17 @@ export const ENTERPRISE_URL = 'https://www.liferay.com/en/contact-sales';
 export const ERC_MAX_LENGTH = 75;
 
 export const FDS_EVENT_UPDATE_DISPLAY = 'fds-update-display';
+
+export const ROOT_FOLDER_ERC = {
+	CONTENTS: 'L_CONTENTS',
+	FILES: 'L_FILES',
+} as const;
+
+export const ROOT_FOLDER_ERCS: ReadonlySet<string> = new Set([
+	ROOT_FOLDER_ERC.CONTENTS,
+	ROOT_FOLDER_ERC.FILES,
+]);
+
+export function isRootFolderERC(erc: string | undefined) {
+	return !!erc && ROOT_FOLDER_ERCS.has(erc);
+}
