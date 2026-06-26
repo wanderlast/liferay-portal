@@ -302,6 +302,7 @@ public class FragmentDisplayContext {
 				getFragmentCollectionId());
 
 		if ((fragmentCollection != null) &&
+			(fragmentCollection.getGroupId() != CompanyConstants.SYSTEM) &&
 			(fragmentCollection.getGroupId() !=
 				_themeDisplay.getCompanyGroupId()) &&
 			(fragmentCollection.getGroupId() !=
