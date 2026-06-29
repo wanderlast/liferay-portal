@@ -104,6 +104,13 @@ const additionalAPIURLParametersTransformer = (loadDataArgs: {
 	return `${prefixPart}${cleanedFilters.join(' and ')}`.trim();
 };
 
+export interface IBreadcrumbProps {
+	breadcrumbItems: IBreadcrumbItem[];
+	displayType: string;
+	hideSpace?: boolean;
+	size: string;
+}
+
 export type AdditionalProps = {
 	additionalAPIURLParameters: string | undefined;
 	assetLibraries: AssetLibrary[];
@@ -184,6 +191,13 @@ export default function AssetsFDSPropsTransformer({
 
 	const {additionalAPIURLParameters, ...remainingAdditionalProps} =
 		additionalProps || {};
+
+	const bulkActionAPIURL =
+		additionalAPIURLParameters && otherProps.apiURL
+			? `${otherProps.apiURL}${
+					otherProps.apiURL.includes('?') ? '&' : '?'
+				}${additionalAPIURLParameters}`
+			: otherProps.apiURL;
 
 	return {
 		...otherProps,
@@ -680,13 +694,6 @@ export default function AssetsFDSPropsTransformer({
 				expireEntriesBulkAction({
 					apiURL: bulkActionAPIURL,
 					dataSetId: otherProps.id,
-					selectedData,
-				});
-			}
-			else if (action?.data?.id === 'export-for-translation') {
-				exportTranslationBulkAction({
-					additionalProps,
-					apiURL: bulkActionAPIURL,
 					selectedData,
 				});
 			}
