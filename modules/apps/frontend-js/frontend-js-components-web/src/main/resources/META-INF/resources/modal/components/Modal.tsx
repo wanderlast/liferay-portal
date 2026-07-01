@@ -7,7 +7,7 @@ import ClayButton from '@clayui/button';
 import ClayLoadingIndicator from '@clayui/loading-indicator';
 import ClayModal, {useModal} from '@clayui/modal';
 import classNames from 'classnames';
-import {navigate} from 'frontend-js-web';
+import {navigate, setCSPNonce} from 'frontend-js-web';
 import PropTypes from 'prop-types';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
@@ -229,7 +229,7 @@ export default function Modal({
 			if (html) {
 				const fragment = document
 					.createRange()
-					.createContextualFragment(html);
+					.createContextualFragment(setCSPNonce(html));
 
 				if (bodyRef.current) {
 					bodyRef.current.innerHTML = '';
