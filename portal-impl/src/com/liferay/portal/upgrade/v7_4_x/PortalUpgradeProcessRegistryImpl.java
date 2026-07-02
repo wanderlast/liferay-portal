@@ -769,6 +769,12 @@ public class PortalUpgradeProcessRegistryImpl
 
 		upgradeVersionTreeMap.put(
 			new Version(38, 2, 7),
+			new LayoutRemoveUnusedTypeSettingsUpgradeProcess());
+		upgradeVersionTreeMap.put(
+			new Version(38, 2, 8),
+			new LayoutSetPrototypeRemoveReadyForPropagationUpgradeProcess());
+		upgradeVersionTreeMap.put(
+			new Version(38, 2, 9),
 			new LayoutSetRemoveUnusedSettingsUpgradeProcess());
 	}
 
