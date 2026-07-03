@@ -10,7 +10,7 @@
 
 .lfr-objects__object-definition-details-management-toolbar {
 	position: fixed;
-	top: 3.5rem;
+	top: var(--control-menu-container-height, 56px);
 	width: 100%;
 	z-index: 1;
 }
