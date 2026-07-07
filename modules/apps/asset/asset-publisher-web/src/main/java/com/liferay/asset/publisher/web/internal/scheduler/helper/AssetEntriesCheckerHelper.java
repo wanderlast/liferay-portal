@@ -41,6 +41,8 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.Role;
+import com.liferay.portal.kernel.model.RoleConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.notifications.UserNotificationDefinition;
 import com.liferay.portal.kernel.portlet.PortletIdCodec;
@@ -54,6 +56,7 @@ import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.PortletPreferenceValueLocalService;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalService;
+import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.EscapableLocalizableFunction;
@@ -290,7 +293,7 @@ public class AssetEntriesCheckerHelper {
 
 		try (AutoCloseable autoCloseable =
 				LayoutServiceContextHelperUtil.getServiceContextAutoCloseable(
-					layout)) {
+					layout, _getUser(layout.getCompanyId()))) {
 
 			AssetListEntry assetListEntry =
 				AssetPublisherUtil.getAssetListEntry(
@@ -579,6 +582,24 @@ public class AssetEntriesCheckerHelper {
 		return subscriptionSender;
 	}
 
+	private User _getUser(long companyId) throws PortalException {
+		Role role = _roleLocalService.fetchRole(
+			companyId, RoleConstants.ADMINISTRATOR);
+
+		if (role == null) {
+			return _userLocalService.getGuestUser(companyId);
+		}
+
+		List<User> adminUsers = _userLocalService.getRoleUsers(
+			role.getRoleId(), 0, 1);
+
+		if (adminUsers.isEmpty()) {
+			return _userLocalService.getGuestUser(companyId);
+		}
+
+		return adminUsers.get(0);
+	}
+
 	private void _notifySubscribers(
 		Layout layout, String layoutURL, List<Subscription> subscriptions,
 		String portletId, PortletPreferences portletPreferences,
@@ -686,6 +707,9 @@ public class AssetEntriesCheckerHelper {
 	@Reference
 	private PortletPreferenceValueLocalService
 		_portletPreferenceValueLocalService;
+
+	@Reference
+	private RoleLocalService _roleLocalService;
 
 	@Reference
 	private SegmentsConfigurationProvider _segmentsConfigurationProvider;
