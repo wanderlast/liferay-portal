@@ -15,10 +15,18 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.GroupConstants;
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.ResourceConstants;
+import com.liferay.portal.kernel.model.Role;
+import com.liferay.portal.kernel.model.role.RoleConstants;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.GroupLocalService;
+import com.liferay.portal.kernel.service.LayoutLocalService;
+import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
+import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.kernel.test.AssertUtils;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.util.CompanyTestUtil;
@@ -144,6 +152,50 @@ public class GroupLocalServiceTest {
 	}
 
 	@Test
+	public void testDeleteGroup() throws Exception {
+		Group group1 = GroupTestUtil.addGroup();
+
+		Layout layout = _layoutLocalService.createLayout(group1.getGroupId());
+
+		Group group2 = GroupTestUtil.addGroup();
+
+		layout.setGroupId(group2.getGroupId());
+		layout.setCompanyId(group2.getCompanyId());
+
+		layout.setLayoutId(RandomTestUtil.nextLong());
+
+		_layoutLocalService.addLayout(layout);
+
+		Role role = _roleLocalService.getRole(
+			group1.getCompanyId(), RoleConstants.GUEST);
+
+		_resourcePermissionLocalService.setResourcePermissions(
+			group1.getCompanyId(), Layout.class.getName(),
+			ResourceConstants.SCOPE_GROUP, String.valueOf(group1.getGroupId()),
+			role.getRoleId(), new String[] {ActionKeys.VIEW});
+		_resourcePermissionLocalService.setResourcePermissions(
+			group1.getCompanyId(), Layout.class.getName(),
+			ResourceConstants.SCOPE_INDIVIDUAL,
+			String.valueOf(group1.getGroupId()), role.getRoleId(),
+			new String[] {ActionKeys.VIEW});
+
+		_groupLocalService.deleteGroup(group1);
+
+		Assert.assertEquals(
+			0,
+			_resourcePermissionLocalService.getResourcePermissionsCount(
+				group1.getCompanyId(), Layout.class.getName(),
+				ResourceConstants.SCOPE_GROUP,
+				String.valueOf(group1.getGroupId())));
+		Assert.assertEquals(
+			1,
+			_resourcePermissionLocalService.getResourcePermissionsCount(
+				group1.getCompanyId(), Layout.class.getName(),
+				ResourceConstants.SCOPE_INDIVIDUAL,
+				String.valueOf(group1.getGroupId())));
+	}
+
+	@Test
 	public void testGetStagedSites() {
 		List<Group> groups = _groupLocalService.getStagedSites();
 
@@ -212,5 +264,14 @@ public class GroupLocalServiceTest {
 
 	@Inject
 	private GroupLocalService _groupLocalService;
+
+	@Inject
+	private LayoutLocalService _layoutLocalService;
+
+	@Inject
+	private ResourcePermissionLocalService _resourcePermissionLocalService;
+
+	@Inject
+	private RoleLocalService _roleLocalService;
 
 }
