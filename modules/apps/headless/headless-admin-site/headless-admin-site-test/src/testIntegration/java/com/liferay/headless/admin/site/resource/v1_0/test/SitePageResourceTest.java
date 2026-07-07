@@ -412,7 +412,8 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 	@TestInfo(
 		{
 			"LPD-72013", "LPD-74331", "LPD-75450", "LPD-77124", "LPD-77505",
-			"LPD-77576", "LPD-77852", "LPD-78667", "LPD-79415", "LPD-81793"
+			"LPD-77576", "LPD-77852", "LPD-78667", "LPD-79415", "LPD-81793",
+			"LPD-97454"
 		}
 	)
 	public void testPutSiteSitePage() throws Exception {
@@ -2986,19 +2987,20 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 			(layout, putSitePage) -> _assertPageElements(
 				pageElements, putSitePage));
 
-		SitePage linkToURLSitePage = _getRandomSitePage(
-			SitePage.Type.LINK_TO_URL_PAGE);
+		SitePage linkToPageSitePage = _getRandomSitePage(
+			SitePage.Type.LINK_TO_PAGE_PAGE);
 
-		linkToURLSitePage.setPageSpecifications(
-			PageSpecificationsTestUtil.getLinkToURLPageSpecifications(
-				linkToURLSitePage.getExternalReferenceCode()));
+		linkToPageSitePage.setPageSpecifications(
+			PageSpecificationsTestUtil.getLinkToPagePageSpecifications(
+				linkToPageSitePage.getExternalReferenceCode()));
 
 		_testPutSiteSitePageWithEmptyLayout(
-			LayoutConstants.TYPE_URL, serviceContext, linkToURLSitePage,
+			LayoutConstants.TYPE_LINK_TO_LAYOUT, serviceContext,
+			linkToPageSitePage,
 			(layout, putSitePage) ->
 				PageSpecificationsTestUtil.assertPageSpecifications(
 					putSitePage.getPageSpecifications(),
-					linkToURLSitePage.getPageSpecifications()));
+					linkToPageSitePage.getPageSpecifications()));
 
 		SitePage pageSetSitePage = _getRandomSitePage(
 			SitePage.Type.PAGE_SET_PAGE);
@@ -3030,6 +3032,11 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 				PageSpecificationsTestUtil.assertWidgetPageSpecifications(
 					widgetSitePage.getPageSpecifications(),
 					putSitePage.getPageSpecifications()));
+
+		_testPutSiteSitePageWithEmptyLayoutAndLayoutTypeException(
+			serviceContext, _getRandomSitePage(SitePage.Type.EMBEDDED_PAGE));
+		_testPutSiteSitePageWithEmptyLayoutAndLayoutTypeException(
+			serviceContext, _getRandomSitePage(SitePage.Type.LINK_TO_URL_PAGE));
 	}
 
 	private void _testPutSiteSitePageWithEmptyLayout(
@@ -3072,6 +3079,42 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 		Assert.assertEquals(expectedType, layout.getType());
 
 		unsafeBiConsumer.accept(layout, putSitePage);
+	}
+
+	private void _testPutSiteSitePageWithEmptyLayoutAndLayoutTypeException(
+			ServiceContext serviceContext, SitePage sitePage)
+		throws Exception {
+
+		SitePageResource sitePageResource = _getSitePageResource(
+			"pageSpecifications");
+
+		Layout layout;
+
+		try (SafeCloseable safeCloseable =
+				LazyReferencingThreadLocal.setEnabledWithSafeCloseable(true)) {
+
+			layout = _layoutLocalService.getOrAddEmptyLayout(
+				sitePage.getExternalReferenceCode(),
+				TestPropsValues.getUserId(), testGroup.getGroupId(), false,
+				serviceContext);
+		}
+
+		Assert.assertEquals(WorkflowConstants.STATUS_EMPTY, layout.getStatus());
+
+		_assertProblemException(
+			"CONFLICT",
+			_language.format(
+				LocaleUtil.getDefault(),
+				"an-empty-page-cannot-be-converted-to-x",
+				_language.get(
+					LocaleUtil.getDefault(),
+					"layout.types." +
+						_externalToInternalValuesMap.get(sitePage.getType()))),
+			() -> sitePageResource.putSiteSitePage(
+				testGroup.getExternalReferenceCode(),
+				sitePage.getExternalReferenceCode(), false, sitePage));
+
+		_layoutLocalService.deleteLayout(layout);
 	}
 
 	private void _testPutSiteSitePageWithExportedPageSetSitePageAsFirstPage(
@@ -4065,6 +4108,12 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 			FileUtil.getBytes(getClass(), "dependencies/liferay.jpg"));
 	}
 
+	private static final Map<SitePage.Type, String>
+		_externalToInternalValuesMap = HashMapBuilder.put(
+			SitePage.Type.EMBEDDED_PAGE, LayoutConstants.TYPE_EMBEDDED
+		).put(
+			SitePage.Type.LINK_TO_URL_PAGE, LayoutConstants.TYPE_URL
+		).build();
 	private static final List<SitePage.Type> _types = Arrays.asList(
 		SitePage.Type.CONTENT_PAGE, SitePage.Type.WIDGET_PAGE);
 
