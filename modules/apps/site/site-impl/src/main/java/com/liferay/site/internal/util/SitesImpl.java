@@ -46,6 +46,7 @@ import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.impl.VirtualLayout;
 import com.liferay.portal.kernel.model.role.RoleConstants;
 import com.liferay.portal.kernel.portlet.PortletIdCodec;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
@@ -382,6 +383,34 @@ public class SitesImpl implements Sites {
 		}
 	}
 
+	@Override
+	public boolean isLayoutModifiedSinceLastMerge(Layout layout) {
+		if ((layout == null) ||
+			Validator.isNull(layout.getLayoutSetPrototypeLayoutERC()) ||
+			layout.isPortletLayoutPageTemplateEntryLinkActive() ||
+			(layout instanceof VirtualLayout) || !layout.isLayoutUpdateable()) {
+
+			return false;
+		}
+
+		long lastMergeTime = GetterUtil.getLong(
+			layout.getTypeSettingsProperty(LAST_MERGE_TIME));
+
+		if (lastMergeTime == 0) {
+			return false;
+		}
+
+		Date existingLayoutModifiedDate = layout.getModifiedDate();
+
+		if ((existingLayoutModifiedDate != null) &&
+			(existingLayoutModifiedDate.getTime() > lastMergeTime)) {
+
+			return true;
+		}
+
+		return false;
+	}
+
 	/**
 	 * Returns <code>true</code> if the linked site template can be merged into
 	 * the layout set. This method checks the current number of merge fail
@@ -467,6 +496,22 @@ public class SitesImpl implements Sites {
 
 		mergeLayoutSetPrototypeLayoutsInBackground(
 			layoutSetPrototype, layoutSet);
+	}
+
+	@Override
+	public void removeMergeFailFriendlyURLLayouts(LayoutSet layoutSet)
+		throws PortalException {
+
+		UnicodeProperties settingsUnicodeProperties =
+			layoutSet.getSettingsProperties();
+
+		if (settingsUnicodeProperties.containsKey(
+				MERGE_FAIL_FRIENDLY_URL_LAYOUTS)) {
+
+			settingsUnicodeProperties.remove(MERGE_FAIL_FRIENDLY_URL_LAYOUTS);
+
+			_layoutSetLocalService.updateLayoutSet(layoutSet);
+		}
 	}
 
 	@Override
