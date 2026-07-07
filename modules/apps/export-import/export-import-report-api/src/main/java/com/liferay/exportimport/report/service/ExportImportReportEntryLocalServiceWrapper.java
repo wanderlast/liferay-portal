@@ -318,6 +318,15 @@ public class ExportImportReportEntryLocalServiceWrapper
 			getExportImportReportEntriesCount();
 	}
 
+	@Override
+	public int getExportImportReportEntriesCount(
+		long companyId, long exportImportConfigurationId) {
+
+		return _exportImportReportEntryLocalService.
+			getExportImportReportEntriesCount(
+				companyId, exportImportConfigurationId);
+	}
+
 	/**
 	 * Returns the export import report entry with the primary key.
 	 *
