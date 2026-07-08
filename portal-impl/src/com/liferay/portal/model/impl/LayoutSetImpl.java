@@ -8,12 +8,14 @@ package com.liferay.portal.model.impl;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.petra.string.StringUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.ColorScheme;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.LayoutSetPrototype;
 import com.liferay.portal.kernel.model.Theme;
@@ -22,6 +24,7 @@ import com.liferay.portal.kernel.model.cache.CacheField;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.kernel.service.ThemeLocalServiceUtil;
@@ -36,9 +39,11 @@ import com.liferay.portal.kernel.util.PropsValues;
 import com.liferay.portal.kernel.util.URLCodec;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.sites.kernel.util.Sites;
 
 import java.io.IOException;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NavigableMap;
@@ -222,6 +227,32 @@ public class LayoutSetImpl extends LayoutSetBaseImpl {
 		}
 
 		return false;
+	}
+
+	@Override
+	public List<Layout> getMergeFailFriendlyURLLayouts() {
+		UnicodeProperties settingsUnicodeProperties = getSettingsProperties();
+
+		String uuids = settingsUnicodeProperties.getProperty(
+			Sites.MERGE_FAIL_FRIENDLY_URL_LAYOUTS);
+
+		if (Validator.isNotNull(uuids)) {
+			List<Layout> layouts = new ArrayList<>();
+
+			for (String uuid : StringUtil.split(uuids)) {
+				Layout layout =
+					LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
+						uuid, getGroupId(), isPrivateLayout());
+
+				if (layout != null) {
+					layouts.add(layout);
+				}
+			}
+
+			return layouts;
+		}
+
+		return Collections.emptyList();
 	}
 
 	@Override
