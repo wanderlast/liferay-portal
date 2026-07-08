@@ -576,6 +576,12 @@ public class SitesImpl implements Sites {
 		}
 	}
 
+	public void mergeLayoutSetPrototypeLayouts(Group group, LayoutSet layoutSet)
+		throws Exception {
+
+		mergeLayoutSetPrototypeLayouts(layoutSet);
+	}
+
 	@Override
 	public void mergeLayoutSetPrototypeLayouts(LayoutSet layoutSet)
 		throws Exception {
