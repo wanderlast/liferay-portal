@@ -9,6 +9,7 @@ import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.petra.lang.SafeCloseable;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.service.LayoutSetLocalService;
 import com.liferay.portal.kernel.struts.LastPath;
@@ -26,6 +27,9 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.util.PortalImpl;
 
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -42,6 +46,7 @@ import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletContext;
 
 /**
  * @author Zsolt Oláh
@@ -83,6 +88,48 @@ public class VirtualHostFilterTest {
 		_portalUtil.setPortal(_portal);
 
 		_virtualHostFilter.destroy();
+	}
+
+	@Test(expected = SystemException.class)
+	public void testProcessFilterDoesNotSwallowException() {
+		MockHttpServletRequest mockHttpServletRequest =
+			_getMockHttpServletRequest(StringPool.SLASH);
+
+		_virtualHostFilter.init(
+			new MockFilterConfig(
+				new MockServletContext() {
+
+					@Override
+					public RequestDispatcher getRequestDispatcher(String path) {
+						return new RequestDispatcher() {
+
+							@Override
+							public void forward(
+								ServletRequest servletRequest,
+								ServletResponse servletResponse) {
+
+								throw new SystemException();
+							}
+
+							@Override
+							public void include(
+								ServletRequest servletRequest,
+								ServletResponse servletResponse) {
+							}
+
+						};
+					}
+
+				}));
+
+		ReflectionTestUtil.invoke(
+			_virtualHostFilter, "processFilter",
+			new Class<?>[] {
+				HttpServletRequest.class, HttpServletResponse.class,
+				FilterChain.class
+			},
+			mockHttpServletRequest, new MockHttpServletResponse(),
+			new MockFilterChain());
 	}
 
 	@Test
