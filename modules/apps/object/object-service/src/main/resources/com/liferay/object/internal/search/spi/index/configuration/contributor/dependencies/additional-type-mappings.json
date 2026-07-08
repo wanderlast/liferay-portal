@@ -9,9 +9,6 @@
 		"objectActionId": {
 			"type": "keyword"
 		},
-		"objectDefinitionExternalReferenceCode": {
-			"type": "keyword"
-		},
 		"objectDefinitionId": {
 			"type": "keyword"
 		},
