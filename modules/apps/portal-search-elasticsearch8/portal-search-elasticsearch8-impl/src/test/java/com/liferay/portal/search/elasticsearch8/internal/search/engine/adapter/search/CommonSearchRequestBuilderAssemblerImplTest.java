@@ -470,12 +470,12 @@ public class CommonSearchRequestBuilderAssemblerImplTest {
 
 		SearchSearchRequest searchSearchRequest = _createSearchSearchRequest();
 
-		BooleanQuery booleanQuery = new BooleanQuery();
+		BooleanQueryImpl booleanQueryImpl = new BooleanQueryImpl();
 
-		booleanQuery.add(
+		booleanQueryImpl.add(
 			new MatchQuery("title", "alpha"), BooleanClauseOccur.MUST);
 
-		searchSearchRequest.setQuery(booleanQuery);
+		searchSearchRequest.setQuery(booleanQueryImpl);
 
 		_assertSearch(searchSearchRequest, "alpha 1", "alpha 2");
 
