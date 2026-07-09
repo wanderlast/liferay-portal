@@ -1656,8 +1656,9 @@ public class DefaultObjectEntryManagerImplTest
 
 		// Regular user without permissions
 
-		try {
-			_defaultObjectEntryManager.addObjectEntry(
+		Assert.assertThrows(
+			PrincipalException.class,
+			() -> _defaultObjectEntryManager.addObjectEntry(
 				_simpleDTOConverterContext, objectDefinition,
 				new ObjectEntry() {
 					{
@@ -1669,16 +1670,11 @@ public class DefaultObjectEntryManagerImplTest
 						).build();
 					}
 				},
-				String.valueOf(group.getGroupId()));
+				String.valueOf(group.getGroupId())));
 
-			Assert.fail();
-		}
-		catch (PrincipalException principalException) {
-			Assert.assertNotNull(principalException);
-		}
-
-		try {
-			_defaultObjectEntryManager.addObjectEntry(
+		Assert.assertThrows(
+			PrincipalException.class,
+			() -> _defaultObjectEntryManager.addObjectEntry(
 				_simpleDTOConverterContext, objectDefinition,
 				new ObjectEntry() {
 					{
@@ -1691,13 +1687,7 @@ public class DefaultObjectEntryManagerImplTest
 						).build();
 					}
 				},
-				String.valueOf(group.getGroupId()));
-
-			Assert.fail();
-		}
-		catch (PrincipalException principalException) {
-			Assert.assertNotNull(principalException);
-		}
+				String.valueOf(group.getGroupId())));
 
 		objectDefinitionLocalService.deleteObjectDefinition(
 			objectDefinition.getObjectDefinitionId());
@@ -4013,24 +4003,20 @@ public class DefaultObjectEntryManagerImplTest
 			},
 			objectDefinition1, _user);
 
-		try {
-			_defaultObjectEntryManager.deleteObjectEntry(
-				companyId, _simpleDTOConverterContext, "externalReferenceCode1",
-				objectDefinition1, null);
+		ObjectRelationshipDeletionTypeException
+			objectRelationshipDeletionTypeException = Assert.assertThrows(
+				ObjectRelationshipDeletionTypeException.class,
+				() -> _defaultObjectEntryManager.deleteObjectEntry(
+					companyId, _simpleDTOConverterContext,
+					"externalReferenceCode1", objectDefinition1, null));
 
-			Assert.fail();
-		}
-		catch (ObjectRelationshipDeletionTypeException
-					objectRelationshipDeletionTypeException) {
-
-			Assert.assertThat(
-				objectRelationshipDeletionTypeException.getMessage(),
-				CoreMatchers.containsString(
-					StringBundler.concat(
-						"User ", _user.getUserId(),
-						" must have DELETE permission for ",
-						objectDefinition2.getClassName())));
-		}
+		Assert.assertThat(
+			objectRelationshipDeletionTypeException.getMessage(),
+			CoreMatchers.containsString(
+				StringBundler.concat(
+					"User ", _user.getUserId(),
+					" must have DELETE permission for ",
+					objectDefinition2.getClassName())));
 
 		// Relationship type disassociate
 
@@ -4045,16 +4031,11 @@ public class DefaultObjectEntryManagerImplTest
 			companyId, _simpleDTOConverterContext, "externalReferenceCode1",
 			objectDefinition1, null);
 
-		try {
-			_defaultObjectEntryManager.getObjectEntry(
+		Assert.assertThrows(
+			NoSuchObjectEntryException.class,
+			() -> _defaultObjectEntryManager.getObjectEntry(
 				companyId, _simpleDTOConverterContext, "externalReferenceCode1",
-				objectDefinition1, null);
-
-			Assert.fail();
-		}
-		catch (NoSuchObjectEntryException noSuchObjectEntryException) {
-			Assert.assertNotNull(noSuchObjectEntryException);
-		}
+				objectDefinition1, null));
 
 		PrincipalThreadLocal.setName(adminUser.getUserId());
 		PermissionThreadLocal.setPermissionChecker(
@@ -4082,23 +4063,15 @@ public class DefaultObjectEntryManagerImplTest
 				ObjectRelationshipConstants.DELETION_TYPE_PREVENT, false,
 				objectRelationship.getLabelMap(), null);
 
-		try {
-			_defaultObjectEntryManager.deleteObjectEntry(
+		AssertUtils.assertFailure(
+			RequiredObjectRelationshipException.class,
+			StringBundler.concat(
+				"Object relationship ",
+				objectRelationship.getObjectRelationshipId(),
+				" does not allow deletes"),
+			() -> _defaultObjectEntryManager.deleteObjectEntry(
 				companyId, _simpleDTOConverterContext, "externalReferenceCode3",
-				objectDefinition1, null);
-
-			Assert.fail();
-		}
-		catch (RequiredObjectRelationshipException
-					requiredObjectRelationshipException) {
-
-			Assert.assertEquals(
-				StringBundler.concat(
-					"Object relationship ",
-					objectRelationship.getObjectRelationshipId(),
-					" does not allow deletes"),
-				requiredObjectRelationshipException.getMessage());
-		}
+				objectDefinition1, null));
 
 		_roleLocalService.deleteRole(role.getRoleId());
 
@@ -4244,21 +4217,14 @@ public class DefaultObjectEntryManagerImplTest
 			ResourceConstants.SCOPE_COMPANY, String.valueOf(companyId),
 			role.getRoleId(), ActionKeys.DELETE);
 
-		try {
-			_defaultObjectEntryManager.deleteObjectEntry(
-				_objectDefinition3, objectEntry2.getId());
-
-			Assert.fail();
-		}
-		catch (Exception exception) {
-			Assert.assertEquals(
-				exception.getMessage(),
-				StringBundler.concat(
-					"User ", _user.getUserId(),
-					" must have DELETE permission for ",
-					_objectDefinition3.getClassName(), StringPool.SPACE,
-					objectEntry2.getId()));
-		}
+		AssertUtils.assertFailure(
+			Exception.class,
+			StringBundler.concat(
+				"User ", _user.getUserId(), " must have DELETE permission for ",
+				_objectDefinition3.getClassName(), StringPool.SPACE,
+				objectEntry2.getId()),
+			() -> _defaultObjectEntryManager.deleteObjectEntry(
+				_objectDefinition3, objectEntry2.getId()));
 
 		// Regular roles' individual permissions should not be restricted by
 		// account entry
@@ -4268,7 +4234,7 @@ public class DefaultObjectEntryManagerImplTest
 
 		PrincipalThreadLocal.setName(adminUser.getUserId());
 
-		objectEntry1 = _addObjectEntry(accountEntry1);
+		ObjectEntry objectEntry3 = _addObjectEntry(accountEntry1);
 
 		PermissionThreadLocal.setPermissionChecker(
 			PermissionCheckerFactoryUtil.create(_user));
@@ -4278,18 +4244,18 @@ public class DefaultObjectEntryManagerImplTest
 		_resourcePermissionLocalService.setResourcePermissions(
 			companyId, _objectDefinition3.getClassName(),
 			ResourceConstants.SCOPE_INDIVIDUAL,
-			String.valueOf(objectEntry1.getId()), role.getRoleId(),
+			String.valueOf(objectEntry3.getId()), role.getRoleId(),
 			new String[] {ActionKeys.DELETE});
 
 		_defaultObjectEntryManager.deleteObjectEntry(
-			_objectDefinition3, objectEntry1.getId());
+			_objectDefinition3, objectEntry3.getId());
 
 		PermissionThreadLocal.setPermissionChecker(
 			PermissionCheckerFactoryUtil.create(adminUser));
 
 		PrincipalThreadLocal.setName(adminUser.getUserId());
 
-		objectEntry1 = _addObjectEntry(accountEntry1);
+		ObjectEntry objectEntry4 = _addObjectEntry(accountEntry1);
 
 		// Account entry scope
 
@@ -4314,23 +4280,16 @@ public class DefaultObjectEntryManagerImplTest
 			_buyerRole.getRoleId());
 
 		_defaultObjectEntryManager.deleteObjectEntry(
-			_objectDefinition3, objectEntry1.getId());
+			_objectDefinition3, objectEntry4.getId());
 
-		try {
-			_defaultObjectEntryManager.deleteObjectEntry(
-				_objectDefinition3, objectEntry2.getId());
-
-			Assert.fail();
-		}
-		catch (Exception exception) {
-			Assert.assertEquals(
-				exception.getMessage(),
-				StringBundler.concat(
-					"User ", _user.getUserId(),
-					" must have DELETE permission for ",
-					_objectDefinition3.getClassName(), StringPool.SPACE,
-					objectEntry2.getId()));
-		}
+		AssertUtils.assertFailure(
+			Exception.class,
+			StringBundler.concat(
+				"User ", _user.getUserId(), " must have DELETE permission for ",
+				_objectDefinition3.getClassName(), StringPool.SPACE,
+				objectEntry2.getId()),
+			() -> _defaultObjectEntryManager.deleteObjectEntry(
+				_objectDefinition3, objectEntry2.getId()));
 
 		// Organization scope
 
@@ -4339,7 +4298,7 @@ public class DefaultObjectEntryManagerImplTest
 
 		PrincipalThreadLocal.setName(adminUser.getUserId());
 
-		objectEntry1 = _addObjectEntry(accountEntry1);
+		ObjectEntry objectEntry5 = _addObjectEntry(accountEntry1);
 
 		_user = _addUser();
 
@@ -4357,27 +4316,21 @@ public class DefaultObjectEntryManagerImplTest
 
 		_assertObjectEntriesSize1(1);
 
-		try {
-			_defaultObjectEntryManager.deleteObjectEntry(
-				_objectDefinition3, objectEntry1.getId());
-
-			Assert.fail();
-		}
-		catch (Exception exception) {
-			Assert.assertEquals(
-				exception.getMessage(),
-				StringBundler.concat(
-					"User ", _user.getUserId(), " must have DELETE permission ",
-					"for ", _objectDefinition3.getClassName(), StringPool.SPACE,
-					objectEntry1.getId()));
-		}
+		AssertUtils.assertFailure(
+			Exception.class,
+			StringBundler.concat(
+				"User ", _user.getUserId(), " must have DELETE permission for ",
+				_objectDefinition3.getClassName(), StringPool.SPACE,
+				objectEntry5.getId()),
+			() -> _defaultObjectEntryManager.deleteObjectEntry(
+				_objectDefinition3, objectEntry5.getId()));
 
 		_assertObjectEntriesSize1(1);
 
 		_addResourcePermission(ActionKeys.DELETE, _accountManagerRole);
 
 		_defaultObjectEntryManager.deleteObjectEntry(
-			_objectDefinition3, objectEntry1.getId());
+			_objectDefinition3, objectEntry5.getId());
 
 		_assertObjectEntriesSize1(0);
 
@@ -4391,7 +4344,7 @@ public class DefaultObjectEntryManagerImplTest
 
 		PrincipalThreadLocal.setName(adminUser.getUserId());
 
-		objectEntry1 = _addObjectEntry(accountEntry1);
+		ObjectEntry objectEntry6 = _addObjectEntry(accountEntry1);
 
 		_user = _addUser();
 
@@ -4413,27 +4366,21 @@ public class DefaultObjectEntryManagerImplTest
 
 		_removeResourcePermission(ActionKeys.DELETE, _accountManagerRole);
 
-		try {
-			_defaultObjectEntryManager.deleteObjectEntry(
-				_objectDefinition3, objectEntry1.getId());
-
-			Assert.fail();
-		}
-		catch (Exception exception) {
-			Assert.assertEquals(
-				exception.getMessage(),
-				StringBundler.concat(
-					"User ", _user.getUserId(), " must have DELETE permission ",
-					"for ", _objectDefinition3.getClassName(), StringPool.SPACE,
-					objectEntry1.getId()));
-		}
+		AssertUtils.assertFailure(
+			Exception.class,
+			StringBundler.concat(
+				"User ", _user.getUserId(), " must have DELETE permission for ",
+				_objectDefinition3.getClassName(), StringPool.SPACE,
+				objectEntry6.getId()),
+			() -> _defaultObjectEntryManager.deleteObjectEntry(
+				_objectDefinition3, objectEntry6.getId()));
 
 		_assertObjectEntriesSize1(1);
 
 		_addResourcePermission(ActionKeys.DELETE, _accountManagerRole);
 
 		_defaultObjectEntryManager.deleteObjectEntry(
-			_objectDefinition3, objectEntry1.getId());
+			_objectDefinition3, objectEntry6.getId());
 
 		_assertObjectEntriesSize1(0);
 	}
