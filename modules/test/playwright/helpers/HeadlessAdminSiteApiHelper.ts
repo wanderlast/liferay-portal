@@ -24,6 +24,13 @@ export class HeadlessAdminSiteApiHelper {
 		);
 	}
 
+	async deleteSite(externalReferenceCode: string) {
+		await this.apiHelpers.delete(
+			`${this.apiHelpers.baseUrl}${this.basePath}/sites/${externalReferenceCode}`,
+			{failOnStatusCode: true}
+		);
+	}
+
 	async getPage(
 		siteExternalReferenceCode: string,
 		pageExternalReferenceCode: string
