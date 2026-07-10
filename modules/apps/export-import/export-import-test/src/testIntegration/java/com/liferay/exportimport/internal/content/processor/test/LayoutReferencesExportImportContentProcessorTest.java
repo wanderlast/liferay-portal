@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.model.StagedModel;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
+import com.liferay.portal.kernel.test.TestInfo;
 import com.liferay.portal.kernel.test.randomizerbumpers.NumericStringRandomizerBumper;
 import com.liferay.portal.kernel.test.randomizerbumpers.UniqueStringRandomizerBumper;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
@@ -653,6 +654,26 @@ public class LayoutReferencesExportImportContentProcessorTest {
 
 		Assert.assertEquals(
 			url, _exportAndImportLayoutURL(url, exportGroup, importGroup));
+	}
+
+	@Test
+	@TestInfo("LPD-97694")
+	public void testValidateContentRelativePrivatePageURLWithVirtualHost()
+		throws Exception {
+
+		Group group = GroupTestUtil.addGroup();
+
+		GroupTestUtil.addLayoutSetVirtualHost(group, true);
+		GroupTestUtil.addLayoutSetVirtualHost(group, false);
+
+		Layout layout = LayoutTestUtil.addTypePortletLayout(group, true);
+
+		_layoutReferencesExportImportContentProcessor.validateContentReferences(
+			group.getGroupId(),
+			StringBundler.concat(
+				_CONTENT_PREFIX, layout.getFriendlyURL(),
+				_CONTENT_POSTFIX));
+
 	}
 
 	@Test
