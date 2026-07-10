@@ -1123,6 +1123,11 @@ public class LayoutReferencesExportImportContentProcessor
 			Layout layout = _layoutLocalService.fetchLayoutByFriendlyURL(
 				groupId, privateLayout, url);
 
+			if (layout == null) {
+				layout = _layoutLocalService.fetchLayoutByFriendlyURL(
+					groupId, !privateLayout, url);
+			}
+
 			if (layout != null) {
 				continue;
 			}
