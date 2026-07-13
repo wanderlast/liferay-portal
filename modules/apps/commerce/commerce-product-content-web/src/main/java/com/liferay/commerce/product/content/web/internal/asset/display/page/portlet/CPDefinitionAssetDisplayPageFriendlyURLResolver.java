@@ -423,7 +423,7 @@ public class CPDefinitionAssetDisplayPageFriendlyURLResolver
 		}
 
 		InfoItemIdentifier infoItemIdentifier = new ClassPKInfoItemIdentifier(
-			layoutDisplayPageObjectProvider.getClassPK());
+			layoutDisplayPageObjectProvider.getClassPK(), version);
 
 		InfoItemObjectProvider<Object> infoItemObjectProvider =
 			(InfoItemObjectProvider<Object>)
@@ -431,8 +431,6 @@ public class CPDefinitionAssetDisplayPageFriendlyURLResolver
 					InfoItemObjectProvider.class,
 					layoutDisplayPageObjectProvider.getClassName(),
 					infoItemIdentifier.getInfoItemServiceFilter());
-
-		infoItemIdentifier.setVersion(version);
 
 		return infoItemObjectProvider.getInfoItem(infoItemIdentifier);
 	}
