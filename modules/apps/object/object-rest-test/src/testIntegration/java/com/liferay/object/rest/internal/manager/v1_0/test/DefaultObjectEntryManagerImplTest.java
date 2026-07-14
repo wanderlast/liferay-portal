@@ -1515,6 +1515,9 @@ public class DefaultObjectEntryManagerImplTest
 
 	@Test
 	public void testAddObjectEntryWithAttachmentObjectField() throws Exception {
+
+		// Administrator
+
 		String dlFolderName = RandomTestUtil.randomString();
 
 		ObjectDefinition objectDefinition = _addObjectDefinition(
@@ -1574,8 +1577,6 @@ public class DefaultObjectEntryManagerImplTest
 			null, serviceContext);
 
 		long fileEntryId = dlFileEntry.getFileEntryId();
-
-		// Administrator
 
 		Assert.assertNotNull(
 			_defaultObjectEntryManager.addObjectEntry(
