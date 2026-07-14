@@ -579,6 +579,14 @@ public class AssetCategoryLocalServiceUtil {
 			parentCategoryId, vocabularyId, start, end, orderByComparator);
 	}
 
+	public static List<AssetCategory> getVocabularyCategories(
+		long groupId, String name, long vocabularyId, int start, int end,
+		OrderByComparator<AssetCategory> orderByComparator) {
+
+		return getService().getVocabularyCategories(
+			groupId, name, vocabularyId, start, end, orderByComparator);
+	}
+
 	public static int getVocabularyCategoriesCount(long vocabularyId) {
 		return getService().getVocabularyCategoriesCount(vocabularyId);
 	}
