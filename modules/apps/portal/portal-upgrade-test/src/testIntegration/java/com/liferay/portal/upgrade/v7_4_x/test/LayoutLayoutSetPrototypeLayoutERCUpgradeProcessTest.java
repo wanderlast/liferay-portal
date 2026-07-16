@@ -181,7 +181,6 @@ public class LayoutLayoutSetPrototypeLayoutERCUpgradeProcessTest
 			layoutSet.getSettingsProperties();
 
 		settingsUnicodeProperties.remove(Sites.LAST_MERGE_TIME);
-		settingsUnicodeProperties.remove(Sites.LAST_MERGE_VERSION);
 
 		layoutSet = _layoutSetLocalService.updateLayoutSet(layoutSet);
 
