@@ -14,6 +14,7 @@ import com.liferay.journal.service.JournalArticleResourceLocalService;
 import com.liferay.portal.kernel.cache.MultiVMPool;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
+import com.liferay.portal.kernel.util.FriendlyURLNormalizer;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.test.log.LogCapture;
@@ -64,6 +65,16 @@ public class JournalArticleFriendlyURLFormatUpgradeProcessTest
 		_runUpgrade();
 
 		_assertURLTitle("test/test");
+	}
+
+	@Test
+	public void testUpgradeForCapitalSpecialCharacter() throws Exception {
+		_addJournalArticle("test001óóóÓ");
+
+		_runUpgrade();
+
+		_assertURLTitle(
+			_friendlyURLNormalizer.normalizeWithEncoding("test001óóóó"));
 	}
 
 	@Test
@@ -184,6 +195,10 @@ public class JournalArticleFriendlyURLFormatUpgradeProcessTest
 	private static UpgradeStepRegistrator _upgradeStepRegistrator;
 
 	private long _classNameId;
+
+	@Inject
+	private FriendlyURLNormalizer _friendlyURLNormalizer;
+
 	private JournalArticle _journalArticle;
 
 	@Inject
