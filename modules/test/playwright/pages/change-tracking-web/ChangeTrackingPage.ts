@@ -300,6 +300,11 @@ export class ChangeTrackingPage {
 	async goToPublicationsViaApplicationMenu() {
 		await this.page.getByLabel('Open Applications MenuCtrl+Alt+A').click();
 
+		// The menu remembers the last used tab, so select the Applications tab
+		// explicitly because Publications is not reachable from the other tabs
+
+		await this.page.getByRole('tab', {name: 'Applications'}).click();
+
 		await this.page.getByRole('menuitem', {name: 'Publications'}).click();
 
 		const enablePublications = this.page.getByText('Enable Publications');
