@@ -220,24 +220,34 @@ export class ChangeTrackingPage {
 			).toBeVisible();
 		}
 
-		const checkBox = this.page.getByRole('checkbox', {
-			name: 'Enable Publications',
-		});
+		const checkBox = this.page.getByTitle('Enable Publications');
+
+		// Do not use setChecked here: toggling the checkbox submits the form
+		// and reloads the page, so setChecked's state verification can click
+		// the toggle a second time and revert the configuration
 
 		if (check) {
-			await checkBox.setChecked(true);
+			if (!(await checkBox.isChecked())) {
+				await checkBox.click();
+
+				await this.page.waitForLoadState();
+			}
 
 			await expect(
-				this.page.getByText('Allow Unapproved Changes')
+				this.page.getByText('Allow Publishing Unapproved Changes')
 			).toBeVisible();
 
 			await this.goto();
 		}
 		else {
-			await checkBox.setChecked(false);
+			if (await checkBox.isChecked()) {
+				await checkBox.click();
+
+				await this.page.waitForLoadState();
+			}
 
 			await expect(
-				this.page.getByText('Allow Unapproved Changes')
+				this.page.getByText('Allow Publishing Unapproved Changes')
 			).not.toBeVisible();
 		}
 	}
@@ -294,16 +304,17 @@ export class ChangeTrackingPage {
 
 		const enablePublications = this.page.getByText('Enable Publications');
 
-		if (await enablePublications.isHidden()) {
-			const publicationsHeader = this.page
-				.getByTestId('headerTitle')
-				.filter({hasText: 'Publications'});
+		const publicationsHeader = this.page
+			.getByTestId('headerTitle')
+			.filter({hasText: 'Publications'});
 
-			await expect(publicationsHeader).toBeVisible();
-		}
-		else {
-			await expect(enablePublications).toBeVisible();
-		}
+		// Depending on whether publications is enabled, the link lands on the
+		// publications list or on the settings view. Wait for either instead
+		// of sampling the state while the navigation is still in flight.
+
+		await expect(
+			enablePublications.or(publicationsHeader).first()
+		).toBeVisible();
 	}
 
 	async goToPublicationHistory() {
