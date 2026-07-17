@@ -138,6 +138,8 @@ test(
 				name: 'Site-' + getRandomString(),
 			});
 
+			apiHelpers.data.push({id: site.id, type: 'site'});
+
 			const sitePages = await apiHelpers.headlessAdminSite.getPages(
 				site.externalReferenceCode,
 				'pageSize=100&privateLayout=false'
