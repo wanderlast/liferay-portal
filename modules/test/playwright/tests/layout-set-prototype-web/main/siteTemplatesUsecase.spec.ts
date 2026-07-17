@@ -5,9 +5,9 @@
 
 import {expect, mergeTests} from '@playwright/test';
 
+import {applicationsMenuPageTest} from '../../../fixtures/applicationsMenuPageTest';
 import {dataApiHelpersTest} from '../../../fixtures/dataApiHelpersTest';
 import {featureFlagsTest} from '../../../fixtures/featureFlagsTest';
-import {globalMenuPagesTest} from '../../../fixtures/globalMenuPagesTest';
 import {loginTest} from '../../../fixtures/loginTest';
 import {productMenuPageTest} from '../../../fixtures/productMenuPageTest';
 import {siteSettingsPagesTest} from '../../../fixtures/siteSettingsPagesTest';
@@ -33,12 +33,12 @@ export const test = mergeTests(
 );
 
 const testWithSiteTemplateSync = mergeTests(
+	applicationsMenuPageTest,
 	dataApiHelpersTest,
 	featureFlagsTest({
 		'LPD-35443': {enabled: true},
 		'LPD-82107': {enabled: true},
 	}),
-	globalMenuPagesTest,
 	layoutSetPrototypePageTest,
 	loginTest(),
 	productMenuPageTest,
@@ -134,7 +134,7 @@ test(
 
 			// Create an empty Site that is not linked to any Site Template
 
-			const site = await apiHelpers.headlessAdminSite.postSite({
+			const site = await apiHelpers.headlessSite.createSite({
 				name: 'Site-' + getRandomString(),
 			});
 
@@ -206,8 +206,8 @@ test(
 		{tag: '@LPD-87027'},
 		async ({
 			apiHelpers,
+			applicationsMenuPage,
 			editOrganizationPage,
-			globalMenuPage,
 			layoutSetPrototypePage,
 			page,
 			productMenuPage,
@@ -291,7 +291,7 @@ test(
 
 			// Execute the Site Template Sync manually
 
-			await globalMenuPage.goToControlPanel('Site Templates');
+			await applicationsMenuPage.goToSiteTemplates();
 
 			await layoutSetPrototypePage.executeSyncAndWaitForSuccess(
 				siteTemplateName
@@ -332,7 +332,7 @@ test(
 		{tag: '@LPD-87027'},
 		async ({
 			apiHelpers,
-			globalMenuPage,
+			applicationsMenuPage,
 			layoutSetPrototypePage,
 			page,
 			productMenuPage,
@@ -416,7 +416,7 @@ test(
 
 			// Execute the Site Template Sync manually
 
-			await globalMenuPage.goToControlPanel('Site Templates');
+			await applicationsMenuPage.goToSiteTemplates();
 
 			await layoutSetPrototypePage.executeSyncAndWaitForSuccess(
 				siteTemplateName
@@ -457,8 +457,8 @@ test(
 		{tag: '@LPD-87027'},
 		async ({
 			apiHelpers,
+			applicationsMenuPage,
 			editUserPage,
-			globalMenuPage,
 			layoutSetPrototypePage,
 			page,
 			productMenuPage,
@@ -543,7 +543,7 @@ test(
 
 			// Execute the Site Template Sync manually
 
-			await globalMenuPage.goToControlPanel('Site Templates');
+			await applicationsMenuPage.goToSiteTemplates();
 
 			await layoutSetPrototypePage.executeSyncAndWaitForSuccess(
 				siteTemplateName

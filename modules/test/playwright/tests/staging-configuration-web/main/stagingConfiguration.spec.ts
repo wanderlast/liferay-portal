@@ -477,7 +477,7 @@ testWithSitePagesAPI(
 	{tag: '@LPD-87027'},
 	async ({
 		apiHelpers,
-		globalMenuPage,
+		applicationsMenuPage,
 		sitesPage,
 		stagingConfigurationPage,
 	}) => {
@@ -495,17 +495,24 @@ testWithSitePagesAPI(
 			type: 'layoutSetPrototype',
 		});
 
-		await globalMenuPage.goToControlPanel('Sites');
+		await applicationsMenuPage.goToSites();
 
 		const siteName = 'Site-' + getRandomString();
 
-		const {externalReferenceCode} = await sitesPage.createSite({
+		const siteId = await sitesPage.createSite({
 			isCustom: true,
 			siteName,
 			templateName: siteTemplateName,
 		});
 
-		apiHelpers.data.push({id: externalReferenceCode, type: 'site'});
+		apiHelpers.data.push({id: siteId, type: 'site'});
+
+		const siteGroup = await apiHelpers.jsonWebServicesGroup.getGroupByKey(
+			layoutSetPrototype.companyId,
+			siteName
+		);
+
+		const externalReferenceCode = siteGroup.externalReferenceCode;
 
 		// Wait until the Site Template pages propagate to the linked Site so the
 		// propagation background task completes before the cleanup deletes it

@@ -5,9 +5,9 @@
 
 import {expect, mergeTests} from '@playwright/test';
 
+import {applicationsMenuPageTest} from '../../../fixtures/applicationsMenuPageTest';
 import {dataApiHelpersTest} from '../../../fixtures/dataApiHelpersTest';
 import {featureFlagsTest} from '../../../fixtures/featureFlagsTest';
-import {globalMenuPagesTest} from '../../../fixtures/globalMenuPagesTest';
 import {loginTest} from '../../../fixtures/loginTest';
 import {productMenuPageTest} from '../../../fixtures/productMenuPageTest';
 import {sitesPageTest} from '../../../fixtures/sitesPageTest';
@@ -19,12 +19,12 @@ import {layoutSetPrototypePageTest} from './fixtures/layoutSetPrototypePageTest'
 import createSiteTemplate from './utils/createSiteTemplate';
 
 export const test = mergeTests(
+	applicationsMenuPageTest,
 	dataApiHelpersTest,
 	featureFlagsTest({
 		'LPD-35443': {enabled: true},
 		'LPD-82107': {enabled: true},
 	}),
-	globalMenuPagesTest,
 	layoutSetPrototypePageTest,
 	loginTest(),
 	productMenuPageTest,
@@ -35,7 +35,7 @@ export const test = mergeTests(
 test(
 	'Execute Site Template Sync action is hidden for inactive Site Templates',
 	{tag: '@LPD-87027'},
-	async ({apiHelpers, globalMenuPage, layoutSetPrototypePage}) => {
+	async ({apiHelpers, applicationsMenuPage, layoutSetPrototypePage}) => {
 
 		// Create an inactive Site Template
 
@@ -54,7 +54,7 @@ test(
 			type: 'layoutSetPrototype',
 		});
 
-		await globalMenuPage.goToControlPanel('Site Templates');
+		await applicationsMenuPage.goToSiteTemplates();
 
 		// Inactive: Activate is shown and the sync action is hidden
 
@@ -79,7 +79,12 @@ test(
 test(
 	'Execute Site Template Sync is blocked when Publications is enabled',
 	{tag: '@LPD-87027'},
-	async ({apiHelpers, globalMenuPage, layoutSetPrototypePage, page}) => {
+	async ({
+		apiHelpers,
+		applicationsMenuPage,
+		layoutSetPrototypePage,
+		page,
+	}) => {
 		const siteTemplateName = 'SiteTemplate-' + getRandomString();
 
 		const layoutSetPrototype =
@@ -99,7 +104,7 @@ test(
 		try {
 			await changeTrackingPage.enablePublications(true);
 
-			await globalMenuPage.goToControlPanel('Site Templates');
+			await applicationsMenuPage.goToSiteTemplates();
 
 			await clickAndExpectToBeVisible({
 				target: layoutSetPrototypePage.executeSyncMenuItem,
@@ -143,7 +148,7 @@ test(
 	{tag: '@LPD-87027'},
 	async ({
 		apiHelpers,
-		globalMenuPage,
+		applicationsMenuPage,
 		layoutSetPrototypePage,
 		page,
 		productMenuPage,
@@ -172,13 +177,20 @@ test(
 
 		const siteName = 'Site-' + getRandomString();
 
-		const {externalReferenceCode} = await sitesPage.createSite({
+		const siteId = await sitesPage.createSite({
 			isCustom: true,
 			siteName,
 			templateName: siteTemplateName,
 		});
 
-		apiHelpers.data.push({id: externalReferenceCode, type: 'site'});
+		apiHelpers.data.push({id: siteId, type: 'site'});
+
+		const siteGroup = await apiHelpers.jsonWebServicesGroup.getGroupByKey(
+			layoutSetPrototype.companyId,
+			siteName
+		);
+
+		const externalReferenceCode = siteGroup.externalReferenceCode;
 
 		// Add a new page to the Site Template
 
@@ -199,7 +211,7 @@ test(
 		// Trigger the manual sync from the Site Templates list and wait for the
 		// asynchronous completion notification
 
-		await globalMenuPage.goToControlPanel('Site Templates');
+		await applicationsMenuPage.goToSiteTemplates();
 
 		await layoutSetPrototypePage.executeSyncAndWaitForSuccess(
 			siteTemplateName
