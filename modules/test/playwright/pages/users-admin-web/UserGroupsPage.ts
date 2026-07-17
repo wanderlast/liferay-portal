@@ -5,6 +5,7 @@
 
 import {FrameLocator, Locator, Page, expect} from '@playwright/test';
 
+import {clickAndExpectToBeVisible} from '../../utils/clickAndExpectToBeVisible';
 import {waitForAlert} from '../../utils/waitForAlert';
 import {DataTablePage} from '../account-admin-web/DataTablePage';
 import {ApplicationsMenuPage} from '../product-navigation-applications-menu/ApplicationsMenuPage';
@@ -238,13 +239,11 @@ export class UserGroupsPage {
 		siteTemplateName: string,
 		{propagationEnabled = false}: {propagationEnabled?: boolean} = {}
 	) {
-		await expect(async () => {
-			await (await this.userGroupsTableRowActions(userGroupName)).click();
-
-			await expect(this.editUserGroupMenuItem).toBeVisible();
-		}).toPass({timeout: 5000});
-
-		await this.editUserGroupMenuItem.click();
+		await clickAndExpectToBeVisible({
+			autoClick: true,
+			target: this.editUserGroupMenuItem,
+			trigger: await this.userGroupsTableRowActions(userGroupName),
+		});
 
 		await this.page
 			.locator('select[name$="publicLayoutSetPrototypeId"]')
