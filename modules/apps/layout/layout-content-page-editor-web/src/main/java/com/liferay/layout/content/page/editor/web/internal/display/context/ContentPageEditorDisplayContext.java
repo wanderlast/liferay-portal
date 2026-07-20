@@ -704,6 +704,7 @@ public class ContentPageEditorDisplayContext {
 								getFrontendTokenDefinition(layout);
 
 						if ((styleBookEntry != null) &&
+							(frontendTokenDefinition != null) &&
 							Objects.equals(
 								frontendTokenDefinition.getThemeId(),
 								styleBookEntry.getThemeId())) {
