@@ -350,21 +350,7 @@ public class AssetLibraryResourceTest extends BaseAssetLibraryResourceTestCase {
 	}
 
 	protected AssetLibrary randomAssetLibrary() throws Exception {
-		AssetLibrary assetLibrary = super.randomAssetLibrary();
-
-		assetLibrary.setSettings(
-			new Settings() {
-				{
-					autoTaggingEnabled = false;
-					logoColor = "color-1";
-					sharingEnabled = false;
-					useCustomLanguages = false;
-				}
-			});
-		assetLibrary.setType(
-			RandomTestUtil.randomEnum(AssetLibrary.Type.class));
-
-		return assetLibrary;
+		return _randomAssetLibrary(true);
 	}
 
 	protected AssetLibrary randomAssetLibraryWithTrashEnabled()
@@ -612,6 +598,29 @@ public class AssetLibraryResourceTest extends BaseAssetLibraryResourceTestCase {
 		assetLibrary.setSettings(settings);
 
 		return assetLibraryResource.postAssetLibrary(assetLibrary);
+	}
+
+	private AssetLibrary _randomAssetLibrary(boolean provideSettings)
+		throws Exception {
+
+		AssetLibrary assetLibrary = super.randomAssetLibrary();
+
+		if (provideSettings) {
+			assetLibrary.setSettings(
+				new Settings() {
+					{
+						autoTaggingEnabled = false;
+						logoColor = "color-1";
+						sharingEnabled = false;
+						useCustomLanguages = false;
+					}
+				});
+		}
+
+		assetLibrary.setType(
+			RandomTestUtil.randomEnum(AssetLibrary.Type.class));
+
+		return assetLibrary;
 	}
 
 	private void _testPostAssetLibrary(MimeTypeLimit[] mimeTypeLimits)
