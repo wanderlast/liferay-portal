@@ -761,6 +761,11 @@ public class PortalUpgradeProcessRegistryImpl
 			new Version(38, 2, 5),
 			UpgradeModulesFactory.create(
 				new String[] {"com.liferay.site.cms.site.initializer"}, null));
+
+		upgradeVersionTreeMap.put(
+			new Version(38, 2, 6),
+			UpgradeModulesFactory.create(
+				new String[] {"com.liferay.portal.vulcan.impl"}, null));
 	}
 
 }
