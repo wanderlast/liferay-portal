@@ -65,7 +65,7 @@ public class CommerceAddressServiceTest {
 
 		if (_country == null) {
 			_country = _countryLocalService.addCountry(
-				null, "ZZ", "ZZZ", true, true, null,
+				"ZZ", "ZZZ", true, true, null,
 				RandomTestUtil.randomString(), "000",
 				RandomTestUtil.randomDouble(), true, false, false,
 				ServiceContextTestUtil.getServiceContext(
