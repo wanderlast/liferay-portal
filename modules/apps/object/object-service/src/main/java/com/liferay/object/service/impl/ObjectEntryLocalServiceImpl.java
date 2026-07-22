@@ -3791,7 +3791,8 @@ public class ObjectEntryLocalServiceImpl
 	}
 
 	private Predicate _fillPredicate(
-			long objectDefinitionId, Predicate predicate, String search)
+			ObjectDefinition objectDefinition, Predicate predicate,
+			String search)
 		throws PortalException {
 
 		if (Validator.isNull(search)) {
@@ -3799,17 +3800,21 @@ public class ObjectEntryLocalServiceImpl
 		}
 
 		List<ObjectField> objectFields = _objectFieldPersistence.findByODI_I(
-			objectDefinitionId, true);
+			objectDefinition.getObjectDefinitionId(), true);
 
 		if (objectFields.isEmpty()) {
 			return predicate;
 		}
 
+		String defaultLanguageId = objectDefinition.getDefaultLanguageId();
+		String preferredLanguageId = ObjectEntrySearchUtil.getLanguageId();
+
 		Predicate searchPredicate = null;
 
 		for (ObjectField objectField : objectFields) {
 			Table<?> table = _objectFieldLocalService.getTable(
-				objectDefinitionId, objectField.getName());
+				objectDefinition.getObjectDefinitionId(),
+				objectField.getName());
 
 			Column<?, ?> column = table.getColumn(
 				objectField.getDBColumnName());
@@ -3832,6 +3837,19 @@ public class ObjectEntryLocalServiceImpl
 					ObjectEntrySearchUtil.getObjectFieldPredicate(
 						objectField.getBusinessType(), column,
 						objectField.getDBType(), search);
+
+				if (objectField.isLocalized() &&
+					(objectFieldPredicate != null) &&
+					(table instanceof
+						DynamicObjectDefinitionLocalizationTable)) {
+
+					objectFieldPredicate =
+						ObjectEntrySearchUtil.getLocalizedObjectFieldPredicate(
+							column, defaultLanguageId,
+							(DynamicObjectDefinitionLocalizationTable)table,
+							objectField, objectFieldPredicate,
+							preferredLanguageId);
+				}
 			}
 
 			if (objectFieldPredicate == null) {
@@ -4686,9 +4704,7 @@ public class ObjectEntryLocalServiceImpl
 			ObjectEntrySearchUtil.getObjectEntryIndexPredicate(
 				groupIds, objectDefinition,
 				Predicate.withParentheses(
-					_fillPredicate(
-						objectDefinition.getObjectDefinitionId(), predicate,
-						search))
+					_fillPredicate(objectDefinition, predicate, search))
 			).and(
 				ObjectEntryTable.INSTANCE.rootObjectEntryId.eq(
 					ObjectEntryTable.INSTANCE.objectEntryId
@@ -4832,9 +4848,7 @@ public class ObjectEntryLocalServiceImpl
 				}
 			).and(
 				Predicate.withParentheses(
-					_fillPredicate(
-						objectRelationship.getObjectDefinitionId2(), predicate,
-						search))
+					_fillPredicate(objectDefinition, predicate, search))
 			)
 		);
 	}
