@@ -444,14 +444,13 @@ public class AssetLibraryResourceImpl extends BaseAssetLibraryResourceImpl {
 		group = depotEntry.getGroup();
 
 		if ((unicodeProperties != null) && !unicodeProperties.isEmpty()) {
-			group.setTypeSettingsProperties(
+			_groupLocalService.updateGroup(
+				group.getGroupId(),
 				UnicodePropertiesBuilder.create(
 					group.getTypeSettingsProperties(), true
 				).putAll(
 					unicodeProperties
-				).build());
-
-			group = _groupLocalService.updateGroup(group);
+				).buildString());
 		}
 
 		_updateDLSizeLimitConfiguration(
