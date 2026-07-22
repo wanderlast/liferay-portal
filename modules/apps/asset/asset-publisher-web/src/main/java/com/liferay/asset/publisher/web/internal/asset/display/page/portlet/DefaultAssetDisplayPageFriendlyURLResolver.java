@@ -250,8 +250,6 @@ public class DefaultAssetDisplayPageFriendlyURLResolver
 		HttpServletRequest httpServletRequest =
 			(HttpServletRequest)requestContext.get("request");
 
-		String layoutMode = ParamUtil.getString(httpServletRequest, "p_l_mode");
-
 		if (Validator.isNull(currentDefaultAssetPublisherPortletId)) {
 			String actualPortletAuthenticationToken = AuthTokenUtil.getToken(
 				httpServletRequest, layout.getPlid(),
@@ -294,6 +292,8 @@ public class DefaultAssetDisplayPageFriendlyURLResolver
 		actualParams.put(
 			namespace + "assetEntryId",
 			new String[] {String.valueOf(assetEntry.getEntryId())});
+
+		String layoutMode = ParamUtil.getString(httpServletRequest, "p_l_mode");
 
 		if (Objects.equals(layoutMode, Constants.PREVIEW)) {
 			_markWorkflowAssetPreview(
