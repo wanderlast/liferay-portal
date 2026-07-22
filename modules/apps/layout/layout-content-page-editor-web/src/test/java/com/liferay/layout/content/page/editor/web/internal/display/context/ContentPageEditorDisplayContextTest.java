@@ -5,22 +5,22 @@
 
 package com.liferay.layout.content.page.editor.web.internal.display.context;
 
+import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.frontend.token.definition.FrontendTokenDefinitionRegistry;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
 import com.liferay.style.book.model.StyleBookEntry;
-import com.liferay.style.book.util.StyleBookEntryProviderUtil;
+import com.liferay.style.book.service.StyleBookEntryLocalService;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
 /**
@@ -33,11 +33,6 @@ public class ContentPageEditorDisplayContextTest {
 	public static final LiferayUnitTestRule liferayUnitTestRule =
 		LiferayUnitTestRule.INSTANCE;
 
-	@AfterClass
-	public static void tearDownClass() {
-		_styleBookEntryProviderUtilMockedStatic.close();
-	}
-
 	@Test
 	public void testGetStyleBookEntryERC() throws Exception {
 		ContentPageEditorDisplayContext contentPageEditorDisplayContext =
@@ -46,6 +41,18 @@ public class ContentPageEditorDisplayContextTest {
 		ReflectionTestUtil.setFieldValue(
 			contentPageEditorDisplayContext, "_frontendTokenDefinitionRegistry",
 			Mockito.mock(FrontendTokenDefinitionRegistry.class));
+
+		StyleBookEntryLocalService styleBookEntryLocalService = Mockito.mock(
+			StyleBookEntryLocalService.class);
+
+		ReflectionTestUtil.setFieldValue(
+			contentPageEditorDisplayContext, "_styleBookEntryLocalService",
+			styleBookEntryLocalService);
+
+		Staging staging = Mockito.mock(Staging.class);
+
+		ReflectionTestUtil.setFieldValue(
+			contentPageEditorDisplayContext, "_staging", staging);
 
 		ThemeDisplay themeDisplay = Mockito.mock(ThemeDisplay.class);
 
@@ -60,8 +67,28 @@ public class ContentPageEditorDisplayContextTest {
 		ReflectionTestUtil.setFieldValue(
 			contentPageEditorDisplayContext, "themeDisplay", themeDisplay);
 
-		_styleBookEntryProviderUtilMockedStatic.when(
-			() -> StyleBookEntryProviderUtil.getStyleBookEntry(layout)
+		Mockito.when(
+			layout.getStyleBookEntryERC()
+		).thenReturn(
+			RandomTestUtil.randomString()
+		);
+
+		Mockito.when(
+			layout.getGroupId()
+		).thenReturn(
+			RandomTestUtil.randomLong()
+		);
+
+		Mockito.when(
+			staging.getLiveGroupId(Mockito.anyLong())
+		).thenReturn(
+			RandomTestUtil.randomLong()
+		);
+
+		Mockito.when(
+			styleBookEntryLocalService.
+				fetchStyleBookEntryByExternalReferenceCode(
+					Mockito.anyString(), Mockito.anyLong())
 		).thenReturn(
 			Mockito.mock(StyleBookEntry.class)
 		);
@@ -72,9 +99,5 @@ public class ContentPageEditorDisplayContextTest {
 				contentPageEditorDisplayContext, "_getStyleBookEntryERC",
 				new Class<?>[0]));
 	}
-
-	private static final MockedStatic<StyleBookEntryProviderUtil>
-		_styleBookEntryProviderUtilMockedStatic = Mockito.mockStatic(
-			StyleBookEntryProviderUtil.class);
 
 }
