@@ -684,37 +684,7 @@ public class ContentPageEditorDisplayContext {
 				"siteNavigationMenuItemSelectorURL",
 				_getSiteNavigationMenuItemSelectorURL()
 			).put(
-				"styleBookEntryERC",
-				() -> {
-					Layout layout = themeDisplay.getLayout();
-
-					String styleBookEntryERC = GetterUtil.getString(
-						layout.getStyleBookEntryERC());
-
-					if (Validator.isNotNull(styleBookEntryERC)) {
-						StyleBookEntry styleBookEntry =
-							_styleBookEntryLocalService.
-								fetchStyleBookEntryByExternalReferenceCode(
-									styleBookEntryERC,
-									_staging.getLiveGroupId(
-										layout.getGroupId()));
-
-						FrontendTokenDefinition frontendTokenDefinition =
-							_frontendTokenDefinitionRegistry.
-								getFrontendTokenDefinition(layout);
-
-						if ((styleBookEntry != null) &&
-							(frontendTokenDefinition != null) &&
-							Objects.equals(
-								frontendTokenDefinition.getThemeId(),
-								styleBookEntry.getThemeId())) {
-
-							return styleBookEntryERC;
-						}
-					}
-
-					return StringPool.BLANK;
-				}
+				"styleBookEntryERC", () -> _getStyleBookEntryERC()
 			).put(
 				"styleBooks", _getStyleBooks()
 			).put(
@@ -1995,6 +1965,35 @@ public class ContentPageEditorDisplayContext {
 				RequestBackedPortletURLFactoryUtil.create(httpServletRequest),
 				renderResponse.getNamespace() + "selectSiteNavigationMenu",
 				itemSelectorCriterion));
+	}
+
+	private String _getStyleBookEntryERC() throws Exception {
+		Layout layout = themeDisplay.getLayout();
+
+		String styleBookEntryERC = GetterUtil.getString(
+			layout.getStyleBookEntryERC());
+
+		if (Validator.isNotNull(styleBookEntryERC)) {
+			StyleBookEntry styleBookEntry =
+				_styleBookEntryLocalService.
+					fetchStyleBookEntryByExternalReferenceCode(
+						styleBookEntryERC,
+						_staging.getLiveGroupId(layout.getGroupId()));
+
+			FrontendTokenDefinition frontendTokenDefinition =
+				_frontendTokenDefinitionRegistry.getFrontendTokenDefinition(
+					layout);
+
+			if ((styleBookEntry != null) && (frontendTokenDefinition != null) &&
+				Objects.equals(
+					frontendTokenDefinition.getThemeId(),
+					styleBookEntry.getThemeId())) {
+
+				return styleBookEntryERC;
+			}
+		}
+
+		return StringPool.BLANK;
 	}
 
 	private List<Map<String, Object>> _getStyleBooks() throws Exception {
