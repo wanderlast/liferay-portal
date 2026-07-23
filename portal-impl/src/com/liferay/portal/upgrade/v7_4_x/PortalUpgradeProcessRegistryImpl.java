@@ -760,24 +760,24 @@ public class PortalUpgradeProcessRegistryImpl
 		upgradeVersionTreeMap.put(
 			new Version(38, 2, 5),
 			UpgradeModulesFactory.create(
-				new String[] {"com.liferay.site.cms.site.initializer"}, null));
-
-		upgradeVersionTreeMap.put(
-			new Version(38, 2, 6),
-			UpgradeModulesFactory.create(
 				new String[] {"com.liferay.portal.vulcan.impl"}, null));
 
 		upgradeVersionTreeMap.put(
-			new Version(38, 2, 7),
+			new Version(38, 2, 6),
 			new LayoutRemoveUnusedTypeSettingsUpgradeProcess());
 
 		upgradeVersionTreeMap.put(
-			new Version(38, 2, 8),
+			new Version(38, 2, 7),
 			new LayoutSetPrototypeRemoveReadyForPropagationUpgradeProcess());
 
 		upgradeVersionTreeMap.put(
-			new Version(38, 2, 9),
+			new Version(38, 2, 8),
 			new LayoutSetRemoveUnusedSettingsUpgradeProcess());
+
+		upgradeVersionTreeMap.put(
+			new Version(38, 2, 9),
+			UpgradeModulesFactory.create(
+				new String[] {"com.liferay.site.cms.site.initializer"}, null));
 	}
 
 }
