@@ -43,6 +43,7 @@ import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.VirtualLayout;
 import com.liferay.portal.kernel.model.role.RoleConstants;
+import com.liferay.portal.kernel.module.service.Snapshot;
 import com.liferay.portal.kernel.portlet.PortletIdCodec;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
@@ -630,7 +631,11 @@ public class SitesImpl implements Sites {
 					"import, or staging process is in progress");
 		}
 
-		if (_ctSettingsConfigurationHelper.isEnabled(
+		CTSettingsConfigurationHelper ctSettingsConfigurationHelper =
+			_ctSettingsConfigurationHelperSnapshot.get();
+
+		if ((ctSettingsConfigurationHelper != null) &&
+			ctSettingsConfigurationHelper.isEnabled(
 				layoutSetPrototype.getCompanyId())) {
 
 			throw new IllegalStateException(
@@ -1220,11 +1225,12 @@ public class SitesImpl implements Sites {
 
 	private static final Log _log = LogFactoryUtil.getLog(SitesImpl.class);
 
-	@Reference
-	private AssetEntryLocalService _assetEntryLocalService;
+	private static final Snapshot<CTSettingsConfigurationHelper>
+		_ctSettingsConfigurationHelperSnapshot = new Snapshot<>(
+			SitesImpl.class, CTSettingsConfigurationHelper.class);
 
 	@Reference
-	private CTSettingsConfigurationHelper _ctSettingsConfigurationHelper;
+	private AssetEntryLocalService _assetEntryLocalService;
 
 	@Reference
 	private ExportImportConfigurationLocalService
