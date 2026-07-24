@@ -328,7 +328,7 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 		com.liferay.info.sort.Sort sort = collectionQuery.getSort();
 
 		if (sort == null) {
-			searchContext.setSorts(_DEFAULT_INDEXED_SORTS);
+			searchContext.setSorts(_SORTS_DEFAULT_INDEXED);
 		}
 
 		searchContext.setStart(pagination.getStart());
@@ -445,7 +445,7 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 					collectionQuery.getPagination()),
 				ObjectEntryInfoCollectionProviderUtil.getSearch(
 					collectionQuery),
-				_DEFAULT_OBJECT_ENTRY_SORTS);
+				_SORTS_DEFAULT_OBJECT_ENTRY);
 
 		return InfoPage.of(
 			TransformUtil.transform(
@@ -505,7 +505,7 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 					collectionQuery.getPagination()),
 				ObjectEntryInfoCollectionProviderUtil.getSearch(
 					collectionQuery),
-				_DEFAULT_OBJECT_ENTRY_SORTS);
+				_SORTS_DEFAULT_OBJECT_ENTRY);
 
 		return InfoPage.of(
 			TransformUtil.transform(
@@ -800,12 +800,12 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 		return false;
 	}
 
-	private static final Sort[] _DEFAULT_INDEXED_SORTS = {
+	private static final Sort[] _SORTS_DEFAULT_INDEXED = {
 		new Sort(Field.CREATE_DATE, Sort.LONG_TYPE, false),
 		new Sort(Field.ENTRY_CLASS_PK, Sort.LONG_TYPE, false)
 	};
 
-	private static final Sort[] _DEFAULT_OBJECT_ENTRY_SORTS = {
+	private static final Sort[] _SORTS_DEFAULT_OBJECT_ENTRY = {
 		new Sort(Field.CREATE_DATE, Sort.LONG_TYPE, false),
 		new Sort("id", Sort.LONG_TYPE, false)
 	};
