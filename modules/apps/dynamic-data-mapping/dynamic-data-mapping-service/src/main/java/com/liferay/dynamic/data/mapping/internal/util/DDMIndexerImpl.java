@@ -138,8 +138,8 @@ public class DDMIndexerImpl implements DDMIndexer {
 
 						if (legacyDDMIndexFieldsEnabled) {
 							_addToDocument(
-								document, indexType, name,
-								ddmFormField.getType(), value);
+								ddmFormField, document, indexType, locale, name,
+								value);
 						}
 						else if (value != null) {
 							fieldArray.addField(
@@ -162,7 +162,7 @@ public class DDMIndexerImpl implements DDMIndexer {
 
 					if (legacyDDMIndexFieldsEnabled) {
 						_addToDocument(
-							document, indexType, name, ddmFormField.getType(),
+							ddmFormField, document, indexType, null, name,
 							value);
 					}
 					else if (value != null) {
@@ -704,6 +704,29 @@ public class DDMIndexerImpl implements DDMIndexer {
 	}
 
 	private void _addToDocument(
+			DDMFormField ddmFormField, Document document, String indexType,
+			Locale locale, String name, Serializable value)
+		throws PortalException {
+
+		Serializable sortableValue = value;
+
+		if (value instanceof Serializable[] serializables) {
+			List<String> sortableValues = new ArrayList<>();
+
+			for (Serializable serializable : serializables) {
+				sortableValues.add(
+					_getSortableValue(ddmFormField, locale, serializable));
+			}
+
+			sortableValue = sortableValues.toString();
+		}
+
+		_addToDocument(
+			document, indexType, name, sortableValue, ddmFormField.getType(),
+			value);
+	}
+
+	private void _addToDocument(
 			Document document, String indexType, String name,
 			Serializable sortableValue, String type, Serializable value)
 		throws PortalException {
@@ -883,14 +906,6 @@ public class DDMIndexerImpl implements DDMIndexer {
 				}
 			}
 		}
-	}
-
-	private void _addToDocument(
-			Document document, String indexType, String name, String type,
-			Serializable value)
-		throws PortalException {
-
-		_addToDocument(document, indexType, name, value, type, value);
 	}
 
 	private Field _createField(
