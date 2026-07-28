@@ -60,8 +60,8 @@ if (ddmStructure != null) {
 			if (DDMTemplatePermission.contains(permissionChecker, ddmTemplate, ActionKeys.UPDATE)) {
 				rowHREF = PortletURLBuilder.createRenderURL(
 					renderResponse
-				).setMVCPath(
-					"/edit_ddm_template.jsp"
+				).setMVCRenderCommandName(
+					"/journal/edit_ddm_template"
 				).setRedirect(
 					currentURL
 				).setParameter(
