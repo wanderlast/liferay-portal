@@ -2998,6 +2998,8 @@ public class ObjectDefinitionLocalServiceTest {
 			ExportImportThreadLocal.setExportImportConfigurationId(
 				exportImportConfigurationId);
 
+			ExportImportThreadLocal.setPortletImportInProcess(true);
+
 			ObjectDefinition objectDefinition =
 				_objectDefinitionLocalService.getOrAddEmptyObjectDefinition(
 					externalReferenceCode, companyId, userId,
@@ -3076,6 +3078,10 @@ public class ObjectDefinitionLocalServiceTest {
 			Assert.assertEquals(
 				WorkflowConstants.STATUS_APPROVED,
 				objectDefinition.getStatus());
+		}
+		finally {
+			ExportImportThreadLocal.setExportImportConfigurationId(0);
+			ExportImportThreadLocal.setPortletImportInProcess(false);
 		}
 	}
 
