@@ -778,6 +778,10 @@ public class PortalUpgradeProcessRegistryImpl
 			new Version(38, 2, 9),
 			UpgradeModulesFactory.create(
 				new String[] {"com.liferay.site.cms.site.initializer"}, null));
+
+		upgradeVersionTreeMap.put(
+			new Version(38, 2, 10),
+			new LayoutStagingExternalReferenceCodeUpgradeProcess());
 	}
 
 }
