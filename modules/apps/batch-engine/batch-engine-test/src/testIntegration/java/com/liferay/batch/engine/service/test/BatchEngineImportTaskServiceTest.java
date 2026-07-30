@@ -48,6 +48,8 @@ public class BatchEngineImportTaskServiceTest
 
 	@Test
 	public void testAddBatchEngineImportTask() throws Exception {
+		UserTestUtil.setUser(user);
+
 		AssertUtils.assertFailure(
 			PrincipalException.class, null,
 			() -> _batchEngineImportTaskService.addBatchEngineImportTask(
@@ -56,8 +58,6 @@ public class BatchEngineImportTaskServiceTest
 				BatchEngineTaskExecuteStatus.INITIAL.name(), null,
 				BatchEngineImportTaskConstants.IMPORT_STRATEGY_ON_ERROR_FAIL,
 				BatchEngineTaskOperation.CREATE.name(), new HashMap<>(), null));
-
-		UserTestUtil.setUser(user);
 
 		AssertUtils.assertFailure(
 			PrincipalException.class, null,

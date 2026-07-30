@@ -50,6 +50,8 @@ public class BatchEngineExportTaskServiceTest
 
 	@Test
 	public void testAddBatchEngineExportTask() throws Exception {
+		UserTestUtil.setUser(user);
+
 		AssertUtils.assertFailure(
 			PrincipalException.class, null,
 			() -> _batchEngineExportTaskService.addBatchEngineExportTask(
@@ -61,8 +63,6 @@ public class BatchEngineExportTaskServiceTest
 					"siteId", TestPropsValues.getGroupId()
 				).build(),
 				null));
-
-		UserTestUtil.setUser(user);
 
 		AssertUtils.assertFailure(
 			PrincipalException.class, null,
