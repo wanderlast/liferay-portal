@@ -134,6 +134,41 @@
 					"name": "Collaborator"
 				}
 			},
+			"CollaboratorBrief": {
+				"properties": {
+					"actionIds": {
+						"description": "The sharing actions granted to the user making the request (e.g. VIEW, UPDATE).",
+						"items": {
+							"description": "The sharing actions granted to the user making the request (e.g. VIEW, UPDATE).",
+							"type": "string"
+						},
+						"readOnly": true,
+						"type": "array"
+					},
+					"dateExpired": {
+						"description": "The date when the sharing access expires, or null if it never expires.",
+						"format": "date-time",
+						"readOnly": true,
+						"type": "string"
+					},
+					"share": {
+						"description": "Whether the user making the request can reshare this asset with others.",
+						"readOnly": true,
+						"type": "boolean"
+					},
+					"x-class-name": {
+						"default": "com.liferay.object.rest.dto.v1_0.CollaboratorBrief",
+						"readOnly": true,
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"x-filterable": {
+				},
+				"xml": {
+					"name": "CollaboratorBrief"
+				}
+			},
 			"Comment": {
 				"description": "Optional field with the comments associated with this object entry, can be embedded with nestedFields",
 				"properties": {
@@ -309,6 +344,19 @@
 					},
 					"term": {
 						"type": "string"
+					}
+				},
+				"type": "object",
+				"x-filterable": {
+				}
+			},
+			"MultipartBody": {
+				"properties": {
+					"values": {
+						"additionalProperties": {
+							"type": "string"
+						},
+						"type": "object"
 					}
 				},
 				"type": "object",
@@ -793,6 +841,30 @@
 					"name": "Permission"
 				}
 			},
+			"PostObjectEntryTranslationRequestBody": {
+				"properties": {
+					"file": {
+						"description": "File",
+						"format": "binary",
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"x-filterable": {
+				}
+			},
+			"PostScopeScopeKeyByExternalReferenceCodeTranslationRequestBody": {
+				"properties": {
+					"file": {
+						"description": "File",
+						"format": "binary",
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"x-filterable": {
+				}
+			},
 			"Scope": {
 				"properties": {
 					"externalReferenceCode": {
@@ -855,6 +927,35 @@
 				},
 				"xml": {
 					"name": "Status"
+				}
+			},
+			"TranslationResponse": {
+				"properties": {
+					"failureMessagesJSON": {
+						"items": {
+							"type": "string"
+						},
+						"readOnly": true,
+						"type": "array"
+					},
+					"successMessages": {
+						"items": {
+							"type": "string"
+						},
+						"readOnly": true,
+						"type": "array"
+					},
+					"x-class-name": {
+						"default": "com.liferay.object.rest.dto.v1_0.TranslationResponse",
+						"readOnly": true,
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"x-filterable": {
+				},
+				"xml": {
+					"name": "TranslationResponse"
 				}
 			},
 			"UserGroupBrief": {
@@ -3339,6 +3440,48 @@
 					"default": {
 						"content": {
 							"application/zip": {
+							}
+						},
+						"description": "default response"
+					}
+				},
+				"tags": [
+					"Object9"
+				]
+			},
+			"post": {
+				"operationId": "postObject9Translation",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "object9Id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"$ref": "#/components/schemas/PostObjectEntryTranslationRequestBody"
+							}
+						}
+					}
+				},
+				"responses": {
+					"default": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TranslationResponse"
+								}
+							},
+							"application/xml": {
+								"schema": {
+									"$ref": "#/components/schemas/TranslationResponse"
+								}
 							}
 						},
 						"description": "default response"
