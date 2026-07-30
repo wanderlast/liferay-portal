@@ -4921,6 +4921,8 @@ public class ObjectEntryLocalServiceTest {
 			ExportImportThreadLocal.setExportImportConfigurationId(
 				exportImportConfigurationId);
 
+			ExportImportThreadLocal.setPortletImportInProcess(true);
+
 			ObjectEntry objectEntry =
 				_objectEntryLocalService.getOrAddEmptyObjectEntry(
 					externalReferenceCode, groupId, TestPropsValues.getUserId(),
@@ -4964,6 +4966,8 @@ public class ObjectEntryLocalServiceTest {
 				ExportImportReportEntryConstants.STATUS_UNRESOLVED,
 				exportImportReportEntry.getStatus());
 
+			ExportImportThreadLocal.setPortletImportInProcess(false);
+
 			objectEntry = _objectEntryLocalService.updateObjectEntry(
 				objectEntry.getUserId(), objectEntry.getObjectEntryId(),
 				objectEntry.getObjectEntryFolderId(), Collections.emptyMap(),
@@ -4972,6 +4976,10 @@ public class ObjectEntryLocalServiceTest {
 			Assert.assertEquals(groupId, objectEntry.getGroupId());
 			Assert.assertEquals(
 				WorkflowConstants.STATUS_APPROVED, objectEntry.getStatus());
+		}
+		finally {
+			ExportImportThreadLocal.setExportImportConfigurationId(0);
+			ExportImportThreadLocal.setPortletImportInProcess(false);
 		}
 	}
 
