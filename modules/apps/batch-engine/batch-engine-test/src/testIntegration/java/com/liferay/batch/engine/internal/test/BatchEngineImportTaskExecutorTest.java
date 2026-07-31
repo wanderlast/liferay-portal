@@ -767,8 +767,8 @@ public class BatchEngineImportTaskExecutorTest
 				).build());
 
 		try {
-			_assertSkippedCallbackURL(testApplication, "localhost");
 			_assertFailedCallbackURL(testApplication, "255.255.255.255");
+			_assertSkippedCallbackURL(testApplication, "localhost");
 
 			try (CompanyConfigurationTemporarySwapper
 					companyConfigurationTemporarySwapper =
@@ -792,8 +792,8 @@ public class BatchEngineImportTaskExecutorTest
 								new String[] {"localhost"}
 							).build())) {
 
-				_assertSkippedCallbackURL(testApplication, "localhost");
 				_assertSkippedCallbackURL(testApplication, "255.255.255.255");
+				_assertSkippedCallbackURL(testApplication, "localhost");
 			}
 
 			try (CompanyConfigurationTemporarySwapper
