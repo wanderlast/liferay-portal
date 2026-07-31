@@ -41,8 +41,10 @@ public class DataCleanupPreupgradeProcessUtil {
 		List<String> primaryKeyColumnNames = new ArrayList<>(
 			Arrays.asList(db.getPrimaryKeyColumnNames(connection, tableName)));
 
-		primaryKeyColumnNames.remove(
-			dbInspector.normalizeName("ctCollectionId"));
+		if (primaryKeyColumnNames.size() > 1) {
+			primaryKeyColumnNames.remove(
+				dbInspector.normalizeName("ctCollectionId"));
+		}
 
 		if (primaryKeyColumnNames.size() != 1) {
 			return null;
