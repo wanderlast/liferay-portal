@@ -231,6 +231,8 @@
 						@include clay-select-variant($breakpoint-up);
 					} @else if ($mixin == 'clay-slideout-variant') {
 						@include clay-slideout-variant($breakpoint-up);
+					} @else if ($mixin == 'clay-toggle-switch-variant') {
+						@include clay-toggle-switch-variant($breakpoint-up);
 					}
 				}
 			}
@@ -267,6 +269,8 @@
 						@include clay-select-variant($breakpoint-down);
 					} @else if ($mixin == 'clay-slideout-variant') {
 						@include clay-slideout-variant($breakpoint-down);
+					} @else if ($mixin == 'clay-toggle-switch-variant') {
+						@include clay-toggle-switch-variant($breakpoint-down);
 					} @else {
 						@error "The mixin, `#{$mixin}`, is not defined in clay-generate-media-breakpoints.";
 					}
