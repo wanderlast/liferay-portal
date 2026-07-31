@@ -768,8 +768,8 @@ public class BatchEngineImportTaskExecutorTest
 
 		try {
 			_assertAllowedAndFailedCallbackURL(
-				testApplication, "255.255.255.255");
-			_assertSkippedCallbackURL(testApplication, "localhost");
+				"255.255.255.255", testApplication);
+			_assertSkippedCallbackURL("localhost", testApplication);
 
 			try (CompanyConfigurationTemporarySwapper
 					companyConfigurationTemporarySwapper =
@@ -780,7 +780,7 @@ public class BatchEngineImportTaskExecutorTest
 								"callbackURLLocalNetworkAccessEnabled", true
 							).build())) {
 
-				_assertAllowedCallbackURL(testApplication, "localhost");
+				_assertAllowedCallbackURL("localhost", testApplication);
 			}
 
 			try (CompanyConfigurationTemporarySwapper
@@ -793,8 +793,8 @@ public class BatchEngineImportTaskExecutorTest
 								new String[] {"localhost"}
 							).build())) {
 
-				_assertSkippedCallbackURL(testApplication, "255.255.255.255");
-				_assertSkippedCallbackURL(testApplication, "localhost");
+				_assertSkippedCallbackURL("255.255.255.255", testApplication);
+				_assertSkippedCallbackURL("localhost", testApplication);
 			}
 
 			try (CompanyConfigurationTemporarySwapper
@@ -809,8 +809,8 @@ public class BatchEngineImportTaskExecutorTest
 								"callbackURLLocalNetworkAccessEnabled", true
 							).build())) {
 
-				_assertAllowedCallbackURL(testApplication, "www.able.com");
-				_assertSkippedCallbackURL(testApplication, "localhost");
+				_assertAllowedCallbackURL("www.able.com", testApplication);
+				_assertSkippedCallbackURL("localhost", testApplication);
 			}
 		}
 		finally {
@@ -955,7 +955,7 @@ public class BatchEngineImportTaskExecutorTest
 	}
 
 	private void _assertAllowedAndFailedCallbackURL(
-			TestApplication testApplication, String host)
+			String host, TestApplication testApplication)
 		throws Exception {
 
 		int count = testApplication.getCount();
@@ -971,7 +971,7 @@ public class BatchEngineImportTaskExecutorTest
 	}
 
 	private void _assertAllowedCallbackURL(
-			TestApplication testApplication, String host)
+			String host, TestApplication testApplication)
 		throws Exception {
 
 		int count = testApplication.getCount();
@@ -1093,7 +1093,7 @@ public class BatchEngineImportTaskExecutorTest
 	}
 
 	private void _assertSkippedCallbackURL(
-			TestApplication testApplication, String host)
+			String host, TestApplication testApplication)
 		throws Exception {
 
 		int count = testApplication.getCount();
