@@ -133,11 +133,6 @@ public class ObjectEntryModelDocumentContributor
 			titleObjectFieldId);
 
 		if ((titleObjectField == null) || !titleObjectField.isLocalized()) {
-			document.add(
-				new Field(
-					ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE,
-					objectEntry.getTitleValue()));
-
 			return;
 		}
 
@@ -496,6 +491,10 @@ public class ObjectEntryModelDocumentContributor
 		}
 
 		document.addKeyword("objectEntryId", objectEntry.getObjectEntryId());
+		document.add(
+			new Field(
+				ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE,
+				objectEntry.getTitleValue()));
 
 		_addTitleFields(document, objectDefinition, objectEntry);
 

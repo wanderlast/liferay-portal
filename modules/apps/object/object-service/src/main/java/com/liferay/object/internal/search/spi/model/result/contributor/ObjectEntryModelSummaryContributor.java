@@ -28,11 +28,10 @@ public class ObjectEntryModelSummaryContributor
 	public Summary getSummary(
 		Document document, Locale locale, String snippet) {
 
-		return new Summary(
-			_getTitle(document, locale), _getContent(document, locale));
+		return new Summary(_getTitle(document, locale), _getContent(document));
 	}
 
-	private String _getContent(Document document, Locale locale) {
+	private String _getContent(Document document) {
 		StringBundler sb = new StringBundler();
 
 		Map<String, Field> fields = document.getFields();
@@ -56,18 +55,6 @@ public class ObjectEntryModelSummaryContributor
 		}
 
 		String content = sb.toString();
-
-		if (Validator.isBlank(content)) {
-			String languageId = LanguageUtil.getLanguageId(locale);
-
-			String localizedContent = document.get(
-				"objectEntryContent_" + languageId);
-
-			if (Validator.isNotNull(localizedContent)) {
-				content = StringUtil.shorten(
-					localizedContent, 300, StringPool.TRIPLE_PERIOD);
-			}
-		}
 
 		if (Validator.isBlank(content)) {
 			content = StringUtil.shorten(
