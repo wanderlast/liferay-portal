@@ -147,16 +147,10 @@ public class ObjectEntryModelDocumentContributor
 			titleObjectField.getI18nObjectFieldName());
 
 		if (MapUtil.isEmpty(localizedValues)) {
-			String titleValue = objectEntry.getTitleValue();
-
-			if (!Validator.isBlank(titleValue)) {
-				document.add(
-					new Field(
-						Field.getLocalizedName(
-							objectEntry.getDefaultLanguageId(),
-							ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE),
-						titleValue));
-			}
+			document.add(
+				new Field(
+					ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE,
+					objectEntry.getTitleValue()));
 
 			return;
 		}
@@ -369,7 +363,7 @@ public class ObjectEntryModelDocumentContributor
 			else {
 				_addField(
 					fieldArray, fieldName,
-					"value_" + objectEntry.getDefaultLanguageId(), valueString);
+					"value_" + objectField.getIndexedLanguageId(), valueString);
 			}
 
 			_addField(
@@ -403,10 +397,6 @@ public class ObjectEntryModelDocumentContributor
 			_log.debug("Object entry " + objectEntry);
 		}
 
-		document.addText(
-			ObjectEntrySearchConstants.DEFAULT_LANGUAGE_ID,
-			objectEntry.getDefaultLanguageId());
-
 		document.add(
 			new Field(
 				Field.getSortableFieldName(Field.ENTRY_CLASS_PK),
@@ -415,11 +405,10 @@ public class ObjectEntryModelDocumentContributor
 		ObjectDefinition objectDefinition = objectEntry.getObjectDefinition();
 
 		FieldArray fieldArray = (FieldArray)document.getField(
-			ObjectEntrySearchConstants.NESTED_FIELD_ARRAY);
+			"nestedFieldArray");
 
 		if (fieldArray == null) {
-			fieldArray = new FieldArray(
-				ObjectEntrySearchConstants.NESTED_FIELD_ARRAY);
+			fieldArray = new FieldArray("nestedFieldArray");
 
 			document.add(fieldArray);
 		}
@@ -494,9 +483,7 @@ public class ObjectEntryModelDocumentContributor
 
 				document.add(
 					new Field(
-						Field.getLocalizedName(
-							entry.getKey(),
-							ObjectEntrySearchConstants.OBJECT_ENTRY_CONTENT),
+						"objectEntryContent_" + entry.getKey(),
 						entry.getValue()));
 			}
 
