@@ -10,6 +10,8 @@ package com.liferay.object.constants;
  */
 public class ObjectEntrySearchConstants {
 
+	public static final String DEFAULT_LANGUAGE_ID = "defaultLanguageId";
+
 	public static final String NESTED_FIELD_ARRAY = "nestedFieldArray";
 
 	public static final String NESTED_FIELD_ARRAY_FIELD_NAME =
