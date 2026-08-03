@@ -13,6 +13,7 @@ import com.liferay.document.library.kernel.model.DLFileEntryTable;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalService;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.object.constants.ObjectEntryFolderConstants;
+import com.liferay.object.constants.ObjectEntrySearchConstants;
 import com.liferay.object.constants.ObjectFieldConstants;
 import com.liferay.object.field.business.type.ObjectFieldBusinessTypeRegistry;
 import com.liferay.object.internal.field.business.type.AssigneeObjectFieldBusinessType;
@@ -124,14 +125,18 @@ public class ObjectEntryModelDocumentContributor
 			ObjectEntry objectEntry)
 		throws Exception {
 
+		long titleObjectFieldId = objectDefinition.getTitleObjectFieldId();
+
 		ObjectFieldBag objectFieldBag = objectDefinition.getObjectFieldBag();
 
 		ObjectField titleObjectField = objectFieldBag.getObjectField(
-			objectDefinition.getTitleObjectFieldId());
+			titleObjectFieldId);
 
 		if ((titleObjectField == null) || !titleObjectField.isLocalized()) {
 			document.add(
-				new Field("objectEntryTitle", objectEntry.getTitleValue()));
+				new Field(
+					ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE,
+					objectEntry.getTitleValue()));
 
 			return;
 		}
@@ -149,7 +154,7 @@ public class ObjectEntryModelDocumentContributor
 					new Field(
 						Field.getLocalizedName(
 							objectEntry.getDefaultLanguageId(),
-							"objectEntryTitle"),
+							ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE),
 						titleValue));
 			}
 
@@ -171,7 +176,9 @@ public class ObjectEntryModelDocumentContributor
 
 			document.add(
 				new Field(
-					Field.getLocalizedName(entry.getKey(), "objectEntryTitle"),
+					Field.getLocalizedName(
+						entry.getKey(),
+						ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE),
 					titleValue));
 		}
 	}
@@ -407,10 +414,11 @@ public class ObjectEntryModelDocumentContributor
 		ObjectDefinition objectDefinition = objectEntry.getObjectDefinition();
 
 		FieldArray fieldArray = (FieldArray)document.getField(
-			"nestedFieldArray");
+			ObjectEntrySearchConstants.NESTED_FIELD_ARRAY);
 
 		if (fieldArray == null) {
-			fieldArray = new FieldArray("nestedFieldArray");
+			fieldArray = new FieldArray(
+				ObjectEntrySearchConstants.NESTED_FIELD_ARRAY);
 
 			document.add(fieldArray);
 		}
@@ -436,13 +444,14 @@ public class ObjectEntryModelDocumentContributor
 			objectFields = objectFieldBag.getNonsystemIndexedObjectFields();
 		}
 
+		Map<String, Serializable> values = null;
+
 		TextEmbeddingContentHelper<ObjectEntry> textEmbeddingContentHelper =
 			new TextEmbeddingContentHelper<>(
 				objectEntry.getCompanyId(), objectEntry.getDefaultLanguageId(),
-				StringPool.COMMA_AND_SPACE, objectEntry, objectFields.size(),
+				StringPool.COMMA_AND_SPACE, objectEntry,
+				objectFields.size(),
 				_textEmbeddingDocumentContributor);
-
-		Map<String, Serializable> values = null;
 
 		if (!objectFields.isEmpty()) {
 			values = objectEntry.getIndexedValues();
@@ -485,14 +494,15 @@ public class ObjectEntryModelDocumentContributor
 				document.add(
 					new Field(
 						Field.getLocalizedName(
-							entry.getKey(), "objectEntryContent"),
+							entry.getKey(),
+							ObjectEntrySearchConstants.OBJECT_ENTRY_CONTENT),
 						entry.getValue()));
 			}
 
 			if (localizedContentMap.isEmpty()) {
 				document.add(
 					new Field(
-						"objectEntryContent",
+						ObjectEntrySearchConstants.OBJECT_ENTRY_CONTENT,
 						textEmbeddingContentHelper.getNonlocalizedContent()));
 			}
 		}

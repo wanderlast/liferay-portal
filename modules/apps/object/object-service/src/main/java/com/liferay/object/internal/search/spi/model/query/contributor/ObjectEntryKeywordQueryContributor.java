@@ -5,6 +5,7 @@
 
 package com.liferay.object.internal.search.spi.model.query.contributor;
 
+import com.liferay.object.constants.ObjectEntrySearchConstants;
 import com.liferay.object.constants.ObjectFieldConstants;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.model.ObjectField;
@@ -141,14 +142,15 @@ public class ObjectEntryKeywordQueryContributor
 		}
 		else {
 			defaultLocalizedTitleFieldName = Field.getLocalizedName(
-				defaultLocale, "objectEntryTitle");
+				defaultLocale, ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE);
 		}
 
 		String localizedTitleFieldName = null;
 
-		if (searchContext.getLocale() != null) {
+		if (Validator.isNotNull(searchContext.getLocale())) {
 			localizedTitleFieldName = Field.getLocalizedName(
-				searchContext.getLocale(), "objectEntryTitle");
+				searchContext.getLocale(),
+				ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE);
 		}
 
 		_addLocalizedHighlightFieldNames(
@@ -162,17 +164,19 @@ public class ObjectEntryKeywordQueryContributor
 					booleanQuery, defaultLocalizedTitleFieldName, keywords);
 			}
 
-			if (searchContext.getLocale() != null) {
+			if (Validator.isNotNull(searchContext.getLocale())) {
 				_addTerm(booleanQuery, localizedTitleFieldName, keywords);
 			}
 
-			_addTerm(booleanQuery, "objectEntryTitle", keywords);
+			_addTerm(
+				booleanQuery, ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE,
+				keywords);
 
 			try {
 				for (ObjectField objectField : objectFields) {
 					_contribute(
-						booleanQuery, defaultLocale, objectField, searchContext,
-						keywords);
+						objectField, keywords, booleanQuery, defaultLocale,
+						searchContext);
 				}
 			}
 			catch (ParseException parseException) {
@@ -186,11 +190,13 @@ public class ObjectEntryKeywordQueryContributor
 						booleanQuery, defaultLocalizedTitleFieldName, keywords);
 				}
 
-				if (searchContext.getLocale() != null) {
+				if (Validator.isNotNull(searchContext.getLocale())) {
 					_addTerm(booleanQuery, localizedTitleFieldName, keywords);
 				}
 
-				_addTerm(booleanQuery, "objectEntryTitle", keywords);
+				_addTerm(
+					booleanQuery, ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE,
+					keywords);
 			}
 
 			for (ObjectField objectField : objectFields) {
@@ -200,8 +206,8 @@ public class ObjectEntryKeywordQueryContributor
 
 				try {
 					_contribute(
-						booleanQuery, defaultLocale, objectField, searchContext,
-						keywords);
+						objectField, keywords, booleanQuery, defaultLocale,
+						searchContext);
 				}
 				catch (ParseException parseException) {
 					throw new SystemException(parseException);
@@ -216,7 +222,8 @@ public class ObjectEntryKeywordQueryContributor
 
 					booleanQuery.add(
 						new WildcardQuery(
-							"objectEntryTitle", token + StringPool.STAR),
+							ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE,
+							token + StringPool.STAR),
 						BooleanClauseOccur.SHOULD);
 				}
 
@@ -227,8 +234,8 @@ public class ObjectEntryKeywordQueryContributor
 
 					try {
 						_contribute(
-							booleanQuery, defaultLocale, objectField,
-							searchContext, token);
+							objectField, token, booleanQuery, defaultLocale,
+							searchContext);
 					}
 					catch (ParseException parseException) {
 						throw new SystemException(parseException);
@@ -242,9 +249,12 @@ public class ObjectEntryKeywordQueryContributor
 		Locale defaultLocale, QueryConfig queryConfig,
 		SearchContext searchContext) {
 
+		Locale locale = searchContext.getLocale();
+
 		queryConfig.addHighlightFieldNames(
-			"nestedFieldArray.value_boolean", "nestedFieldArray.value_keyword",
-			"nestedFieldArray.value_text");
+			ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE_BOOLEAN,
+			ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE_KEYWORD,
+			ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE_TEXT);
 
 		for (String localizedNestedFieldName :
 				_getLocalizedNestedFieldNames(defaultLocale, searchContext)) {
@@ -252,23 +262,28 @@ public class ObjectEntryKeywordQueryContributor
 			queryConfig.addHighlightFieldNames(localizedNestedFieldName);
 		}
 
+		long titleObjectFieldId = _objectDefinition.getTitleObjectFieldId();
+
 		ObjectFieldBag objectFieldBag = _objectDefinition.getObjectFieldBag();
 
 		ObjectField titleObjectField = objectFieldBag.getObjectField(
-			_objectDefinition.getTitleObjectFieldId());
+			titleObjectFieldId);
 
 		if ((titleObjectField != null) && titleObjectField.isLocalized()) {
 			queryConfig.addHighlightFieldNames(
 				Field.getLocalizedName(
-					searchContext.getLocale(), "objectEntryTitle"));
+					locale, ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE));
 
 			if (defaultLocale != null) {
 				queryConfig.addHighlightFieldNames(
-					Field.getLocalizedName(defaultLocale, "objectEntryTitle"));
+					Field.getLocalizedName(
+						defaultLocale,
+						ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE));
 			}
 		}
 		else {
-			queryConfig.addHighlightFieldNames("objectEntryTitle");
+			queryConfig.addHighlightFieldNames(
+				ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE);
 		}
 	}
 
@@ -363,10 +378,10 @@ public class ObjectEntryKeywordQueryContributor
 		nestedQueryConfig.setHighlightFieldNames(highlightFieldNames);
 		nestedQueryConfig.setHighlightFragmentSize(
 			queryConfig.getHighlightFragmentSize());
-		nestedQueryConfig.setHighlightRequireFieldMatch(
-			queryConfig.isHighlightRequireFieldMatch());
 		nestedQueryConfig.setHighlightSnippetSize(
 			queryConfig.getHighlightSnippetSize());
+		nestedQueryConfig.setHighlightRequireFieldMatch(
+			queryConfig.isHighlightRequireFieldMatch());
 		nestedQueryConfig.setLocale(queryConfig.getLocale());
 
 		nestedQuery.setInnerHitsEnabled(true);
@@ -374,8 +389,8 @@ public class ObjectEntryKeywordQueryContributor
 	}
 
 	private void _contribute(
-			BooleanQuery booleanQuery, Locale defaultLocale,
-			ObjectField objectField, SearchContext searchContext, String token)
+			ObjectField objectField, String token, BooleanQuery booleanQuery,
+			Locale defaultLocale, SearchContext searchContext)
 		throws ParseException {
 
 		if ((objectField == null) || !objectField.isIndexed()) {
@@ -400,7 +415,8 @@ public class ObjectEntryKeywordQueryContributor
 		QueryConfig queryConfig = searchContext.getQueryConfig();
 
 		if (objectField.isIndexedAsKeyword()) {
-			String fieldName = "nestedFieldArray.value_keyword";
+			String fieldName =
+				ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE_KEYWORD;
 			String lowerCaseToken = StringUtil.toLowerCase(token);
 
 			nestedBooleanQuery.add(
@@ -471,7 +487,10 @@ public class ObjectEntryKeywordQueryContributor
 			else {
 				String[] localizedFieldNames =
 					_searchLocalizationHelper.getLocalizedFieldNames(
-						new String[] {"nestedFieldArray.value"}, searchContext);
+						new String[] {
+							ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE
+						},
+						searchContext);
 
 				BooleanQuery localizedNestedBooleanQuery = new BooleanQuery();
 
@@ -495,8 +514,8 @@ public class ObjectEntryKeywordQueryContributor
 					ObjectFieldConstants.DB_TYPE_BIG_DECIMAL)) {
 
 			_addNumericClause(
-				"nestedFieldArray.value_double", nestedBooleanQuery,
-				objectField, token);
+				ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE_DOUBLE,
+				nestedBooleanQuery, objectField, token);
 		}
 		else if (Objects.equals(
 					objectField.getDBType(),
@@ -513,12 +532,14 @@ public class ObjectEntryKeywordQueryContributor
 			if (StringUtil.equalsIgnoreCase(token, "false") ||
 				StringUtil.equalsIgnoreCase(token, "true")) {
 
-				fieldName = "nestedFieldArray.value_boolean";
+				fieldName =
+					ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE_BOOLEAN;
 			}
 			else if (StringUtil.equalsIgnoreCase(token, "no") ||
 					 StringUtil.equalsIgnoreCase(token, "yes")) {
 
-				fieldName = "nestedFieldArray.value_keyword";
+				fieldName =
+					ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE_KEYWORD;
 			}
 
 			if (fieldName != null) {
@@ -534,32 +555,32 @@ public class ObjectEntryKeywordQueryContributor
 					ObjectFieldConstants.DB_TYPE_DATE)) {
 
 			_addNumericClause(
-				"nestedFieldArray.value_date", nestedBooleanQuery, objectField,
-				token);
+				ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE_DATE,
+				nestedBooleanQuery, objectField, token);
 		}
 		else if (Objects.equals(
 					objectField.getDBType(),
 					ObjectFieldConstants.DB_TYPE_DOUBLE)) {
 
 			_addNumericClause(
-				"nestedFieldArray.value_double", nestedBooleanQuery,
-				objectField, token);
+				ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE_DOUBLE,
+				nestedBooleanQuery, objectField, token);
 		}
 		else if (Objects.equals(
 					objectField.getDBType(),
 					ObjectFieldConstants.DB_TYPE_INTEGER)) {
 
 			_addNumericClause(
-				"nestedFieldArray.value_integer", nestedBooleanQuery,
-				objectField, token);
+				ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE_INTEGER,
+				nestedBooleanQuery, objectField, token);
 		}
 		else if (Objects.equals(
 					objectField.getDBType(),
 					ObjectFieldConstants.DB_TYPE_LONG)) {
 
 			_addNumericClause(
-				"nestedFieldArray.value_long", nestedBooleanQuery, objectField,
-				token);
+				ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE_LONG,
+				nestedBooleanQuery, objectField, token);
 		}
 
 		if (nestedBooleanQuery.hasClauses()) {
@@ -571,11 +592,13 @@ public class ObjectEntryKeywordQueryContributor
 
 			nestedBooleanQuery.add(
 				new TermQuery(
-					"nestedFieldArray.fieldName", objectField.getName()),
+					ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_FIELD_NAME,
+					objectField.getName()),
 				BooleanClauseOccur.MUST);
 
 			NestedQuery nestedQuery = new NestedQuery(
-				"nestedFieldArray", nestedBooleanQuery);
+				ObjectEntrySearchConstants.NESTED_FIELD_ARRAY,
+				nestedBooleanQuery);
 
 			_configureNestedQuery(
 				highlightFieldNames, objectField.getName(), nestedQuery,
@@ -606,7 +629,9 @@ public class ObjectEntryKeywordQueryContributor
 
 		if (locale != null) {
 			fieldNames.add(
-				Field.getLocalizedName(locale, "nestedFieldArray.value"));
+				Field.getLocalizedName(
+					locale,
+					ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE));
 		}
 
 		if ((defaultLocale != null) &&
@@ -614,7 +639,8 @@ public class ObjectEntryKeywordQueryContributor
 
 			fieldNames.add(
 				Field.getLocalizedName(
-					defaultLocale, "nestedFieldArray.value"));
+					defaultLocale,
+					ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE));
 		}
 
 		return fieldNames.toArray(new String[0]);

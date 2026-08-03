@@ -5,6 +5,7 @@
 
 package com.liferay.object.internal.search.spi.model.result.contributor;
 
+import com.liferay.object.constants.ObjectEntrySearchConstants;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.search.Document;
@@ -56,7 +57,7 @@ public class ObjectEntryModelSummaryContributor
 			return content;
 		}
 
-		return document.get("objectEntryContent");
+		return document.get(ObjectEntrySearchConstants.OBJECT_ENTRY_CONTENT);
 	}
 
 	private String _getLocalizedHighlightedContent(
@@ -68,7 +69,8 @@ public class ObjectEntryModelSummaryContributor
 
 		String localizedNestedValueSnippetName = StringBundler.concat(
 			Field.SNIPPET, StringPool.UNDERLINE,
-			Field.getLocalizedName(locale, "nestedFieldArray.value"));
+			Field.getLocalizedName(
+				locale, ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE));
 
 		String content = document.get(localizedNestedValueSnippetName);
 
@@ -77,14 +79,19 @@ public class ObjectEntryModelSummaryContributor
 		}
 
 		return document.get(
-			Field.getLocalizedName(locale, "objectEntryContent"));
+			Field.getLocalizedName(
+				locale, ObjectEntrySearchConstants.OBJECT_ENTRY_CONTENT));
 	}
 
 	private String _getTitle(
 		Locale defaultLocale, Document document, Locale locale) {
 
 		String title = document.get(
-			locale, "snippet_objectEntryTitle", "objectEntryTitle");
+			locale,
+			StringBundler.concat(
+				Field.SNIPPET, StringPool.UNDERLINE,
+				ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE),
+			ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE);
 
 		if (!Validator.isBlank(title)) {
 			return title;
@@ -92,20 +99,27 @@ public class ObjectEntryModelSummaryContributor
 
 		if ((defaultLocale != null) && !defaultLocale.equals(locale)) {
 			title = document.get(
-				defaultLocale, "snippet_objectEntryTitle", "objectEntryTitle");
+				defaultLocale,
+				StringBundler.concat(
+					Field.SNIPPET, StringPool.UNDERLINE,
+					ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE),
+				ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE);
 
 			if (!Validator.isBlank(title)) {
 				return title;
 			}
 		}
 
-		title = document.get("snippet_objectEntryTitle");
+		title = document.get(
+			StringBundler.concat(
+				Field.SNIPPET, StringPool.UNDERLINE,
+				ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE));
 
 		if (!Validator.isBlank(title)) {
 			return title;
 		}
 
-		title = document.get("objectEntryTitle");
+		title = document.get(ObjectEntrySearchConstants.OBJECT_ENTRY_TITLE);
 
 		if (!Validator.isBlank(title)) {
 			return title;

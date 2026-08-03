@@ -5,6 +5,7 @@
 
 package com.liferay.object.internal.search.spi.model.query.contributor;
 
+import com.liferay.object.constants.ObjectEntrySearchConstants;
 import com.liferay.object.constants.ObjectFieldConstants;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.model.ObjectField;
@@ -216,10 +217,10 @@ public class ObjectEntryKeywordQueryContributorTest {
 
 		BooleanQuery booleanQuery = _mockBooleanQuery(argumentCaptor);
 
-		ObjectEntryKeywordQueryContributor objectEntryKeywordQueryContributor =
+		ObjectEntryKeywordQueryContributor contributor =
 			_createObjectEntryKeywordQueryContributor(objectDefinition);
 
-		objectEntryKeywordQueryContributor.contribute(
+		contributor.contribute(
 			RandomTestUtil.randomString(), booleanQuery,
 			_mockKeywordQueryContributorHelper(LocaleUtil.SPAIN));
 
@@ -230,32 +231,34 @@ public class ObjectEntryKeywordQueryContributorTest {
 				NestedQuery nestedQuery = (NestedQuery)query;
 
 				_collectMatchQueryFields(
-					matchQueryFields, nestedQuery.getQuery());
+					nestedQuery.getQuery(), matchQueryFields);
 			}
 		}
 
-		String spainLocalizedFieldName = Field.getLocalizedName(
-			LocaleUtil.SPAIN, "nestedFieldArray.value");
-		String usLocalizedFieldName = Field.getLocalizedName(
-			LocaleUtil.US, "nestedFieldArray.value");
+		String spainNestedFieldArrayValue = Field.getLocalizedName(
+			LocaleUtil.SPAIN,
+			ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE);
+		String usNestedFieldArrayValue = Field.getLocalizedName(
+			LocaleUtil.US, ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE);
 
 		Assert.assertTrue(
 			StringBundler.concat(
 				"Expected ", matchQueryFields, " to contain ",
-				spainLocalizedFieldName),
-			matchQueryFields.contains(spainLocalizedFieldName));
+				spainNestedFieldArrayValue),
+			matchQueryFields.contains(spainNestedFieldArrayValue));
 
 		Assert.assertTrue(
 			StringBundler.concat(
 				"Expected ", matchQueryFields, " to contain ",
-				usLocalizedFieldName),
-			matchQueryFields.contains(usLocalizedFieldName));
+				usNestedFieldArrayValue),
+			matchQueryFields.contains(usNestedFieldArrayValue));
 
 		Assert.assertFalse(
 			StringBundler.concat(
 				"Expected ", matchQueryFields, " not to contain ",
-				"nestedFieldArray.value_text"),
-			matchQueryFields.contains("nestedFieldArray.value_text"));
+				ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE_TEXT),
+			matchQueryFields.contains(
+				ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE_TEXT));
 	}
 
 	private SearchContext _buildSearchContext(Locale locale) {
@@ -271,7 +274,7 @@ public class ObjectEntryKeywordQueryContributorTest {
 	}
 
 	private void _collectMatchQueryFields(
-		Set<String> matchQueryFields, Query query) {
+		Query query, Set<String> matchQueryFields) {
 
 		if (query instanceof MatchQuery) {
 			MatchQuery matchQuery = (MatchQuery)query;
@@ -283,7 +286,7 @@ public class ObjectEntryKeywordQueryContributorTest {
 
 			for (BooleanClause<Query> booleanClause : booleanQuery.clauses()) {
 				_collectMatchQueryFields(
-					matchQueryFields, booleanClause.getClause());
+					booleanClause.getClause(), matchQueryFields);
 			}
 		}
 	}
@@ -312,9 +315,12 @@ public class ObjectEntryKeywordQueryContributorTest {
 				Mockito.any(String[].class), Mockito.any())
 		).thenReturn(
 			new String[] {
-				Field.getLocalizedName(LocaleUtil.US, "nestedFieldArray.value"),
 				Field.getLocalizedName(
-					LocaleUtil.SPAIN, "nestedFieldArray.value")
+					LocaleUtil.US,
+					ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE),
+				Field.getLocalizedName(
+					LocaleUtil.SPAIN,
+					ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE)
 			}
 		);
 
