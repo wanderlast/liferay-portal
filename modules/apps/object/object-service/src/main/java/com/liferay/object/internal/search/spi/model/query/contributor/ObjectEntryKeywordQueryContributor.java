@@ -410,8 +410,8 @@ public class ObjectEntryKeywordQueryContributor
 					objectField.getName()));
 		}
 
-		String[] highlightFieldNames = null;
 		BooleanQuery nestedBooleanQuery = new BooleanQuery();
+		String[] highlightFieldNames = null;
 		QueryConfig queryConfig = searchContext.getQueryConfig();
 
 		if (objectField.isIndexedAsKeyword()) {
@@ -485,28 +485,18 @@ public class ObjectEntryKeywordQueryContributor
 				highlightFieldNames = localizedFieldNames;
 			}
 			else {
-				String[] localizedFieldNames =
-					_searchLocalizationHelper.getLocalizedFieldNames(
-						new String[] {
-							ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE
-						},
-						searchContext);
-
-				BooleanQuery localizedNestedBooleanQuery = new BooleanQuery();
-
-				for (String localizedFieldName : localizedFieldNames) {
-					localizedNestedBooleanQuery.add(
-						_createMatchQuery(
-							localizedFieldName, searchContext, token),
-						BooleanClauseOccur.SHOULD);
-
-					queryConfig.addHighlightFieldNames(localizedFieldName);
-				}
+				String fieldName = StringBundler.concat(
+					ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE,
+					StringPool.UNDERLINE,
+					_objectDefinition.getDefaultLanguageId());
 
 				nestedBooleanQuery.add(
-					localizedNestedBooleanQuery, BooleanClauseOccur.MUST);
+					_createMatchQuery(fieldName, searchContext, token),
+					BooleanClauseOccur.MUST);
 
-				highlightFieldNames = localizedFieldNames;
+				queryConfig.addHighlightFieldNames(fieldName);
+
+				highlightFieldNames = new String[] {fieldName};
 			}
 		}
 		else if (Objects.equals(

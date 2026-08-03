@@ -235,23 +235,14 @@ public class ObjectEntryKeywordQueryContributorTest {
 			}
 		}
 
-		String spainNestedFieldArrayValue = Field.getLocalizedName(
-			LocaleUtil.SPAIN,
-			ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE);
-		String usNestedFieldArrayValue = Field.getLocalizedName(
+		String localizedNestedFieldArrayValue = Field.getLocalizedName(
 			LocaleUtil.US, ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE);
 
 		Assert.assertTrue(
 			StringBundler.concat(
 				"Expected ", matchQueryFields, " to contain ",
-				spainNestedFieldArrayValue),
-			matchQueryFields.contains(spainNestedFieldArrayValue));
-
-		Assert.assertTrue(
-			StringBundler.concat(
-				"Expected ", matchQueryFields, " to contain ",
-				usNestedFieldArrayValue),
-			matchQueryFields.contains(usNestedFieldArrayValue));
+				localizedNestedFieldArrayValue),
+			matchQueryFields.contains(localizedNestedFieldArrayValue));
 
 		Assert.assertFalse(
 			StringBundler.concat(
@@ -307,27 +298,10 @@ public class ObjectEntryKeywordQueryContributorTest {
 		_createObjectEntryKeywordQueryContributor(
 			ObjectDefinition objectDefinition) {
 
-		SearchLocalizationHelper searchLocalizationHelper = Mockito.mock(
-			SearchLocalizationHelper.class);
-
-		Mockito.when(
-			searchLocalizationHelper.getLocalizedFieldNames(
-				Mockito.any(String[].class), Mockito.any())
-		).thenReturn(
-			new String[] {
-				Field.getLocalizedName(
-					LocaleUtil.US,
-					ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE),
-				Field.getLocalizedName(
-					LocaleUtil.SPAIN,
-					ObjectEntrySearchConstants.NESTED_FIELD_ARRAY_VALUE)
-			}
-		);
-
 		return new ObjectEntryKeywordQueryContributor(
 			objectDefinition, Mockito.mock(ObjectFieldLocalService.class),
 			Mockito.mock(ObjectViewLocalService.class),
-			searchLocalizationHelper);
+			Mockito.mock(SearchLocalizationHelper.class));
 	}
 
 	private List<Query> _getAssigneeBooleanQueryClauses(List<Query> queries) {
