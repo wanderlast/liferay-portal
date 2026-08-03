@@ -10,14 +10,13 @@ import {loginTest} from '../../../fixtures/loginTest';
 import {ApiHelpers} from '../../../helpers/ApiHelpers';
 import getRandomString from '../../../utils/getRandomString';
 import {performLoginViaApi} from '../../../utils/performLogin';
-import {AssetsPage} from '../main/pages/AssetsPage';
 import {DataSetPage} from '../main/pages/DataSetPage';
 import {cmsPagesTest} from './fixtures/cmsPagesTest';
 
 const test = mergeTests(cmsPagesTest, dataApiHelpersTest, loginTest());
 
 const APPLICATION_NAME = 'cms/basic-documents';
-const FILE_COUNT = 2;
+const FILE_COUNT = 12;
 
 const SPACE_NAME = 'Default';
 
@@ -25,22 +24,13 @@ const VALID_IMAGE_FILE_BASE64 =
 	'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=';
 
 let createdEntryIds: number[];
-let singleTokenPrefix: string;
-let multiTokenPrefix: string;
+let titlePrefix: string;
 
-async function createFile(apiHelpers: ApiHelpers, title: string) {
-	return apiHelpers.objectEntry.postObjectEntry(
-		{
-			file: {
-				fileBase64: VALID_IMAGE_FILE_BASE64,
-				name: `${title}.png`,
-			},
-			objectEntryFolderExternalReferenceCode: 'L_FILES',
-			title,
-		},
-		APPLICATION_NAME,
-		SPACE_NAME
-	);
+async function openBulkActionMenu(page: Page) {
+	await page
+		.getByTestId('visualization-mode-table')
+		.getByLabel('Actions')
+		.click();
 }
 
 async function expectBulkActionVisible(page: Page, action: string) {
@@ -55,35 +45,15 @@ async function expectBulkActionVisible(page: Page, action: string) {
 	}).toPass({timeout: 5000});
 }
 
-async function openBulkActionMenu(page: Page) {
-	await page
-		.getByTestId('visualization-mode-table')
-		.getByLabel('Actions')
-		.click();
-}
+async function selectRow(page: Page, title: string, checked: boolean) {
+	const checkbox = page.getByLabel(`Select ${title}`, {exact: true});
 
-async function searchSelectAndExpectDelete(
-	assetsPage: AssetsPage,
-	page: Page,
-	search: string,
-	titles: string[]
-) {
-	await assetsPage.gotoFiles();
-	await assetsPage.changeVisualizationMode('Table');
-
-	const dataSetPage = new DataSetPage(page);
-
-	await dataSetPage.search(search);
-
-	for (const title of titles) {
-		await selectRow(page, title);
+	if (checked) {
+		await checkbox.check();
 	}
-
-	await expectBulkActionVisible(page, 'Delete');
-}
-
-async function selectRow(page: Page, title: string) {
-	await page.getByLabel(`Select ${title}`, {exact: true}).check();
+	else {
+		await checkbox.uncheck();
+	}
 }
 
 test.describe(
@@ -97,24 +67,26 @@ test.describe(
 
 			const setupApiHelpers = new ApiHelpers(page);
 
-			singleTokenPrefix = `singleToken_${getRandomString().replace(/-/g, '')}`;
-			multiTokenPrefix = `multiToken_${getRandomString().replace(/-/g, '')}`;
+			titlePrefix = `bulkfilter_${getRandomString().replace(/-/g, '')}`;
 
 			const createdEntries: ObjectEntry[] = [];
 
 			for (let i = 0; i < FILE_COUNT; i++) {
-				createdEntries.push(
-					await createFile(
-						setupApiHelpers,
-						`${singleTokenPrefix}_${i}`
-					)
+				const title = `${titlePrefix}_${i}`;
+				const entry = await setupApiHelpers.objectEntry.postObjectEntry(
+					{
+						file: {
+							fileBase64: VALID_IMAGE_FILE_BASE64,
+							name: `${title}.png`,
+						},
+						objectEntryFolderExternalReferenceCode: 'L_FILES',
+						title,
+					},
+					APPLICATION_NAME,
+					SPACE_NAME
 				);
-				createdEntries.push(
-					await createFile(
-						setupApiHelpers,
-						`${multiTokenPrefix} ${i}`
-					)
-				);
+
+				createdEntries.push(entry);
 			}
 
 			createdEntryIds = createdEntries.map((entry) => entry.id);
@@ -144,40 +116,31 @@ test.describe(
 			assetsPage,
 			page,
 		}) => {
-			await searchSelectAndExpectDelete(
-				assetsPage,
-				page,
-				`${singleTokenPrefix}_0`,
-				[`${singleTokenPrefix}_0`]
-			);
+			await assetsPage.gotoFiles();
+			await assetsPage.changeVisualizationMode('Table');
+
+			const dataSetPage = new DataSetPage(page);
+
+			await dataSetPage.search(`${titlePrefix}_0`);
+			await selectRow(page, `${titlePrefix}_0`, true);
+
+			await expectBulkActionVisible(page, 'Delete');
 		});
 
-		test(
-			'shows Delete in the bulk menu when multiple items are found by a ' +
-				'partial title',
-			{tag: '@LPD-96225'},
-			async ({assetsPage, page}) => {
-				await searchSelectAndExpectDelete(
-					assetsPage,
-					page,
-					singleTokenPrefix,
-					[`${singleTokenPrefix}_0`, `${singleTokenPrefix}_1`]
-				);
-			}
-		);
+		test('shows Delete in the bulk menu when multiple items are selected', async ({
+			assetsPage,
+			page,
+		}) => {
+			await assetsPage.gotoFiles();
+			await assetsPage.changeVisualizationMode('Table');
 
-		test(
-			'shows Delete in the bulk menu when multiple items are found by a ' +
-				'whole word in a multi-word title',
-			{tag: '@LPD-96225'},
-			async ({assetsPage, page}) => {
-				await searchSelectAndExpectDelete(
-					assetsPage,
-					page,
-					multiTokenPrefix,
-					[`${multiTokenPrefix} 0`, `${multiTokenPrefix} 1`]
-				);
-			}
-		);
+			const dataSetPage = new DataSetPage(page);
+
+			await dataSetPage.search(titlePrefix);
+			await selectRow(page, `${titlePrefix}_0`, true);
+			await selectRow(page, `${titlePrefix}_1`, true);
+
+			await expectBulkActionVisible(page, 'Delete');
+		});
 	}
 );
