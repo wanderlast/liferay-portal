@@ -17,8 +17,8 @@ import com.liferay.portal.search.spi.model.result.contributor.ModelSummaryContri
 import java.util.Locale;
 
 /**
- * @author Joshua Cords
  * @author Bryan Engler
+ * @author Joshua Cords
  */
 public class ObjectEntryModelSummaryContributor
 	implements ModelSummaryContributor {

@@ -163,7 +163,7 @@ public class ObjectEntryModelDocumentContributor
 				continue;
 			}
 
-			String titleValue = GetterUtil.getString(value);
+			String titleValue = String.valueOf(value);
 
 			if (Validator.isBlank(titleValue)) {
 				continue;
