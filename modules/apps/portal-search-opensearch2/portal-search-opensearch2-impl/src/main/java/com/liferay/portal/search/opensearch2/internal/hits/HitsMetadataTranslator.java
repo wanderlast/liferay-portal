@@ -34,7 +34,6 @@ import org.opensearch.client.json.JsonData;
 import org.opensearch.client.opensearch.core.explain.Explanation;
 import org.opensearch.client.opensearch.core.search.Hit;
 import org.opensearch.client.opensearch.core.search.HitsMetadata;
-import org.opensearch.client.opensearch.core.search.InnerHitsResult;
 import org.opensearch.client.opensearch.core.search.TotalHits;
 
 /**
@@ -77,7 +76,7 @@ public class HitsMetadataTranslator {
 		SearchHitBuilder searchHitBuilder = new SearchHitBuilder();
 
 		return searchHitBuilder.addHighlightFields(
-			_translateHighlightFields(hit)
+			_translateHighlightFields(hit.highlight())
 		).addSources(
 			_translateSource(hit.source())
 		).document(
@@ -107,48 +106,6 @@ public class HitsMetadataTranslator {
 		return StringPool.BLANK;
 	}
 
-	private void _populateHighlightFields(
-		Hit<JsonData> hit, List<HighlightField> highlightFields) {
-
-		Map<String, List<String>> highlight = hit.highlight();
-
-		if (highlight != null) {
-			for (Map.Entry<String, List<String>> entry : highlight.entrySet()) {
-				highlightFields.add(
-					new HighlightFieldBuilder(
-					).fragments(
-						entry.getValue()
-					).name(
-						entry.getKey()
-					).build());
-			}
-		}
-
-		Map<String, InnerHitsResult> innerHits = hit.innerHits();
-
-		if ((innerHits == null) || innerHits.isEmpty()) {
-			return;
-		}
-
-		for (InnerHitsResult innerHitsResult : innerHits.values()) {
-			HitsMetadata<JsonData> hitsMetadata = innerHitsResult.hits();
-
-			if (hitsMetadata == null) {
-				continue;
-			}
-
-			List<Hit<JsonData>> hits = hitsMetadata.hits();
-
-			if (hits == null) {
-				continue;
-			}
-
-			for (Hit<JsonData> innerHit : hits) {
-				_populateHighlightFields(innerHit, highlightFields);
-			}
-		}
-	}
-
 	private Document _translateDocument(
 		String alternateUidFieldName, Hit<JsonData> hit) {
 
@@ -168,10 +125,20 @@ public class HitsMetadataTranslator {
 		return documentBuilder.build();
 	}
 
-	private List<HighlightField> _translateHighlightFields(Hit<JsonData> hit) {
+	private List<HighlightField> _translateHighlightFields(
+		Map<String, List<String>> highlight) {
+
 		List<HighlightField> highlightFields = new ArrayList<>();
 
-		_populateHighlightFields(hit, highlightFields);
+		for (Map.Entry<String, List<String>> entry : highlight.entrySet()) {
+			highlightFields.add(
+				new HighlightFieldBuilder(
+				).fragments(
+					entry.getValue()
+				).name(
+					entry.getKey()
+				).build());
+		}
 
 		return highlightFields;
 	}
