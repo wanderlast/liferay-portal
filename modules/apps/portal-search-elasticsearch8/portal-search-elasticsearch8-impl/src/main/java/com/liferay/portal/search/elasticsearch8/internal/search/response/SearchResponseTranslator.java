@@ -95,13 +95,13 @@ public class SearchResponseTranslator {
 	private void _addInnerHitsSnippets(
 		Document document, Hit<JsonData> hit, Locale locale) {
 
-		Map<String, InnerHitsResult> innerHitsResults = hit.innerHits();
+		Map<String, InnerHitsResult> innerHits = hit.innerHits();
 
-		if (MapUtil.isEmpty(innerHitsResults)) {
+		if (MapUtil.isEmpty(innerHits)) {
 			return;
 		}
 
-		for (InnerHitsResult innerHitsResult : innerHitsResults.values()) {
+		for (InnerHitsResult innerHitsResult : innerHits.values()) {
 			HitsMetadata<JsonData> hitsMetadata = innerHitsResult.hits();
 
 			if ((hitsMetadata == null) ||
