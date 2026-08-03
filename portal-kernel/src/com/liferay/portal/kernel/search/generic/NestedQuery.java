@@ -25,10 +25,6 @@ public class NestedQuery extends BaseQueryImpl {
 		return queryVisitor.visitQuery(this);
 	}
 
-	public String getInnerHitsName() {
-		return _innerHitsName;
-	}
-
 	public String getPath() {
 		return _path;
 	}
@@ -44,18 +40,6 @@ public class NestedQuery extends BaseQueryImpl {
 		}
 
 		return false;
-	}
-
-	public boolean isInnerHitsEnabled() {
-		return _innerHitsEnabled;
-	}
-
-	public void setInnerHitsEnabled(boolean innerHitsEnabled) {
-		_innerHitsEnabled = innerHitsEnabled;
-	}
-
-	public void setInnerHitsName(String innerHitsName) {
-		_innerHitsName = innerHitsName;
 	}
 
 	@Override
@@ -77,8 +61,6 @@ public class NestedQuery extends BaseQueryImpl {
 		return sb.toString();
 	}
 
-	private boolean _innerHitsEnabled;
-	private String _innerHitsName;
 	private final String _path;
 	private final Query _query;
 
