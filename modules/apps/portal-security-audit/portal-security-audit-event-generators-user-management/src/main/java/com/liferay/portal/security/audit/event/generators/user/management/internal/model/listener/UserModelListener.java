@@ -51,6 +51,8 @@ public class UserModelListener extends BaseModelListener<User> {
 						EventTypes.UPDATE, User.class.getName(),
 						user.getUserId(), attributes);
 
+				auditMessage.setCompanyId(user.getCompanyId());
+
 				_auditRouter.route(auditMessage);
 			}
 		}
@@ -65,6 +67,8 @@ public class UserModelListener extends BaseModelListener<User> {
 		try {
 			AuditMessage auditMessage = AuditMessageBuilder.buildAuditMessage(
 				eventType, User.class.getName(), user.getUserId(), null);
+
+			auditMessage.setCompanyId(user.getCompanyId());
 
 			JSONObject additionalInfoJSONObject =
 				auditMessage.getAdditionalInfo();

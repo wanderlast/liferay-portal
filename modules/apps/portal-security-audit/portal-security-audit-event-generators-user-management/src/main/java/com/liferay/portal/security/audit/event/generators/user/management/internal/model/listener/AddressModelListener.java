@@ -48,6 +48,8 @@ public class AddressModelListener extends BaseModelListener<Address> {
 						EventTypes.UPDATE, User.class.getName(),
 						address.getClassPK(), attributes);
 
+				auditMessage.setCompanyId(address.getCompanyId());
+
 				_auditRouter.route(auditMessage);
 			}
 		}

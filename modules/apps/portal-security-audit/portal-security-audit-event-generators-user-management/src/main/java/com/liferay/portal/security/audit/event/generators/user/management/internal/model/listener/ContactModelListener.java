@@ -42,6 +42,8 @@ public class ContactModelListener extends BaseModelListener<Contact> {
 						EventTypes.UPDATE, User.class.getName(),
 						contact.getClassPK(), attributes);
 
+				auditMessage.setCompanyId(contact.getCompanyId());
+
 				_auditRouter.route(auditMessage);
 			}
 		}

@@ -78,6 +78,8 @@ public class OrganizationModelListener extends BaseModelListener<Organization> {
 						EventTypes.UPDATE, Organization.class.getName(),
 						organization.getOrganizationId(), attributes);
 
+				auditMessage.setCompanyId(organization.getCompanyId());
+
 				_auditRouter.route(auditMessage);
 			}
 		}
@@ -113,6 +115,8 @@ public class OrganizationModelListener extends BaseModelListener<Organization> {
 			additionalInfoJSONObject.put(
 				"organizationName", organization.getName());
 
+			auditMessage.setCompanyId(organization.getCompanyId());
+
 			_auditRouter.route(auditMessage);
 		}
 		catch (Exception exception) {
@@ -128,6 +132,8 @@ public class OrganizationModelListener extends BaseModelListener<Organization> {
 			AuditMessage auditMessage = AuditMessageBuilder.buildAuditMessage(
 				eventType, Organization.class.getName(),
 				organization.getOrganizationId(), null);
+
+			auditMessage.setCompanyId(organization.getCompanyId());
 
 			_auditRouter.route(auditMessage);
 		}
