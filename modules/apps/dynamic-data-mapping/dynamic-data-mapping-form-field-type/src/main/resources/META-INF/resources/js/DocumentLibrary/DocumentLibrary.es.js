@@ -527,16 +527,20 @@ const Main = ({
 			return null;
 		}
 
-		try {
-			const fileEntry = JSON.parse(fileEntryValue);
+		if (typeof fileEntryValue === 'string') {
+			try {
+				const fileEntry = JSON.parse(fileEntryValue);
 
-			return fileEntry.fileEntryId || null;
-		}
-		catch (error) {
-			console.error('Unable to parse JSON', fileEntryValue);
+				return fileEntry.fileEntryId || null;
+			}
+			catch (error) {
+				console.error('Unable to parse JSON', fileEntryValue);
 
-			return null;
+				return null;
+			}
 		}
+
+		return fileEntryValue.fileEntryId || null;
 	};
 
 	const deleteFileEntry = useCallback(
