@@ -129,7 +129,7 @@ public class RoleResourceTest extends BaseRoleResourceTestCase {
 		com.liferay.portal.kernel.model.Role serviceBuilderRole =
 			_roleLocalService.fetchRole(roleId);
 
-		_roles.add(serviceBuilderRole);
+		_serviceBuilderRoles.add(serviceBuilderRole);
 
 		return new Role() {
 			{
@@ -152,7 +152,7 @@ public class RoleResourceTest extends BaseRoleResourceTestCase {
 		com.liferay.portal.kernel.model.Role depotServiceBuilderRole =
 			RoleTestUtil.addRole(RoleConstants.TYPE_DEPOT);
 
-		_roles.add(depotServiceBuilderRole);
+		_serviceBuilderRoles.add(depotServiceBuilderRole);
 
 		return new Role() {
 			{
@@ -277,7 +277,7 @@ public class RoleResourceTest extends BaseRoleResourceTestCase {
 		com.liferay.portal.kernel.model.Role serviceBuilderRole =
 			RoleTestUtil.addRole(RoleConstants.TYPE_REGULAR);
 
-		_roles.add(serviceBuilderRole);
+		_serviceBuilderRoles.add(serviceBuilderRole);
 
 		_userLocalService.addRoleUser(serviceBuilderRole.getRoleId(), user);
 
@@ -552,7 +552,7 @@ public class RoleResourceTest extends BaseRoleResourceTestCase {
 	private RoleLocalService _roleLocalService;
 
 	@DeleteAfterTestRun
-	private List<com.liferay.portal.kernel.model.Role> _roles =
+	private List<com.liferay.portal.kernel.model.Role> _serviceBuilderRoles =
 		new ArrayList<>();
 
 	@DeleteAfterTestRun
