@@ -227,7 +227,8 @@ public class RoleResourceTest extends BaseRoleResourceTestCase {
 		return _userGroup.getExternalReferenceCode();
 	}
 
-	private void _assertForbidden(UnsafeRunnable<Exception> unsafeRunnable)
+	private void _assertProblemStatus(
+			String status, UnsafeRunnable<Exception> unsafeRunnable)
 		throws Exception {
 
 		try {
@@ -238,7 +239,7 @@ public class RoleResourceTest extends BaseRoleResourceTestCase {
 		catch (Problem.ProblemException problemException) {
 			Problem problem = problemException.getProblem();
 
-			Assert.assertEquals("FORBIDDEN", problem.getStatus());
+			Assert.assertEquals(status, problem.getStatus());
 		}
 	}
 
@@ -405,7 +406,8 @@ public class RoleResourceTest extends BaseRoleResourceTestCase {
 				_getServiceBuilderRole(
 					DepotRolesConstants.ASSET_LIBRARY_CONTENT_REVIEWER);
 
-		_assertForbidden(
+		_assertProblemStatus(
+			"FORBIDDEN",
 			() -> assignMembersRoleResource.putAssetLibraryUserAccountRolesPage(
 				testDepotEntryGroup.getExternalReferenceCode(),
 				user.getExternalReferenceCode(),
@@ -420,7 +422,8 @@ public class RoleResourceTest extends BaseRoleResourceTestCase {
 
 		User user = UserTestUtil.addUser(testDepotEntry.getGroupId());
 
-		_assertForbidden(
+		_assertProblemStatus(
+			"FORBIDDEN",
 			() -> assignMembersRoleResource.putAssetLibraryUserAccountRolesPage(
 				testDepotEntryGroup.getExternalReferenceCode(),
 				user.getExternalReferenceCode(),
@@ -487,7 +490,8 @@ public class RoleResourceTest extends BaseRoleResourceTestCase {
 		RoleResource assignUserRolesRoleResource = _getDepotEntryRoleResource(
 			ActionKeys.ASSIGN_USER_ROLES);
 
-		_assertForbidden(
+		_assertProblemStatus(
+			"FORBIDDEN",
 			() ->
 				assignUserRolesRoleResource.putAssetLibraryUserAccountRolesPage(
 					testDepotEntryGroup.getExternalReferenceCode(),
@@ -518,16 +522,9 @@ public class RoleResourceTest extends BaseRoleResourceTestCase {
 			}
 		};
 
-		try {
-			unsafeBiConsumer.accept(new Role[] {randomRole3});
-
-			Assert.fail();
-		}
-		catch (Problem.ProblemException problemException) {
-			Problem problem = problemException.getProblem();
-
-			Assert.assertEquals("NOT_FOUND", problem.getStatus());
-		}
+		_assertProblemStatus(
+			"NOT_FOUND",
+			() -> unsafeBiConsumer.accept(new Role[] {randomRole3}));
 
 		_assertRolesPage(new Role[] {randomRole1, randomRole2}, unsafeSupplier);
 	}
