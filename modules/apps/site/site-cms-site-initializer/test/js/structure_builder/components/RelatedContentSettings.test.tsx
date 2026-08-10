@@ -61,6 +61,7 @@ const DEFAULT_STATE: State = {
 	invalids: new Map(),
 	publishedChildren: new Set(),
 	renamingItemUuid: null,
+	savedChildren: new Set(),
 	selection: [],
 	structure: {
 		children: new Map([[RELATED_CONTENT_UUID, RELATED_CONTENT]]),

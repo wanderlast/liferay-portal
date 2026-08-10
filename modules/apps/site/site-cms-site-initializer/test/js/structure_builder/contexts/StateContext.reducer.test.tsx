@@ -67,6 +67,7 @@ function buildInitialState({
 		invalids: new Map(),
 		publishedChildren: new Set(),
 		renamingItemUuid: null,
+		savedChildren: new Set(),
 		selection: [],
 		structure,
 		unsavedChanges: false,

@@ -57,6 +57,7 @@ function buildInitialState(field: Field): State {
 		invalids: new Map(),
 		publishedChildren: new Set(),
 		renamingItemUuid: null,
+		savedChildren: new Set(),
 		selection: [],
 		structure: {
 			children,

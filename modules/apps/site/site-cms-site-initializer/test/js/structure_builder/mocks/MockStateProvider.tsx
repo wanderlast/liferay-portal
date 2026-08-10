@@ -38,6 +38,7 @@ const DEFAULT_STATE: State = {
 	invalids: new Map(),
 	publishedChildren: new Set(),
 	renamingItemUuid: null,
+	savedChildren: new Set(),
 	selection: [],
 	structure: DEFAULT_STRUCTURE,
 	unsavedChanges: false,

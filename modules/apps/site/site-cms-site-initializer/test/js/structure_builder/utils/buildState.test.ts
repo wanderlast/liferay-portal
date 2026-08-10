@@ -112,6 +112,7 @@ describe('buildState', () => {
 			invalids: new Map(),
 			publishedChildren: new Set(),
 			renamingItemUuid: null,
+			savedChildren: new Set(),
 			selection: [],
 			structure,
 			unsavedChanges: false,
@@ -134,6 +135,7 @@ describe('buildState', () => {
 
 		const nextState = {
 			...initialState,
+			savedChildren: new Set(children.keys()),
 			structure: {
 				...structure,
 				children,
@@ -168,6 +170,7 @@ describe('buildState', () => {
 			invalids: new Map(),
 			publishedChildren: new Set(),
 			renamingItemUuid: null,
+			savedChildren: new Set(),
 			selection: [],
 			structure,
 			unsavedChanges: false,
@@ -193,11 +196,13 @@ describe('buildState', () => {
 
 		const {children, uuid} = result!.structure;
 
+		const savedChildren = new Set(children.keys());
 		const publishedChildren = new Set(children.keys());
 
 		const nextState = {
 			...initialState,
 			publishedChildren,
+			savedChildren,
 			structure: {
 				...structure,
 				children,
@@ -235,6 +240,7 @@ describe('buildState', () => {
 			invalids: new Map(),
 			publishedChildren: new Set(),
 			renamingItemUuid: null,
+			savedChildren: new Set(),
 			selection: [],
 			structure,
 			unsavedChanges: false,
@@ -261,11 +267,13 @@ describe('buildState', () => {
 
 		const {children, uuid} = result!.structure;
 
+		const savedChildren = new Set(children.keys());
 		const publishedChildren = new Set(children.keys());
 
 		const nextState = {
 			...initialState,
 			publishedChildren,
+			savedChildren,
 			structure: {
 				...structure,
 				children,
