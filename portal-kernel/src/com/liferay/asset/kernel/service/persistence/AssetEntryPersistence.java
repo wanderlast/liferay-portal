@@ -322,6 +322,149 @@ public interface AssetEntryPersistence
 	public int countByCompanyId(long companyId);
 
 	/**
+	 * Returns all the asset entries where classUuid = &#63;.
+	 *
+	 * @param classUuid the class uuid
+	 * @return the matching asset entries
+	 */
+	public java.util.List<AssetEntry> findByClassUuid(String classUuid);
+
+	/**
+	 * Returns a range of all the asset entries where classUuid = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
+	 * </p>
+	 *
+	 * @param classUuid the class uuid
+	 * @param start the lower bound of the range of asset entries
+	 * @param end the upper bound of the range of asset entries (not inclusive)
+	 * @return the range of matching asset entries
+	 */
+	public java.util.List<AssetEntry> findByClassUuid(
+		String classUuid, int start, int end);
+
+	/**
+	 * Returns an ordered range of all the asset entries where classUuid = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
+	 * </p>
+	 *
+	 * @param classUuid the class uuid
+	 * @param start the lower bound of the range of asset entries
+	 * @param end the upper bound of the range of asset entries (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching asset entries
+	 */
+	public java.util.List<AssetEntry> findByClassUuid(
+		String classUuid, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<AssetEntry>
+			orderByComparator);
+
+	/**
+	 * Returns an ordered range of all the asset entries where classUuid = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AssetEntryModelImpl</code>.
+	 * </p>
+	 *
+	 * @param classUuid the class uuid
+	 * @param start the lower bound of the range of asset entries
+	 * @param end the upper bound of the range of asset entries (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching asset entries
+	 */
+	public java.util.List<AssetEntry> findByClassUuid(
+		String classUuid, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<AssetEntry>
+			orderByComparator,
+		boolean useFinderCache);
+
+	/**
+	 * Returns the first asset entry in the ordered set where classUuid = &#63;.
+	 *
+	 * @param classUuid the class uuid
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching asset entry
+	 * @throws NoSuchEntryException if a matching asset entry could not be found
+	 */
+	public AssetEntry findByClassUuid_First(
+			String classUuid,
+			com.liferay.portal.kernel.util.OrderByComparator<AssetEntry>
+				orderByComparator)
+		throws NoSuchEntryException;
+
+	/**
+	 * Returns the first asset entry in the ordered set where classUuid = &#63;.
+	 *
+	 * @param classUuid the class uuid
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching asset entry, or <code>null</code> if a matching asset entry could not be found
+	 */
+	public AssetEntry fetchByClassUuid_First(
+		String classUuid,
+		com.liferay.portal.kernel.util.OrderByComparator<AssetEntry>
+			orderByComparator);
+
+	/**
+	 * Returns the last asset entry in the ordered set where classUuid = &#63;.
+	 *
+	 * @param classUuid the class uuid
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching asset entry
+	 * @throws NoSuchEntryException if a matching asset entry could not be found
+	 */
+	public AssetEntry findByClassUuid_Last(
+			String classUuid,
+			com.liferay.portal.kernel.util.OrderByComparator<AssetEntry>
+				orderByComparator)
+		throws NoSuchEntryException;
+
+	/**
+	 * Returns the last asset entry in the ordered set where classUuid = &#63;.
+	 *
+	 * @param classUuid the class uuid
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching asset entry, or <code>null</code> if a matching asset entry could not be found
+	 */
+	public AssetEntry fetchByClassUuid_Last(
+		String classUuid,
+		com.liferay.portal.kernel.util.OrderByComparator<AssetEntry>
+			orderByComparator);
+
+	/**
+	 * Returns the asset entries before and after the current asset entry in the ordered set where classUuid = &#63;.
+	 *
+	 * @param entryId the primary key of the current asset entry
+	 * @param classUuid the class uuid
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next asset entry
+	 * @throws NoSuchEntryException if a asset entry with the primary key could not be found
+	 */
+	public AssetEntry[] findByClassUuid_PrevAndNext(
+			long entryId, String classUuid,
+			com.liferay.portal.kernel.util.OrderByComparator<AssetEntry>
+				orderByComparator)
+		throws NoSuchEntryException;
+
+	/**
+	 * Removes all the asset entries where classUuid = &#63; from the database.
+	 *
+	 * @param classUuid the class uuid
+	 */
+	public void removeByClassUuid(String classUuid);
+
+	/**
+	 * Returns the number of asset entries where classUuid = &#63;.
+	 *
+	 * @param classUuid the class uuid
+	 * @return the number of matching asset entries
+	 */
+	public int countByClassUuid(String classUuid);
+
+	/**
 	 * Returns all the asset entries where visible = &#63;.
 	 *
 	 * @param visible the visible
