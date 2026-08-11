@@ -447,7 +447,7 @@ function getRelatedContentObjectRelationships(
 				objectRelationship.objectDefinitionExternalReferenceCode2 ===
 					mainObjectDefinition.externalReferenceCode &&
 				objectRelationship.type === 'oneToMany' &&
-				!objectRelationship.edge &&
+				objectRelationship.deletionType === 'disassociate' &&
 				!(
 					objectDefinition.externalReferenceCode ===
 						mainObjectDefinition.externalReferenceCode &&
