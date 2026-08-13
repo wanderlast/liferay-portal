@@ -131,7 +131,7 @@ public class ViewTasksSectionDisplayContext extends BaseSectionDisplayContext {
 	}
 
 	public String getAPIURL() {
-		StringBundler sb = new StringBundler(11);
+		StringBundler sb = new StringBundler(12);
 
 		sb.append("/o/search/v1.0/search?emptySearch=true");
 
@@ -155,7 +155,8 @@ public class ViewTasksSectionDisplayContext extends BaseSectionDisplayContext {
 			sb.append("'))");
 		}
 
-		sb.append(")&nestedFields=cmpProjectToCMPTasks,embedded");
+		sb.append(")");
+		sb.append(getNestedFieldsAPIURLParameters("cmpProjectToCMPTasks"));
 
 		return sb.toString();
 	}
