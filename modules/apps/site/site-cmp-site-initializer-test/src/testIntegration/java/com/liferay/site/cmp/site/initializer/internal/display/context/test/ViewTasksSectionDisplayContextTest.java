@@ -101,7 +101,8 @@ public class ViewTasksSectionDisplayContextTest
 					"&filter=(objectDefinitionId eq ",
 					objectDefinition.getObjectDefinitionId(),
 					" or keywords/any(k:startswith(k, 'L_CMP_TASK')))",
-					"&nestedFields=cmpProjectToCMPTasks,embedded")));
+					"&nestedFields=embedded,embedded.cmpProjectToCMPTasks",
+					"&nestedFieldsDepth=2")));
 		Assert.assertTrue(
 			StringUtil.equals(
 				getAPIURL(_assetEntry),
@@ -110,7 +111,8 @@ public class ViewTasksSectionDisplayContextTest
 					"(objectDefinitionId eq ",
 					objectDefinition.getObjectDefinitionId(),
 					" and scopeGroupId eq ", _assetEntry.getGroupId(),
-					")&nestedFields=cmpProjectToCMPTasks,embedded")));
+					")&nestedFields=embedded,embedded.cmpProjectToCMPTasks",
+					"&nestedFieldsDepth=2")));
 	}
 
 	@Test
