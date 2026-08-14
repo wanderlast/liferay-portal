@@ -9,6 +9,7 @@ import {apiHelpersTest} from '../../../fixtures/apiHelpersTest';
 import {documentLibraryPagesTest} from '../../../fixtures/documentLibraryPages.fixtures';
 import {isolatedSiteTest} from '../../../fixtures/isolatedSiteTest';
 import {loginTest} from '../../../fixtures/loginTest';
+import {usersAndOrganizationsPagesTest} from '../../../fixtures/usersAndOrganizationsPagesTest';
 import getRandomString from '../../../utils/getRandomString';
 import {openFieldset} from '../../../utils/openFieldset';
 import {PORTLET_URLS} from '../../../utils/portletUrls';
@@ -17,7 +18,8 @@ const test = mergeTests(
 	apiHelpersTest,
 	documentLibraryPagesTest,
 	loginTest(),
-	isolatedSiteTest
+	isolatedSiteTest,
+	usersAndOrganizationsPagesTest
 );
 
 test(
@@ -57,6 +59,7 @@ test(
 		documentLibraryPage,
 		page,
 		site,
+		usersAndOrganizationsPage,
 	}) => {
 		const testUser = await apiHelpers.headlessAdminUser.postUserAccount();
 
@@ -94,9 +97,30 @@ test(
 
 		await documentLibraryPage.goToEditFolder(title);
 
-		await page.waitForURL(/edit_folder/);
+		await expect(documentLibraryEditFolderPage.title).toBeEnabled();
 
-		const doAsUserIdURL = `${page.url()}&doAsUserId=${testUser.id}`;
+		const editFolderURL = page.url();
+
+		await usersAndOrganizationsPage.goto();
+
+		await usersAndOrganizationsPage.usersSearchBar.fill(
+			testUser.alternateName
+		);
+
+		await usersAndOrganizationsPage.usersSearchBar.press('Enter');
+
+		const impersonateLink = page.locator('a[href*="doAsUserId"]');
+
+		await expect(impersonateLink).toHaveCount(1);
+
+		const impersonateURL = new URL(
+			await impersonateLink.getAttribute('href'),
+			page.url()
+		);
+
+		const doAsUserIdURL = `${editFolderURL}&doAsUserId=${impersonateURL.searchParams.get(
+			'doAsUserId'
+		)}`;
 
 		await page.goto(doAsUserIdURL);
 
