@@ -197,10 +197,16 @@ test.describe('User notification template', () => {
 					.getByRole('combobox', {name: 'Select User Group'})
 					.click();
 				await expect(
-					userNotificationTemplatePage.page.getByText(userGroup1.name)
+					userNotificationTemplatePage.page.getByLabel(
+						userGroup1.name,
+						{exact: true}
+					)
 				).toBeVisible();
 				await expect(
-					userNotificationTemplatePage.page.getByText(userGroup2.name)
+					userNotificationTemplatePage.page.getByLabel(
+						userGroup2.name,
+						{exact: true}
+					)
 				).toBeVisible();
 			});
 
