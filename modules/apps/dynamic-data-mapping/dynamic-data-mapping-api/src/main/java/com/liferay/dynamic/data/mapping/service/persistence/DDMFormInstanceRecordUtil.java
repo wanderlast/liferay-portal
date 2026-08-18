@@ -1284,6 +1284,197 @@ public class DDMFormInstanceRecordUtil {
 	}
 
 	/**
+	 * Returns all the ddm form instance records where formInstanceId = &#63; and ipAddress = &#63;.
+	 *
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 * @return the matching ddm form instance records
+	 */
+	public static List<DDMFormInstanceRecord> findByF_I(
+		long formInstanceId, String ipAddress) {
+
+		return getPersistence().findByF_I(formInstanceId, ipAddress);
+	}
+
+	/**
+	 * Returns a range of all the ddm form instance records where formInstanceId = &#63; and ipAddress = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>DDMFormInstanceRecordModelImpl</code>.
+	 * </p>
+	 *
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 * @param start the lower bound of the range of ddm form instance records
+	 * @param end the upper bound of the range of ddm form instance records (not inclusive)
+	 * @return the range of matching ddm form instance records
+	 */
+	public static List<DDMFormInstanceRecord> findByF_I(
+		long formInstanceId, String ipAddress, int start, int end) {
+
+		return getPersistence().findByF_I(
+			formInstanceId, ipAddress, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the ddm form instance records where formInstanceId = &#63; and ipAddress = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>DDMFormInstanceRecordModelImpl</code>.
+	 * </p>
+	 *
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 * @param start the lower bound of the range of ddm form instance records
+	 * @param end the upper bound of the range of ddm form instance records (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching ddm form instance records
+	 */
+	public static List<DDMFormInstanceRecord> findByF_I(
+		long formInstanceId, String ipAddress, int start, int end,
+		OrderByComparator<DDMFormInstanceRecord> orderByComparator) {
+
+		return getPersistence().findByF_I(
+			formInstanceId, ipAddress, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns an ordered range of all the ddm form instance records where formInstanceId = &#63; and ipAddress = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>DDMFormInstanceRecordModelImpl</code>.
+	 * </p>
+	 *
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 * @param start the lower bound of the range of ddm form instance records
+	 * @param end the upper bound of the range of ddm form instance records (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching ddm form instance records
+	 */
+	public static List<DDMFormInstanceRecord> findByF_I(
+		long formInstanceId, String ipAddress, int start, int end,
+		OrderByComparator<DDMFormInstanceRecord> orderByComparator,
+		boolean useFinderCache) {
+
+		return getPersistence().findByF_I(
+			formInstanceId, ipAddress, start, end, orderByComparator,
+			useFinderCache);
+	}
+
+	/**
+	 * Returns the first ddm form instance record in the ordered set where formInstanceId = &#63; and ipAddress = &#63;.
+	 *
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching ddm form instance record
+	 * @throws NoSuchFormInstanceRecordException if a matching ddm form instance record could not be found
+	 */
+	public static DDMFormInstanceRecord findByF_I_First(
+			long formInstanceId, String ipAddress,
+			OrderByComparator<DDMFormInstanceRecord> orderByComparator)
+		throws com.liferay.dynamic.data.mapping.exception.
+			NoSuchFormInstanceRecordException {
+
+		return getPersistence().findByF_I_First(
+			formInstanceId, ipAddress, orderByComparator);
+	}
+
+	/**
+	 * Returns the first ddm form instance record in the ordered set where formInstanceId = &#63; and ipAddress = &#63;.
+	 *
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching ddm form instance record, or <code>null</code> if a matching ddm form instance record could not be found
+	 */
+	public static DDMFormInstanceRecord fetchByF_I_First(
+		long formInstanceId, String ipAddress,
+		OrderByComparator<DDMFormInstanceRecord> orderByComparator) {
+
+		return getPersistence().fetchByF_I_First(
+			formInstanceId, ipAddress, orderByComparator);
+	}
+
+	/**
+	 * Returns the last ddm form instance record in the ordered set where formInstanceId = &#63; and ipAddress = &#63;.
+	 *
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching ddm form instance record
+	 * @throws NoSuchFormInstanceRecordException if a matching ddm form instance record could not be found
+	 */
+	public static DDMFormInstanceRecord findByF_I_Last(
+			long formInstanceId, String ipAddress,
+			OrderByComparator<DDMFormInstanceRecord> orderByComparator)
+		throws com.liferay.dynamic.data.mapping.exception.
+			NoSuchFormInstanceRecordException {
+
+		return getPersistence().findByF_I_Last(
+			formInstanceId, ipAddress, orderByComparator);
+	}
+
+	/**
+	 * Returns the last ddm form instance record in the ordered set where formInstanceId = &#63; and ipAddress = &#63;.
+	 *
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching ddm form instance record, or <code>null</code> if a matching ddm form instance record could not be found
+	 */
+	public static DDMFormInstanceRecord fetchByF_I_Last(
+		long formInstanceId, String ipAddress,
+		OrderByComparator<DDMFormInstanceRecord> orderByComparator) {
+
+		return getPersistence().fetchByF_I_Last(
+			formInstanceId, ipAddress, orderByComparator);
+	}
+
+	/**
+	 * Returns the ddm form instance records before and after the current ddm form instance record in the ordered set where formInstanceId = &#63; and ipAddress = &#63;.
+	 *
+	 * @param formInstanceRecordId the primary key of the current ddm form instance record
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next ddm form instance record
+	 * @throws NoSuchFormInstanceRecordException if a ddm form instance record with the primary key could not be found
+	 */
+	public static DDMFormInstanceRecord[] findByF_I_PrevAndNext(
+			long formInstanceRecordId, long formInstanceId, String ipAddress,
+			OrderByComparator<DDMFormInstanceRecord> orderByComparator)
+		throws com.liferay.dynamic.data.mapping.exception.
+			NoSuchFormInstanceRecordException {
+
+		return getPersistence().findByF_I_PrevAndNext(
+			formInstanceRecordId, formInstanceId, ipAddress, orderByComparator);
+	}
+
+	/**
+	 * Removes all the ddm form instance records where formInstanceId = &#63; and ipAddress = &#63; from the database.
+	 *
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 */
+	public static void removeByF_I(long formInstanceId, String ipAddress) {
+		getPersistence().removeByF_I(formInstanceId, ipAddress);
+	}
+
+	/**
+	 * Returns the number of ddm form instance records where formInstanceId = &#63; and ipAddress = &#63;.
+	 *
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 * @return the number of matching ddm form instance records
+	 */
+	public static int countByF_I(long formInstanceId, String ipAddress) {
+		return getPersistence().countByF_I(formInstanceId, ipAddress);
+	}
+
+	/**
 	 * Caches the ddm form instance record in the entity cache if it is enabled.
 	 *
 	 * @param ddmFormInstanceRecord the ddm form instance record

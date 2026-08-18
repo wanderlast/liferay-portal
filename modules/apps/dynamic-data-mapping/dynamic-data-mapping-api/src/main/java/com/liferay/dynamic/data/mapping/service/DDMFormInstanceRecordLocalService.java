@@ -377,6 +377,10 @@ public interface DDMFormInstanceRecordLocalService
 	public int getFormInstanceRecordsCount(long ddmFormInstanceId, long userId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getFormInstanceRecordsCount(
+		long ddmFormInstanceId, String ipAddress);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
 
 	/**

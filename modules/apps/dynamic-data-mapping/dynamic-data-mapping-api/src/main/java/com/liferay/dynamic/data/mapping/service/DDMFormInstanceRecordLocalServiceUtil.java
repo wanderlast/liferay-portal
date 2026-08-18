@@ -435,6 +435,13 @@ public class DDMFormInstanceRecordLocalServiceUtil {
 			ddmFormInstanceId, userId);
 	}
 
+	public static int getFormInstanceRecordsCount(
+		long ddmFormInstanceId, String ipAddress) {
+
+		return getService().getFormInstanceRecordsCount(
+			ddmFormInstanceId, ipAddress);
+	}
+
 	public static
 		com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery
 			getIndexableActionableDynamicQuery() {

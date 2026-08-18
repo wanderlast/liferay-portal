@@ -3661,6 +3661,606 @@ public class DDMFormInstanceRecordPersistenceImpl
 	private static final String _FINDER_COLUMN_F_F_FORMINSTANCEVERSION_3 =
 		"(ddmFormInstanceRecord.formInstanceVersion IS NULL OR ddmFormInstanceRecord.formInstanceVersion = '')";
 
+	private FinderPath _finderPathWithPaginationFindByF_I;
+	private FinderPath _finderPathWithoutPaginationFindByF_I;
+	private FinderPath _finderPathCountByF_I;
+
+	/**
+	 * Returns all the ddm form instance records where formInstanceId = &#63; and ipAddress = &#63;.
+	 *
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 * @return the matching ddm form instance records
+	 */
+	@Override
+	public List<DDMFormInstanceRecord> findByF_I(
+		long formInstanceId, String ipAddress) {
+
+		return findByF_I(
+			formInstanceId, ipAddress, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+			null);
+	}
+
+	/**
+	 * Returns a range of all the ddm form instance records where formInstanceId = &#63; and ipAddress = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>DDMFormInstanceRecordModelImpl</code>.
+	 * </p>
+	 *
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 * @param start the lower bound of the range of ddm form instance records
+	 * @param end the upper bound of the range of ddm form instance records (not inclusive)
+	 * @return the range of matching ddm form instance records
+	 */
+	@Override
+	public List<DDMFormInstanceRecord> findByF_I(
+		long formInstanceId, String ipAddress, int start, int end) {
+
+		return findByF_I(formInstanceId, ipAddress, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the ddm form instance records where formInstanceId = &#63; and ipAddress = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>DDMFormInstanceRecordModelImpl</code>.
+	 * </p>
+	 *
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 * @param start the lower bound of the range of ddm form instance records
+	 * @param end the upper bound of the range of ddm form instance records (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching ddm form instance records
+	 */
+	@Override
+	public List<DDMFormInstanceRecord> findByF_I(
+		long formInstanceId, String ipAddress, int start, int end,
+		OrderByComparator<DDMFormInstanceRecord> orderByComparator) {
+
+		return findByF_I(
+			formInstanceId, ipAddress, start, end, orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the ddm form instance records where formInstanceId = &#63; and ipAddress = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>DDMFormInstanceRecordModelImpl</code>.
+	 * </p>
+	 *
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 * @param start the lower bound of the range of ddm form instance records
+	 * @param end the upper bound of the range of ddm form instance records (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching ddm form instance records
+	 */
+	@Override
+	public List<DDMFormInstanceRecord> findByF_I(
+		long formInstanceId, String ipAddress, int start, int end,
+		OrderByComparator<DDMFormInstanceRecord> orderByComparator,
+		boolean useFinderCache) {
+
+		try (SafeCloseable safeCloseable =
+				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
+					DDMFormInstanceRecord.class)) {
+
+			ipAddress = Objects.toString(ipAddress, "");
+
+			FinderPath finderPath = null;
+			Object[] finderArgs = null;
+
+			if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+
+				if (useFinderCache) {
+					finderPath = _finderPathWithoutPaginationFindByF_I;
+					finderArgs = new Object[] {formInstanceId, ipAddress};
+				}
+			}
+			else if (useFinderCache) {
+				finderPath = _finderPathWithPaginationFindByF_I;
+				finderArgs = new Object[] {
+					formInstanceId, ipAddress, start, end, orderByComparator
+				};
+			}
+
+			List<DDMFormInstanceRecord> list = null;
+
+			if (useFinderCache) {
+				list = (List<DDMFormInstanceRecord>)finderCache.getResult(
+					finderPath, finderArgs, this);
+
+				if ((list != null) && !list.isEmpty()) {
+					for (DDMFormInstanceRecord ddmFormInstanceRecord : list) {
+						if ((formInstanceId !=
+								ddmFormInstanceRecord.getFormInstanceId()) ||
+							!ipAddress.equals(
+								ddmFormInstanceRecord.getIpAddress())) {
+
+							list = null;
+
+							break;
+						}
+					}
+				}
+			}
+
+			if (list == null) {
+				StringBundler sb = null;
+
+				if (orderByComparator != null) {
+					sb = new StringBundler(
+						4 + (orderByComparator.getOrderByFields().length * 2));
+				}
+				else {
+					sb = new StringBundler(4);
+				}
+
+				sb.append(_SQL_SELECT_DDMFORMINSTANCERECORD_WHERE);
+
+				sb.append(_FINDER_COLUMN_F_I_FORMINSTANCEID_2);
+
+				boolean bindIpAddress = false;
+
+				if (ipAddress.isEmpty()) {
+					sb.append(_FINDER_COLUMN_F_I_IPADDRESS_3);
+				}
+				else {
+					bindIpAddress = true;
+
+					sb.append(_FINDER_COLUMN_F_I_IPADDRESS_2);
+				}
+
+				if (orderByComparator != null) {
+					appendOrderByComparator(
+						sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator);
+				}
+				else {
+					sb.append(DDMFormInstanceRecordModelImpl.ORDER_BY_JPQL);
+				}
+
+				String sql = sb.toString();
+
+				Session session = null;
+
+				try {
+					session = openSession();
+
+					Query query = session.createQuery(sql);
+
+					QueryPos queryPos = QueryPos.getInstance(query);
+
+					queryPos.add(formInstanceId);
+
+					if (bindIpAddress) {
+						queryPos.add(ipAddress);
+					}
+
+					list = (List<DDMFormInstanceRecord>)QueryUtil.list(
+						query, getDialect(), start, end);
+
+					cacheResult(list);
+
+					if (useFinderCache) {
+						finderCache.putResult(finderPath, finderArgs, list);
+					}
+				}
+				catch (Exception exception) {
+					throw processException(exception);
+				}
+				finally {
+					closeSession(session);
+				}
+			}
+
+			return list;
+		}
+	}
+
+	/**
+	 * Returns the first ddm form instance record in the ordered set where formInstanceId = &#63; and ipAddress = &#63;.
+	 *
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching ddm form instance record
+	 * @throws NoSuchFormInstanceRecordException if a matching ddm form instance record could not be found
+	 */
+	@Override
+	public DDMFormInstanceRecord findByF_I_First(
+			long formInstanceId, String ipAddress,
+			OrderByComparator<DDMFormInstanceRecord> orderByComparator)
+		throws NoSuchFormInstanceRecordException {
+
+		DDMFormInstanceRecord ddmFormInstanceRecord = fetchByF_I_First(
+			formInstanceId, ipAddress, orderByComparator);
+
+		if (ddmFormInstanceRecord != null) {
+			return ddmFormInstanceRecord;
+		}
+
+		StringBundler sb = new StringBundler(6);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("formInstanceId=");
+		sb.append(formInstanceId);
+
+		sb.append(", ipAddress=");
+		sb.append(ipAddress);
+
+		sb.append("}");
+
+		throw new NoSuchFormInstanceRecordException(sb.toString());
+	}
+
+	/**
+	 * Returns the first ddm form instance record in the ordered set where formInstanceId = &#63; and ipAddress = &#63;.
+	 *
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching ddm form instance record, or <code>null</code> if a matching ddm form instance record could not be found
+	 */
+	@Override
+	public DDMFormInstanceRecord fetchByF_I_First(
+		long formInstanceId, String ipAddress,
+		OrderByComparator<DDMFormInstanceRecord> orderByComparator) {
+
+		List<DDMFormInstanceRecord> list = findByF_I(
+			formInstanceId, ipAddress, 0, 1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last ddm form instance record in the ordered set where formInstanceId = &#63; and ipAddress = &#63;.
+	 *
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching ddm form instance record
+	 * @throws NoSuchFormInstanceRecordException if a matching ddm form instance record could not be found
+	 */
+	@Override
+	public DDMFormInstanceRecord findByF_I_Last(
+			long formInstanceId, String ipAddress,
+			OrderByComparator<DDMFormInstanceRecord> orderByComparator)
+		throws NoSuchFormInstanceRecordException {
+
+		DDMFormInstanceRecord ddmFormInstanceRecord = fetchByF_I_Last(
+			formInstanceId, ipAddress, orderByComparator);
+
+		if (ddmFormInstanceRecord != null) {
+			return ddmFormInstanceRecord;
+		}
+
+		StringBundler sb = new StringBundler(6);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("formInstanceId=");
+		sb.append(formInstanceId);
+
+		sb.append(", ipAddress=");
+		sb.append(ipAddress);
+
+		sb.append("}");
+
+		throw new NoSuchFormInstanceRecordException(sb.toString());
+	}
+
+	/**
+	 * Returns the last ddm form instance record in the ordered set where formInstanceId = &#63; and ipAddress = &#63;.
+	 *
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching ddm form instance record, or <code>null</code> if a matching ddm form instance record could not be found
+	 */
+	@Override
+	public DDMFormInstanceRecord fetchByF_I_Last(
+		long formInstanceId, String ipAddress,
+		OrderByComparator<DDMFormInstanceRecord> orderByComparator) {
+
+		int count = countByF_I(formInstanceId, ipAddress);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<DDMFormInstanceRecord> list = findByF_I(
+			formInstanceId, ipAddress, count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the ddm form instance records before and after the current ddm form instance record in the ordered set where formInstanceId = &#63; and ipAddress = &#63;.
+	 *
+	 * @param formInstanceRecordId the primary key of the current ddm form instance record
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next ddm form instance record
+	 * @throws NoSuchFormInstanceRecordException if a ddm form instance record with the primary key could not be found
+	 */
+	@Override
+	public DDMFormInstanceRecord[] findByF_I_PrevAndNext(
+			long formInstanceRecordId, long formInstanceId, String ipAddress,
+			OrderByComparator<DDMFormInstanceRecord> orderByComparator)
+		throws NoSuchFormInstanceRecordException {
+
+		ipAddress = Objects.toString(ipAddress, "");
+
+		DDMFormInstanceRecord ddmFormInstanceRecord = findByPrimaryKey(
+			formInstanceRecordId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			DDMFormInstanceRecord[] array = new DDMFormInstanceRecordImpl[3];
+
+			array[0] = getByF_I_PrevAndNext(
+				session, ddmFormInstanceRecord, formInstanceId, ipAddress,
+				orderByComparator, true);
+
+			array[1] = ddmFormInstanceRecord;
+
+			array[2] = getByF_I_PrevAndNext(
+				session, ddmFormInstanceRecord, formInstanceId, ipAddress,
+				orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected DDMFormInstanceRecord getByF_I_PrevAndNext(
+		Session session, DDMFormInstanceRecord ddmFormInstanceRecord,
+		long formInstanceId, String ipAddress,
+		OrderByComparator<DDMFormInstanceRecord> orderByComparator,
+		boolean previous) {
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				5 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			sb = new StringBundler(4);
+		}
+
+		sb.append(_SQL_SELECT_DDMFORMINSTANCERECORD_WHERE);
+
+		sb.append(_FINDER_COLUMN_F_I_FORMINSTANCEID_2);
+
+		boolean bindIpAddress = false;
+
+		if (ipAddress.isEmpty()) {
+			sb.append(_FINDER_COLUMN_F_I_IPADDRESS_3);
+		}
+		else {
+			bindIpAddress = true;
+
+			sb.append(_FINDER_COLUMN_F_I_IPADDRESS_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				sb.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			sb.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						sb.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC);
+					}
+					else {
+						sb.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			sb.append(DDMFormInstanceRecordModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = sb.toString();
+
+		Query query = session.createQuery(sql);
+
+		query.setFirstResult(0);
+		query.setMaxResults(2);
+
+		QueryPos queryPos = QueryPos.getInstance(query);
+
+		queryPos.add(formInstanceId);
+
+		if (bindIpAddress) {
+			queryPos.add(ipAddress);
+		}
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(
+						ddmFormInstanceRecord)) {
+
+				queryPos.add(orderByConditionValue);
+			}
+		}
+
+		List<DDMFormInstanceRecord> list = query.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the ddm form instance records where formInstanceId = &#63; and ipAddress = &#63; from the database.
+	 *
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 */
+	@Override
+	public void removeByF_I(long formInstanceId, String ipAddress) {
+		for (DDMFormInstanceRecord ddmFormInstanceRecord :
+				findByF_I(
+					formInstanceId, ipAddress, QueryUtil.ALL_POS,
+					QueryUtil.ALL_POS, null)) {
+
+			remove(ddmFormInstanceRecord);
+		}
+	}
+
+	/**
+	 * Returns the number of ddm form instance records where formInstanceId = &#63; and ipAddress = &#63;.
+	 *
+	 * @param formInstanceId the form instance ID
+	 * @param ipAddress the ip address
+	 * @return the number of matching ddm form instance records
+	 */
+	@Override
+	public int countByF_I(long formInstanceId, String ipAddress) {
+		try (SafeCloseable safeCloseable =
+				ctPersistenceHelper.setCTCollectionIdWithSafeCloseable(
+					DDMFormInstanceRecord.class)) {
+
+			ipAddress = Objects.toString(ipAddress, "");
+
+			FinderPath finderPath = _finderPathCountByF_I;
+
+			Object[] finderArgs = new Object[] {formInstanceId, ipAddress};
+
+			Long count = (Long)finderCache.getResult(
+				finderPath, finderArgs, this);
+
+			if (count == null) {
+				StringBundler sb = new StringBundler(3);
+
+				sb.append(_SQL_COUNT_DDMFORMINSTANCERECORD_WHERE);
+
+				sb.append(_FINDER_COLUMN_F_I_FORMINSTANCEID_2);
+
+				boolean bindIpAddress = false;
+
+				if (ipAddress.isEmpty()) {
+					sb.append(_FINDER_COLUMN_F_I_IPADDRESS_3);
+				}
+				else {
+					bindIpAddress = true;
+
+					sb.append(_FINDER_COLUMN_F_I_IPADDRESS_2);
+				}
+
+				String sql = sb.toString();
+
+				Session session = null;
+
+				try {
+					session = openSession();
+
+					Query query = session.createQuery(sql);
+
+					QueryPos queryPos = QueryPos.getInstance(query);
+
+					queryPos.add(formInstanceId);
+
+					if (bindIpAddress) {
+						queryPos.add(ipAddress);
+					}
+
+					count = (Long)query.uniqueResult();
+
+					finderCache.putResult(finderPath, finderArgs, count);
+				}
+				catch (Exception exception) {
+					throw processException(exception);
+				}
+				finally {
+					closeSession(session);
+				}
+			}
+
+			return count.intValue();
+		}
+	}
+
+	private static final String _FINDER_COLUMN_F_I_FORMINSTANCEID_2 =
+		"ddmFormInstanceRecord.formInstanceId = ? AND ";
+
+	private static final String _FINDER_COLUMN_F_I_IPADDRESS_2 =
+		"ddmFormInstanceRecord.ipAddress = ?";
+
+	private static final String _FINDER_COLUMN_F_I_IPADDRESS_3 =
+		"(ddmFormInstanceRecord.ipAddress IS NULL OR ddmFormInstanceRecord.ipAddress = '')";
+
 	public DDMFormInstanceRecordPersistenceImpl() {
 		Map<String, String> dbColumnNames = new HashMap<String, String>();
 
@@ -4666,6 +5266,25 @@ public class DDMFormInstanceRecordPersistenceImpl
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByF_F",
 			new String[] {Long.class.getName(), String.class.getName()},
 			new String[] {"formInstanceId", "formInstanceVersion"}, false);
+
+		_finderPathWithPaginationFindByF_I = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByF_I",
+			new String[] {
+				Long.class.getName(), String.class.getName(),
+				Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
+			},
+			new String[] {"formInstanceId", "ipAddress"}, true);
+
+		_finderPathWithoutPaginationFindByF_I = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByF_I",
+			new String[] {Long.class.getName(), String.class.getName()},
+			new String[] {"formInstanceId", "ipAddress"}, true);
+
+		_finderPathCountByF_I = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByF_I",
+			new String[] {Long.class.getName(), String.class.getName()},
+			new String[] {"formInstanceId", "ipAddress"}, false);
 
 		DDMFormInstanceRecordUtil.setPersistence(this);
 	}
