@@ -61,6 +61,7 @@ export class EditObjectActionPage {
 			.getByText(
 				`Send email notifications in the guest user's preferred language.`
 			);
+		this.page = page;
 		this.viewObjectActionsPage = new ViewObjectActionsPage(page);
 	}
 
@@ -103,7 +104,15 @@ export class EditObjectActionPage {
 				.click();
 		}
 
-		await this.saveButton.click();
+		// Saving closes the side panel and reloads the parent from a timer, so
+		// the reload is still in flight when the click resolves. Leaving it
+		// pending lands it in whatever step runs next, replacing the page under
+		// that step. Wait for it here.
+
+		await Promise.all([
+			this.page.waitForNavigation(),
+			this.saveButton.click(),
+		]);
 	}
 
 	async chooseNotificationOption() {
