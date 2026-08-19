@@ -820,7 +820,7 @@ test.describe('Publications with incomplete status tests', () => {
 			`Success:${journalArticleTitle} was created successfully.`
 		);
 
-		changeTrackingPage.goToReviewChanges(ctCollection2.body.name);
+		await changeTrackingPage.goToReviewChanges(ctCollection2.body.name);
 
 		const firstDropdown = page
 			.locator('.cell-item-actions .dropdown svg.lexicon-icon-ellipsis-v')
